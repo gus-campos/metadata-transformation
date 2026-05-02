@@ -1,4 +1,3 @@
-type MetadataTransform = Record<string, MetaProps | ConditionalChange>;
 
 type MetaProps = {
   readonly?: boolean;
@@ -22,7 +21,5 @@ type Condition =
   | { rule: (object: any) => boolean }; 
 
 type ConditionalChange = Condition & MetaProps;
-// Futuro: type ConditionalChange = { conditions: Condition[], changes: MetaProps };
-
-// TODO: Quando field ausente, mas critério de field presente
-  //  pode considerar ele mesmo -> preprocessamente
+type UnitTransform = MetaProps | ConditionalChange;
+export type MetadataTransform = Record<string, UnitTransform>;

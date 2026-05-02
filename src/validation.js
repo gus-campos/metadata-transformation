@@ -9,7 +9,7 @@ import {
 export function validateFieldsIdentifiers(metadataTransform, metadata) {
   // TODO
   // Chaves principais 
-  // Valor das chaves internas: field, e cada um de fields
+  // Valor das chaves internas: _field, e cada um de _fields
   // Validar tudo
   // Rodar demais, não deve rodar de cara, só deve aparecer depois
   // Se não seria mais complicado tratar
@@ -72,10 +72,10 @@ function validateConditionalChangeHelper(conditionalChange) {
 }
 
 function validateDependantKeysAndValues(exclusiveKey, conditionalChange) {
-  if (exclusiveKey === "rule") {
-    if (typeof conditionalChange.rule !== "function")
+  if (exclusiveKey === "_if") {
+    if (typeof conditionalChange._if !== "function")
       throw new Error("O predicato passado não é uma função");
-  } else if (exclusiveKey === "field" || exclusiveKey === "fields") {
+  } else if (exclusiveKey === "_field" || exclusiveKey === "_fields") {
     validateDependantKeys(exclusiveKey, conditionalChange);
   } else {
     throw new Error(`Chave exclusiva inválida: ${exclusiveKey}`);
@@ -83,7 +83,7 @@ function validateDependantKeysAndValues(exclusiveKey, conditionalChange) {
 }
 
 function validateDependantKeys(exclusiveKey, conditionalChange) {
-  const otherKey = exclusiveKey === "field" ? "fields" : "field";
+  const otherKey = exclusiveKey === "_field" ? "_fields" : "_field";
 
   const ownKeys = getFoundDependantKeysOf(exclusiveKey, conditionalChange);
   const otherKeys = getFoundDependantKeysOf(otherKey, conditionalChange);
@@ -120,28 +120,28 @@ function validateFieldsTypes(conditionalChange) {
 
   // Não devem ser array -> TODO
 
-  const fieldValue = conditionalChange.field;
-  const someIsEqualValue = conditionalChange.someIsEqual;
-  const equalValue = conditionalChange.equal;
-  const notEqualValue = conditionalChange.notEqual;
+  const fieldValue = conditionalChange._field;
+  const someIsEqualValue = conditionalChange._someIs;
+  const equalValue = conditionalChange._is;
+  const notEqualValue = conditionalChange._isNot;
 
   if (fieldValue !== undefined && typeof fieldValue !== "string")
-    throw new Error("field deve ser uma string");
+    throw new Error("_field deve ser uma string");
 
   if (someIsEqualValue !== undefined && Array.isArray(someIsEqualValue))
-    throw new Error("someIsEqual não deve ser um array");
+    throw new Error("_someIs não deve ser um array");
 
   if (equalValue !== undefined && Array.isArray(equalValue))
-    throw new Error("equal não deve ser um array");
+    throw new Error("_is não deve ser um array");
 
   if (notEqualValue !== undefined && Array.isArray(notEqualValue))
-    throw new Error("notEqual não deve ser um array");
+    throw new Error("_isNot não deve ser um array");
 
   // Devem ser arrays
 
-  const oneOfValue = conditionalChange.oneOf;
-  const fieldsValue = conditionalChange.fields;
-  const equalsPairwiseValue = conditionalChange.equalsPairwise;
+  const oneOfValue = conditionalChange._isIn;
+  const fieldsValue = conditionalChange._fields;
+  const equalsPairwiseValue = conditionalChange._are;
 
   const fieldsIsInvalid =
     fieldsValue !== undefined &&
@@ -153,16 +153,16 @@ function validateFieldsTypes(conditionalChange) {
   }
 
   if (oneOfValue !== undefined && !Array.isArray(oneOfValue))
-    throw new Error("oneOf deve ser um array de valores");
+    throw new Error("_isIn deve ser um array de valores");
 
   // Equals pairwise length
   if (equalsPairwiseValue !== undefined) {
     if (!Array.isArray(equalsPairwiseValue)) {
-      throw new Error("equalsPairwise deve ser um array de valores");
+      throw new Error("_are deve ser um array de valores");
     }
 
     if (fieldsValue.length !== equalsPairwiseValue.length) {
-      throw new Error("fields e equalsPairwise devem ter o mesmo tamanho");
+      throw new Error("_fields e _are devem ter o mesmo tamanho");
     }
   }
 }

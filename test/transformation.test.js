@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { processMetadata } from "../src/processing";
 
 const metadataDefault = {
-  fields: {
+  _fields: {
     taxType: {
       readonly: false,
       required: true,
@@ -35,24 +35,24 @@ const defaultChangesToApply = {
 
 const truthyFalsyCase = {
   taxType: {
-    rule: (obj) => obj.taxType === "iptu",
+    _if: (obj) => obj.taxType === "iptu",
     ...defaultChangesToApply,
   },
   documentType: {
-    field: "taxType",
-    equal: "itbi",
+    _field: "taxType",
+    _is: "itbi",
     ...defaultChangesToApply,
   },
 };
 
 const falsyTruthyCase = {
   taxType: {
-    rule: (obj) => obj.taxType === "itbi",
+    _if: (obj) => obj.taxType === "itbi",
     ...defaultChangesToApply,
   },
   documentType: {
-    field: "taxType",
-    equal: "iptu",
+    _field: "taxType",
+    _is: "iptu",
     ...defaultChangesToApply,
   },
 };
@@ -66,13 +66,13 @@ describe("Process metadata evaluation", () => {
 
   it("truthyFalsyCase", (name, conditionalChange) => {
     processMetadata(metadata, truthyFalsyCase, object);
-    expect(metadata.fields.taxType).toEqual(defaultChangesToApply);
-    expect(metadata.fields.documentType).toEqual(metadataDefault.fields.documentType);
+    expect(metadata._fields.taxType).toEqual(defaultChangesToApply);
+    expect(metadata._fields.documentType).toEqual(metadataDefault._fields.documentType);
   });
 
     it("falsyTruthyCase", (name, conditionalChange) => {
     processMetadata(metadata, falsyTruthyCase, object);
-    expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);
-    expect(metadata.fields.documentType).toEqual(defaultChangesToApply);
+    expect(metadata._fields.taxType).toEqual(metadataDefault._fields.taxType);
+    expect(metadata._fields.documentType).toEqual(defaultChangesToApply);
   });
 });

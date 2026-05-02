@@ -9,53 +9,53 @@ const object = {
 
 const truthyCases = {
   truthyRule: {
-    rule: (obj) => obj.taxType === "iptu",
+    _if: (obj) => obj.taxType === "iptu",
   },
   truthyFieldEqual: {
-    field: "taxType",
-    equal: "iptu",
+    _field: "taxType",
+    _is: "iptu",
   },
   truthyFieldNotEqual: {
-    field: "taxType",
-    notEqual: "itbi",
+    _field: "taxType",
+    _isNot: "itbi",
   },
   truthyFieldOneOf: {
-    field: "taxType",
-    oneOf: ["itbi", "iptu"],
+    _field: "taxType",
+    _isIn: ["itbi", "iptu"],
   },
   truthyFieldEqualPairwise: {
-    fields: ["taxType", "documentType"],
-    equalsPairwise: ["iptu", "cpf"],
+    _fields: ["taxType", "documentType"],
+    _are: ["iptu", "cpf"],
   },
   truthySomeIsEqual: {
-    fields: ["taxType", "documentType"],
-    someIsEqual: "iptu",
+    _fields: ["taxType", "documentType"],
+    _someIs: "iptu",
   },
 };
 
 const falsyCases = {
   falsyRule: {
-    rule: (obj) => obj.taxType === "itbi",
+    _if: (obj) => obj.taxType === "itbi",
   },
   falsyFieldEqual: {
-    field: "taxType",
-    equal: "itbi",
+    _field: "taxType",
+    _is: "itbi",
   },
   falsyFieldNotEqual: {
-    field: "taxType",
-    notEqual: "iptu",
+    _field: "taxType",
+    _isNot: "iptu",
   },
   falsyFieldOneOf: {
-    field: "taxType",
-    oneOf: ["itbi", "ipva"],
+    _field: "taxType",
+    _isIn: ["itbi", "ipva"],
   },
   falsyFieldEqualPairwise: {
-    fields: ["taxType", "documentType"],
-    equalsPairwise: ["itbi", "cpf"],
+    _fields: ["taxType", "documentType"],
+    _are: ["itbi", "cpf"],
   },
   falsySomeIsEqual: {
-    fields: ["taxType", "documentType"],
-    someIsEqual: "cnpj",
+    _fields: ["taxType", "documentType"],
+    _someIs: "cnpj",
   },
 };
 

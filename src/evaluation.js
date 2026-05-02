@@ -6,13 +6,13 @@ export function areConditionsMet(conditionalChange, object) {
   const exclusiveKey = keys.find((key) => exclusiveKeys.includes(key));
 
   switch (exclusiveKey) {
-    case "field":
+    case "_field":
       return evaluateFieldCondition(conditionalChange, object);
 
-    case "fields":
+    case "_fields":
       return evaluateFieldsCondition(conditionalChange, object);
 
-    case "rule":
+    case "_if":
       return evaluateRuleCondition(conditionalChange, object);
   }
 }
@@ -20,22 +20,22 @@ export function areConditionsMet(conditionalChange, object) {
 export function evaluateFieldsCondition(conditionalChange, object) {
   const keys = Object.keys(conditionalChange);
   const dependantKey = keys.find((key) =>
-    dependantToExclusiveKeys.fields.includes(key),
+    dependantToExclusiveKeys._fields.includes(key),
   );
 
-  const fieldsValuesInObject = conditionalChange.fields.map(
+  const fieldsValuesInObject = conditionalChange._fields.map(
     (fieldKey) => object[fieldKey],
   );
 
   switch (dependantKey) {
-    case "equalsPairwise":
-      const expectedValues = conditionalChange.equalsPairwise;
+    case "_are":
+      const expectedValues = conditionalChange._are;
       return fieldsValuesInObject.every(
         (value, index) => value === expectedValues[index],
       );
 
-    case "someIsEqual":
-      const expectedValue = conditionalChange.someIsEqual;
+    case "_someIs":
+      const expectedValue = conditionalChange._someIs;
       return fieldsValuesInObject.some((value) => value === expectedValue);
   }
 }
@@ -43,28 +43,28 @@ export function evaluateFieldsCondition(conditionalChange, object) {
 export function evaluateFieldCondition(conditionalChange, object) {
   const keys = Object.keys(conditionalChange);
   const dependantKey = keys.find((key) =>
-    dependantToExclusiveKeys.field.includes(key),
+    dependantToExclusiveKeys._field.includes(key),
   );
 
-  const fieldValueInObject = object[conditionalChange.field];
+  const fieldValueInObject = object[conditionalChange._field];
 
   switch (dependantKey) {
-    case "equal":
-      const valueExpected = conditionalChange.equal;
+    case "_is":
+      const valueExpected = conditionalChange._is;
       return valueExpected === fieldValueInObject;
 
-    case "notEqual":
-      const valueNotExpected = conditionalChange.notEqual;
+    case "_isNot":
+      const valueNotExpected = conditionalChange._isNot;
       return valueNotExpected !== fieldValueInObject;
 
-    case "oneOf":
-      const acceptedValues = conditionalChange.oneOf;
+    case "_isIn":
+      const acceptedValues = conditionalChange._isIn;
       return acceptedValues.includes(fieldValueInObject);
   }
 }
 
 export function evaluateRuleCondition(conditionalChange, object) {
-  const checkIfRuleIsValid = conditionalChange.rule;
+  const checkIfRuleIsValid = conditionalChange._if;
   const predicateEvaluation = checkIfRuleIsValid(object);
   return !!predicateEvaluation; // força boolean
 }

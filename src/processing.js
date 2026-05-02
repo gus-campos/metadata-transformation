@@ -9,7 +9,7 @@ export function processMetadata(metadata, metadataTransform, object) {
   for (const [fieldIdentifier, conditionalChange] of Object.entries(
     metadataTransform,
   )) {
-    const metadataFields = metadata.fields[fieldIdentifier];
+    const metadataFields = metadata._fields[fieldIdentifier];
     processConditionalChange(metadataFields, conditionalChange, object);
   }
 }

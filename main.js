@@ -1,7 +1,7 @@
 import { processMetadata } from "./src/processing.js";
 
 const _metadata = {
-  fields: {
+  _fields: {
     taxType: {
       readonly: false,
       required: false,
@@ -42,13 +42,13 @@ const _object = {
 
 const metadataTransform = {
   documentType: {
-    field: "taxType",
-    oneOf: ["iptu", "itbi"],
+    _field: "taxType",
+    _isIn: ["iptu", "itbi"],
     hidden: true,
     required: false,
   },
   adress: {
-    rule: (object) => isValidCep(object.cep),
+    _if: (object) => isValidCep(object.cep),
     readonly: true,
     size: "lg",
   },

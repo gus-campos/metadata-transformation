@@ -14,37 +14,37 @@ const validCases = {
   },
 
   valid_field_equal: {
-    field: "status",
-    equal: "ativo",
+    _field: "status",
+    _is: "ativo",
     required: true,
   },
 
   valid_field_notEqual: {
-    field: "status",
-    notEqual: "inativo",
+    _field: "status",
+    _isNot: "inativo",
     hidden: true,
   },
 
   valid_field_oneOf: {
-    field: "tipo",
-    oneOf: ["A", "B", "C"],
+    _field: "tipo",
+    _isIn: ["A", "B", "C"],
     readonly: true,
   },
 
   valid_fields_equalsPairwise: {
-    fields: ["inicio", "fim"],
-    equalsPairwise: ["2024-01-01", "2024-01-02"],
+    _fields: ["inicio", "fim"],
+    _are: ["2024-01-01", "2024-01-02"],
     required: true,
   },
 
   valid_fields_someIsEqual: {
-    fields: ["status1", "status2"],
-    someIsEqual: "ativo",
+    _fields: ["status1", "status2"],
+    _someIs: "ativo",
     hidden: true,
   },
 
   valid_rule: {
-    rule: (obj) => obj.id !== null,
+    _if: (obj) => obj.id !== null,
     readonly: true,
   },
 
@@ -70,63 +70,63 @@ const invalidCases = {
     size: "xl",
   },
 
-  // field sem condição
+  // _field sem condição
   invalid_field_without_condition: {
-    field: "status",
+    _field: "status",
   },
 
-  // field com múltiplas condições
+  // _field com múltiplas condições
   invalid_field_multiple_conditions: {
-    field: "status",
-    equal: "A",
-    oneOf: ["A", "B"],
+    _field: "status",
+    _is: "A",
+    _isIn: ["A", "B"],
   },
 
-  // oneOf não é array
+  // _isIn não é array
   invalid_oneOf_notArray: {
-    field: "status",
-    oneOf: "A",
+    _field: "status",
+    _isIn: "A",
   },
 
-  // fields sem condição
+  // _fields sem condição
   invalid_fields_without_condition: {
-    fields: ["a", "b"],
+    _fields: ["a", "b"],
   },
 
-  // fields com múltiplas condições
+  // _fields com múltiplas condições
   invalid_fields_multiple_conditions: {
-    fields: ["a", "b"],
-    someIsEqual: "A",
-    equalsPairwise: ["A", "B"],
+    _fields: ["a", "b"],
+    _someIs: "A",
+    _are: ["A", "B"],
   },
 
-  // equalsPairwise não é array
+  // _are não é array
   invalid_equalsPairwise_notArray: {
-    fields: ["a", "b"],
-    equalsPairwise: "A",
+    _fields: ["a", "b"],
+    _are: "A",
   },
 
-  // tamanho diferente de fields
+  // tamanho diferente de _fields
   invalid_equalsPairwise_wrong_length: {
-    fields: ["a", "b"],
-    equalsPairwise: ["A"],
+    _fields: ["a", "b"],
+    _are: ["A"],
   },
 
-  // someIsEqual tipo inválido (array em vez de valor)
+  // _someIs tipo inválido (array em vez de valor)
   invalid_someIsEqual_type: {
-    fields: ["a", "b"],
-    someIsEqual: ["A"],
+    _fields: ["a", "b"],
+    _someIs: ["A"],
   },
 
-  // rule não é função
+  // _if não é função
   invalid_rule_notFunction: {
-    rule: true,
+    _if: true,
   },
 
-  // mistura rule com field
+  // mistura _if com _field
   invalid_rule_with_field: {
-    rule: () => true,
-    field: "status",
+    _if: () => true,
+    _field: "status",
   },
 };
 

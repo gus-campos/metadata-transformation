@@ -1,13 +1,13 @@
 export const example = {
   myInstallmentPlanWas: {
-    field: "taxType",
-    equal: "installment",
+    _field: "taxType",
+    _is: "installment",
     hidden: false,
     required: true,
   },
 
   propertyType: {
-    rule: (obj) =>
+    _if: (obj) =>
       ["iptu", "itbi"].includes(obj.taxType) &&
       obj.myInstallmentPlanWas === "property",
     hidden: false,
@@ -15,113 +15,113 @@ export const example = {
   },
 
   otherTaxes: {
-    rule: (object) => object.taxType === "otherTaxes",
+    _if: (object) => object.taxType === "otherTaxes",
     hidden: false,
     required: true,
   },
 
   realEstateRegistry: {
-    field: "propertyType",
-    equal: "urban",
+    _field: "propertyType",
+    _is: "urban",
     hidden: false,
     required: true,
   },
 
   registrationNumber: {
-    field: "propertyType",
-    equal: "rural",
+    _field: "propertyType",
+    _is: "rural",
     hidden: false,
     required: true,
   },
 
   propertyTypeReadOnlyFromInstallment: {
-    field: "myInstallmentPlanWas",
-    equal: "property",
+    _field: "myInstallmentPlanWas",
+    _is: "property",
     readonly: true,
   },
 
   propertyTitleAttachment: {
-    rule: (obj) =>
+    _if: (obj) =>
       ["iptu", "itbi"].includes(obj.taxType) && obj.propertyType !== null,
     hidden: false,
   },
 
   accountBankData: {
-    field: "requestReason",
-    equal: "duplicatedPayment",
+    _field: "requestReason",
+    _is: "duplicatedPayment",
     hidden: false,
     required: true,
   },
 
   secondPaymentReceipt: {
-    field: "requestReason",
-    equal: "unrecordedPayment",
+    _field: "requestReason",
+    _is: "unrecordedPayment",
     hidden: false,
     required: true,
   },
 
   propertyTypeReadOnlyFromIptu: {
-    field: "taxType",
-    equal: "iptu",
+    _field: "taxType",
+    _is: "iptu",
     readonly: true,
   },
 
   debtNature: {
-    field: "taxType",
-    equal: "installment",
+    _field: "taxType",
+    _is: "installment",
     hidden: false,
     required: true,
   },
 
   propertyTypeLayout: {
-    field: "myInstallmentPlanWas",
-    equal: "property",
+    _field: "myInstallmentPlanWas",
+    _is: "property",
     breakLine: true,
     size: "md",
   },
 
   realEstateRegistryLayout: {
-    field: "myInstallmentPlanWas",
-    equal: "property",
+    _field: "myInstallmentPlanWas",
+    _is: "property",
     size: "md",
   },
 
   documentNature: {
-    field: "taxType",
-    oneOf: ["iss", "movableTaxes"],
+    _field: "taxType",
+    _isIn: ["iss", "movableTaxes"],
     hidden: false,
     required: true,
   },
 
   cpf: {
-    field: "documentNature",
-    equal: "cpf",
+    _field: "documentNature",
+    _is: "cpf",
     hidden: false,
     required: true,
   },
 
   cnpj: {
-    field: "documentNature",
-    equal: "cnpj",
+    _field: "documentNature",
+    _is: "cnpj",
     hidden: false,
     required: true,
   },
 
   fineAttachment: {
-    field: "taxType",
-    equal: "fines",
+    _field: "taxType",
+    _is: "fines",
     hidden: false,
   },
 
   fineIdentificationNumber: {
-    field: "taxType",
-    equal: "fines",
+    _field: "taxType",
+    _is: "fines",
     hidden: false,
   },
 
   optionalAttachment: {
-    field: "taxType",
-    equal: "otherTaxes",
+    _field: "taxType",
+    _is: "otherTaxes",
     hidden: false,
   },
 };
