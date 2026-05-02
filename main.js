@@ -1,21 +1,64 @@
-import { metadataTransform } from "./example.js";
-import { processMetadata } from "./process-metadata.js";
+import { processMetadata } from "./src/processing.js";
 
-const metadata = {
-    fields: {
-        myInstallmentPlanWas: {
-            
-        }
-    }
+const _metadata = {
+  fields: {
+    taxType: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+    documentType: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+    cep: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+    adress: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+  },
 };
-const object = {};
 
-console.log("\n\n\n\n")
+const _object = {
+  taxType: "iptu",
+  documentType: "cpf",
+  cep: "36000-000",
+  adress: "",
+};
 
-console.log(JSON.stringify(metadataTransform, null, 2));
-console.log(JSON.stringify(metadata, null, 2));
+const metadataTransform = {
+  documentType: {
+    field: "taxType",
+    oneOf: ["iptu", "itbi"],
+    hidden: true,
+    required: false,
+  },
+  adress: {
+    rule: (object) => isValidCep(object.cep),
+    readonly: true,
+    size: "lg",
+  },
+};
 
-console.log("\n\n\n\n")
+processMetadata(_metadata, metadataTransform, _object);
 
-processMetadata(metadata, metadataTransform, object);
-console.log(JSON.stringify(metadata, null, 2));
+console.log("\n\n");
+console.log(_metadata);
+
+function isValidCep() {
+  return true;
+}

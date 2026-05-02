@@ -14,16 +14,15 @@ type FieldId = { field: string };
 type FieldsIds = { fields: string[] };
 
 type Condition =
-  | (FieldId & { equal: Value })
+  | (FieldId & { equal: Value }) // permitir array?
   | (FieldId & { notEqual: Value })
-  | (FieldId & { some: Value[] })
-  | (FieldsIds & { equals: Value[] })
-  | (FieldsIds & { includes: Value })
-  | { predicate: (object: any) => boolean };
+  | (FieldId & { oneOf: Value[] })
+  | (FieldsIds & { equalsPairwise: Value[] })
+  | (FieldsIds & { someIsEqual: Value })
+  | { rule: (object: any) => boolean }; 
 
 type ConditionalChange = Condition & MetaProps;
-// type ConditionalChange = { conditions: Condition[], changes: MetaProps };
+// Futuro: type ConditionalChange = { conditions: Condition[], changes: MetaProps };
 
-// quando field ausente, mas critério de field presente
-// pode considerar ele mesmo -> preprocessamente
-// Validar se some e equals é array, equals do memso valor 
+// TODO: Quando field ausente, mas critério de field presente
+  //  pode considerar ele mesmo -> preprocessamente
