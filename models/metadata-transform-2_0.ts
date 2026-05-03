@@ -8,7 +8,7 @@ type MetaProps = {
 
 type Value = boolean | string | Date | null | { _not: Value };
 
-type FieldId = { _field: string };
+type FieldId = { _field?: string }; // opcional -> se não passado, assume o próprio campo
 type FieldsIds = { _fields: string[] };
 
 type UnitCondition =
@@ -34,11 +34,9 @@ type MetadataTransform = Record<string, UnitTransform>;
 // are poderia aceitar array de valores, ou { _not: valor }
 
 // Próximas funcionalidades:
-// * Validar fields keys 
 // * Composição através de _all, _any, _not (só vale pra )
-// * Açucar sintático "isNotIn"
-// * Quando field ausente, é considerando o próprio campo automaticamente
-// * Possível passar caminhos (split("."))
+// * Possível passar caminhos (split(".")) ---- nem pensei que podia ser um campo... ?
+      // metadata vale assim?
 // * Incluir mais metaprops, com valueOptions  (internamente é dado push)
 // * Depois do nome do campo, é aceito um array de UnitTransform -> o primeiro truthy é aplicado
 

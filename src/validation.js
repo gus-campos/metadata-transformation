@@ -7,18 +7,17 @@ import {
 } from "./constants.js";
 
 export function validateFieldsIdentifiers(metadataTransform, metadata) {
-
-  // TODO: Testar
-
   const metadataFieldsIdentifiers = Object.keys(metadata.fields);
 
   const transformRootIdentifiers = Object.keys(metadataTransform);
 
-  const fieldAndFieldsIdentifiers = transformRootIdentifiers.flatMap((rootKey) => {
-    const condChange = metadataTransform[rootKey];
-    return [condChange._field, ...(condChange._fields ?? [])].filter(Boolean);
-  });
-  
+  const fieldAndFieldsIdentifiers = transformRootIdentifiers.flatMap(
+    (rootKey) => {
+      const condChange = metadataTransform[rootKey];
+      return [condChange._field, ...(condChange._fields ?? [])].filter(Boolean);
+    },
+  );
+
   const allTransformKeys = [
     ...transformRootIdentifiers,
     ...fieldAndFieldsIdentifiers,
@@ -158,7 +157,8 @@ function validateFieldsTypes(conditionalChange) {
 
   // Devem ser arrays
 
-  const oneOfValue = conditionalChange._isIn;
+  const isInValue = conditionalChange._isIn;
+  const isNotInValue = conditionalChange._isNotIn;
   const fieldsValue = conditionalChange._fields;
   const equalsPairwiseValue = conditionalChange._are;
 
@@ -171,7 +171,10 @@ function validateFieldsTypes(conditionalChange) {
     throw new Error("Fields deve ser um array de strings");
   }
 
-  if (oneOfValue !== undefined && !Array.isArray(oneOfValue))
+  if (isInValue !== undefined && !Array.isArray(isInValue))
+    throw new Error("_isIn deve ser um array de valores");
+
+  if (isNotInValue !== undefined && !Array.isArray(isNotInValue))
     throw new Error("_isIn deve ser um array de valores");
 
   // Equals pairwise length

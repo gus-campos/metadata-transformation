@@ -17,12 +17,20 @@ const metadataDefault = {
       breakLine: true,
       size: "sm",
     },
+    implicitField: {
+      readonly: false,
+      required: true,
+      hidden: false,
+      breakLine: true,
+      size: "sm",
+    },
   },
 };
 
 const object = {
   taxType: "iptu",
   documentType: "cpf",
+  implicitField: "auto"
 };
 
 const defaultChangesToApply = {
@@ -33,7 +41,7 @@ const defaultChangesToApply = {
   size: "lg",
 };
 
-const truthyFalsyCase = {
+const truthyFalsyTruthyCase = {
   taxType: {
     _if: (obj) => obj.taxType === "iptu",
     ...defaultChangesToApply,
@@ -43,9 +51,14 @@ const truthyFalsyCase = {
     _is: "itbi",
     ...defaultChangesToApply,
   },
+  // Uso implícito do _field
+  implicitField: {
+    _is: "auto",
+    ...defaultChangesToApply,
+  },
 };
 
-const falsyTruthyCase = {
+const falsyTruthyFalsyCase = {
   taxType: {
     _if: (obj) => obj.taxType === "itbi",
     ...defaultChangesToApply,
@@ -53,6 +66,11 @@ const falsyTruthyCase = {
   documentType: {
     _field: "taxType",
     _is: "iptu",
+    ...defaultChangesToApply,
+  },
+  // Uso implícito do _field
+  implicitField: {
+    _is: "none",
     ...defaultChangesToApply,
   },
 };
@@ -64,15 +82,19 @@ describe("Process metadata evaluation", () => {
     metadata = structuredClone(metadataDefault);
   });
 
-  it("truthyFalsyCase", (name, conditionalChange) => {
-    processMetadata(truthyFalsyCase, metadata, object);
+  it("truthyFalsyTruthyCase", (name, conditionalChange) => {
+    processMetadata(truthyFalsyTruthyCase, metadata, object);
     expect(metadata.fields.taxType).toEqual(defaultChangesToApply);
-    expect(metadata.fields.documentType).toEqual(metadataDefault.fields.documentType);
+    expect(metadata.fields.documentType).toEqual(
+      metadataDefault.fields.documentType,
+    );
+    expect(metadata.fields.implicitField).toEqual(defaultChangesToApply);
   });
 
-    it("falsyTruthyCase", (name, conditionalChange) => {
-    processMetadata(falsyTruthyCase, metadata, object);
+  it("falsyTruthyFalsyCase", (name, conditionalChange) => {
+    processMetadata(falsyTruthyFalsyCase, metadata, object);
     expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);
     expect(metadata.fields.documentType).toEqual(defaultChangesToApply);
+    expect(metadata.fields.implicitField).toEqual(metadataDefault.fields.implicitField);
   });
 });

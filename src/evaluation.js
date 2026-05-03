@@ -1,6 +1,10 @@
 import { dependantToExclusiveKeys, exclusiveKeys } from "./constants.js";
 
 export function areConditionsMet(conditionalChange, object) {
+
+  /* Avalia após o pre processamento, incluso o processo de adicionar
+  o _field explícito, após detectado uso implícito */
+
   const keys = Object.keys(conditionalChange);
 
   const exclusiveKey = keys.find((key) => exclusiveKeys.includes(key));

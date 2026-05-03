@@ -27,9 +27,25 @@ const validCases = {
     hidden: true,
   },
 
-  valid_field_oneOf: {
+  valid_field_isIn: {
     _field: "tipo",
     _isIn: ["A", "B", "C"],
+    readonly: true,
+  },
+
+  valid_field_isNotIn: {
+    _field: "tipo",
+    _isNotIn: ["A", "B", "C"],
+    readonly: true,
+  },
+
+  valid_implicit_field_isNotIn: {
+    _isNotIn: ["status"],
+    readonly: true,
+  },
+
+  valid_implicit_field_isNot: {
+    _isNot: "status",
     readonly: true,
   },
 
@@ -88,6 +104,22 @@ const invalidCases = {
   invalid_oneOf_notArray: {
     _field: "status",
     _isIn: "A",
+  },
+
+  invalid_field_isNotIn: {
+    _field: "tipo",
+    _isNotIn: "status",
+    readonly: true,
+  },
+
+  invalid_implicit_field_isNotIn: {
+    _isNotIn: "status",
+    readonly: true,
+  },
+
+  invalid_implicit_field_isNot: {
+    _isNot: ["status"],
+    readonly: true,
   },
 
   // _fields sem condição
