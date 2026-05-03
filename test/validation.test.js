@@ -1,8 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { validateConditionalChange } from "../src/validation";
+import {
+  validateConditionalChange,
+  validateFieldsIdentifiers,
+} from "../src/validation";
 
 const validCases = {
-  
   valid_nothing: {},
 
   valid_onlyMetaProps: {
@@ -140,3 +142,100 @@ describe("Process metadata validation", () => {
   });
 });
 
+const metadataDefault = {
+  fields: {
+    taxType: {
+      readonly: false,
+      required: true,
+      hidden: false,
+      breakLine: true,
+      size: "sm",
+    },
+    documentType: {
+      readonly: false,
+      required: true,
+      hidden: false,
+      breakLine: true,
+      size: "sm",
+    },
+  },
+};
+
+const validIdentifierTransform = {
+  taxType: {
+    _field: "taxType",
+    _isIn: ["itbi", "iptu"],
+  },
+  documentType: {
+    _fields: ["taxType", "documentType"],
+    _are: ["iptu", "cpf"],
+  },
+};
+
+const invalidRootIdentifierTransform = {
+  taxType: {
+    _field: "taxType",
+    _isIn: ["itbi", "iptu"],
+  },
+  documentTypee: {
+    _fields: ["taxType", "documentType"],
+    _are: ["iptu", "cpf"],
+  },
+};
+
+const invalidFieldIdentifierTransform = {
+  taxType: {
+    _field: "taxTypee",
+    _isIn: ["itbi", "iptu"],
+  },
+  documentType: {
+    _fields: ["taxType", "documentType"],
+    _are: ["iptu", "cpf"],
+  },
+};
+
+const invalidFieldsIdentifierTransform = {
+  taxType: {
+    _field: "taxType",
+    _isIn: ["itbi", "iptu"],
+  },
+  documentType: {
+    _fields: ["taxTypee", "documentType"],
+    _are: ["iptu", "cpf"],
+  },
+};
+
+describe("Field identifiers validation", () => {
+  it("valid_identifier_transform", () => {
+    expect(() =>
+      validateFieldsIdentifiers(validIdentifierTransform, metadataDefault),
+    ).not.toThrow();
+  });
+
+  it("invalid_root_identifier_transform", () => {
+    expect(() =>
+      validateFieldsIdentifiers(
+        invalidRootIdentifierTransform,
+        metadataDefault,
+      ),
+    ).toThrow();
+  });
+
+  it("invalid_field_identifier_transform", () => {
+    expect(() =>
+      validateFieldsIdentifiers(
+        invalidFieldIdentifierTransform,
+        metadataDefault,
+      ),
+    ).toThrow();
+  });
+
+  it("invalid_fields_identifier_transform", () => {
+    expect(() =>
+      validateFieldsIdentifiers(
+        invalidFieldsIdentifierTransform,
+        metadataDefault,
+      ),
+    ).toThrow();
+  });
+});

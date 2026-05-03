@@ -34,6 +34,7 @@ type MetadataTransform = Record<string, UnitTransform>;
 // are poderia aceitar array de valores, ou { _not: valor }
 
 // Próximas funcionalidades:
+// * Validar fields keys 
 // * Composição através de _all, _any, _not (só vale pra )
 // * Açucar sintático "isNotIn"
 // * Quando field ausente, é considerando o próprio campo automaticamente

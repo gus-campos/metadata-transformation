@@ -7,12 +7,31 @@ import {
 } from "./constants.js";
 
 export function validateFieldsIdentifiers(metadataTransform, metadata) {
-  // TODO
-  // Chaves principais 
-  // Valor das chaves internas: _field, e cada um de _fields
-  // Validar tudo
-  // Rodar demais, não deve rodar de cara, só deve aparecer depois
-  // Se não seria mais complicado tratar
+
+  // TODO: Testar
+
+  const metadataFieldsIdentifiers = Object.keys(metadata.fields);
+
+  const transformRootIdentifiers = Object.keys(metadataTransform);
+
+  const fieldAndFieldsIdentifiers = transformRootIdentifiers.flatMap((rootKey) => {
+    const condChange = metadataTransform[rootKey];
+    return [condChange._field, ...(condChange._fields ?? [])].filter(Boolean);
+  });
+  
+  const allTransformKeys = [
+    ...transformRootIdentifiers,
+    ...fieldAndFieldsIdentifiers,
+  ];
+
+  const invalidFieldIdentifiers = allTransformKeys.filter(
+    (id) => !metadataFieldsIdentifiers.includes(id),
+  );
+
+  if (invalidFieldIdentifiers.length > 0)
+    throw new Error(
+      `Os seguintes identificadores foram usados mas não estão entre os campos do metadata: "${invalidFieldIdentifiers}"`,
+    );
 }
 
 export function validateMetadataTransform(metadataTransform) {

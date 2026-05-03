@@ -13,11 +13,11 @@ export function areConditionsMet(conditionalChange, object) {
       return evaluateFieldsCondition(conditionalChange, object);
 
     case "_if":
-      return evaluateRuleCondition(conditionalChange, object);
+      return evaluateIfCondition(conditionalChange, object);
   }
 }
 
-export function evaluateFieldsCondition(conditionalChange, object) {
+function evaluateFieldsCondition(conditionalChange, object) {
   const keys = Object.keys(conditionalChange);
   const dependantKey = keys.find((key) =>
     dependantToExclusiveKeys._fields.includes(key),
@@ -40,7 +40,7 @@ export function evaluateFieldsCondition(conditionalChange, object) {
   }
 }
 
-export function evaluateFieldCondition(conditionalChange, object) {
+function evaluateFieldCondition(conditionalChange, object) {
   const keys = Object.keys(conditionalChange);
   const dependantKey = keys.find((key) =>
     dependantToExclusiveKeys._field.includes(key),
@@ -63,7 +63,7 @@ export function evaluateFieldCondition(conditionalChange, object) {
   }
 }
 
-export function evaluateRuleCondition(conditionalChange, object) {
+function evaluateIfCondition(conditionalChange, object) {
   const checkIfRuleIsValid = conditionalChange._if;
   const predicateEvaluation = checkIfRuleIsValid(object);
   return !!predicateEvaluation; // força boolean

@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { processMetadata } from "../src/processing";
 
 const metadataDefault = {
-  _fields: {
+  fields: {
     taxType: {
       readonly: false,
       required: true,
@@ -65,14 +65,14 @@ describe("Process metadata evaluation", () => {
   });
 
   it("truthyFalsyCase", (name, conditionalChange) => {
-    processMetadata(metadata, truthyFalsyCase, object);
-    expect(metadata._fields.taxType).toEqual(defaultChangesToApply);
-    expect(metadata._fields.documentType).toEqual(metadataDefault._fields.documentType);
+    processMetadata(truthyFalsyCase, metadata, object);
+    expect(metadata.fields.taxType).toEqual(defaultChangesToApply);
+    expect(metadata.fields.documentType).toEqual(metadataDefault.fields.documentType);
   });
 
     it("falsyTruthyCase", (name, conditionalChange) => {
-    processMetadata(metadata, falsyTruthyCase, object);
-    expect(metadata._fields.taxType).toEqual(metadataDefault._fields.taxType);
-    expect(metadata._fields.documentType).toEqual(defaultChangesToApply);
+    processMetadata(falsyTruthyCase, metadata, object);
+    expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);
+    expect(metadata.fields.documentType).toEqual(defaultChangesToApply);
   });
 });

@@ -54,7 +54,7 @@ const metadataTransform = {
   },
 };
 
-processMetadata(_metadata, metadataTransform, _object);
+processMetadata(metadataTransform, _metadata, _object);
 
 console.log("\n\n");
 console.log(_metadata);
