@@ -6,13 +6,13 @@ type MetaProps = {
   size?: "sm" | "md" | "lg";
 };
 
-type Value = boolean | string | Date | null | { _not: Value };
+type Value = boolean | string | Date | null | { not: Value };
 
 type FieldId = { _field?: string }; // opcional -> se não passado, assume o próprio campo
 type FieldsIds = { _fields: string[] };
 
 type UnitCondition =
-  | (FieldId & { _is: Value }) 
+  | (FieldId & { _is: Value })
   | (FieldId & { _isNot: Value })
   | (FieldId & { _isIn: Value[] })
   | (FieldId & { _isNotIn: Value[] })
@@ -24,31 +24,78 @@ type Condition =
   | UnitCondition
   | { _all: Condition[] }
   | { _any: Condition[] }
-  | { _not: Condition }
+  | { _not: Condition };
 
-type ConditionalChange = UnitCondition & MetaProps;
+type ConditionalChange = Condition & MetaProps;
 type UnitTransform = MetaProps | ConditionalChange | ConditionalChange[];
 type MetadataTransform = Record<string, UnitTransform>;
 
+// function getDotPathValue(dotPath, object) {
+//   // validar path (se tem ponto, n pode ter no inicio nem fim)
+//   // Tem que existir no object
+//   const path = dotPath.split(".");
+//   // Recursivamente obter
+// }
 
-// are poderia aceitar array de valores, ou { _not: valor }
+const exemploA = {
+  nomeCampo: {
+    _all: [
+      {
+        _field: "campoA",
+        _is: true,
+      },
+      {
+        _field: "campoB",
+        _isNot: "verde",
+      },
+    ],
+    readonly: true,
+  },
+};
+
+const exemploB = {
+  nomeCampo: {
+    _fields: ["campoA", "campoB"],
+    _are: [true, { not: "verde" }],
+    readonly: true,
+  },
+};
+
+// Ou deveria ser cumulativo ???
+// Aplica todos que são satisfeitos na ordem? Ou só o primeiro?
+const exemploC = {
+  nomeCampo: [
+    {
+      _field: "campoA",
+      _is: "cpf",
+      hidden: false,
+    },
+    {
+      _field: "campoB",
+      _isNot: "iptu",
+      required: true,
+    },
+  ],
+};
 
 // Próximas funcionalidades:
-// * Composição através de _all, _any, _not (só vale pra )
-// * Possível passar caminhos (split(".")) ---- nem pensei que podia ser um campo... ?
-      // metadata vale assim?
-// * Incluir mais metaprops, com valueOptions  (internamente é dado push)
+// * Apenas no _are, além do valor, aceitar um "{ not: valor }" ou aceitar em todos 
+//    os valores por questão de padronização?
 // * Depois do nome do campo, é aceito um array de UnitTransform -> o primeiro truthy é aplicado
+// * Composição através de _all, _any, _not (só vale pra condições, não nome de campos)
+// * Possível passar caminhos (split(".")) ---- nem pensei que podia ser um campo... ?
+//    metadata vale assim?
+// * Incluir mais metaprops, como o valueOptions  (internamente é dado push)
 
 // Não será feito:
-// * Are aceitando condições em array -> usar _all:  
+// * Are aceitando condições em array -> usar _all:
 // * String fazendo operações entre campos -> usar _if
-// * Uso de "!" dentro do campo para indicar negação -> confuso, gambiarra, e não escalável 
-// * Funcionalidades adicionais -> usar _if, priorizar minimalismo, e aprendizado sobre funcionalismo 
+// * Uso de "!" dentro do campo para indicar negação -> confuso, gambiarra, e não escalável
+// * Funcionalidades adicionais -> usar _if, priorizar minimalismo, e aprendizado sobre funcionalismo
 // * Composição de condições que incluem _field ou _fields -> usar_if, baixa demanda, priorizar simplicidade.
-// * _is aceitando array -> usar _isIN, que é mais semântico e legível
+// * _is aceitando array -> usar _isIn, que é mais semântico e legível
 
 const example = {
   _fields: ["campoA", "campoB"],
-  _are: [{_is: "value1"}, { _isNotIs: ["value1", "value2"] }],
+  _are: [{ _is: "value1" }, { _isNot: ["value1", "value2"] }],
 };
