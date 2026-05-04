@@ -1,7 +1,7 @@
+import { getPathValueFromObject } from "./commom.js";
 import { dependantToExclusiveKeys, exclusiveKeys } from "./constants.js";
 
 export function areConditionsMet(conditionalChange, object) {
-
   /* Avalia após o pre processamento, incluso o processo de adicionar
   o _field explícito, após detectado uso implícito */
 
@@ -28,7 +28,7 @@ function evaluateFieldsCondition(conditionalChange, object) {
   );
 
   const fieldsValuesInObject = conditionalChange._fields.map(
-    (fieldKey) => object[fieldKey],
+    (fieldKey) => getValueFromObject(fieldKey, object),
   );
 
   switch (dependantKey) {
@@ -49,8 +49,8 @@ function evaluateFieldCondition(conditionalChange, object) {
   const dependantKey = keys.find((key) =>
     dependantToExclusiveKeys._field.includes(key),
   );
-
-  const fieldValueInObject = object[conditionalChange._field];
+  
+  const fieldValueInObject = getValueFromObject(conditionalChange._field, object);
 
   switch (dependantKey) {
     case "_is":
@@ -71,4 +71,13 @@ function evaluateIfCondition(conditionalChange, object) {
   const checkIfRuleIsValid = conditionalChange._if;
   const predicateEvaluation = checkIfRuleIsValid(object);
   return !!predicateEvaluation; // força boolean
+}
+
+function getValueFromObject(pathOrIdentifier, object) {
+  if (pathOrIdentifier.includes(".")) {
+    const pathArray = pathOrIdentifier.split(".");
+    return getPathValueFromObject(pathArray, object);
+  } else {
+    return object[pathOrIdentifier];
+  }
 }

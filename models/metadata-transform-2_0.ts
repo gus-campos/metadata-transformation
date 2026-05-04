@@ -6,7 +6,8 @@ type MetaProps = {
   size?: "sm" | "md" | "lg";
 };
 
-type Value = boolean | string | Date | null | { not: Value };
+type BaseValue = boolean | string | Date | null;
+type Value = BaseValue | { not: BaseValue };
 
 type FieldId = { _field?: string }; // opcional -> se não passado, assume o próprio campo
 type FieldsIds = { _fields: string[] };
@@ -18,7 +19,7 @@ type UnitCondition =
   | (FieldId & { _isNotIn: Value[] })
   | (FieldsIds & { _are: Value[] })
   | (FieldsIds & { _someIs: Value })
-  | { _if: (object: any) => boolean };
+  | { _if: (obj: any) => boolean };
 
 type Condition =
   | UnitCondition
@@ -79,13 +80,14 @@ const exemploC = {
 };
 
 // Próximas funcionalidades:
+// * Incluir mais metaprops, como o valueOptions  (internamente é dado push)
+
+// ===== Talvez seja demais =====
+// Talvez { not: "value" } seja demais, fugir do escopo e tal
 // * Apenas no _are, além do valor, aceitar um "{ not: valor }" ou aceitar em todos 
 //    os valores por questão de padronização?
-// * Depois do nome do campo, é aceito um array de UnitTransform -> o primeiro truthy é aplicado
+// Talvez só o lambda já ia melhorar mto a coisa
 // * Composição através de _all, _any, _not (só vale pra condições, não nome de campos)
-// * Possível passar caminhos (split(".")) ---- nem pensei que podia ser um campo... ?
-//    metadata vale assim?
-// * Incluir mais metaprops, como o valueOptions  (internamente é dado push)
 
 // Não será feito:
 // * Are aceitando condições em array -> usar _all:

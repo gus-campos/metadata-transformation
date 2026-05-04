@@ -1,3 +1,4 @@
+import { getPathValueFromObject } from "./commom.js";
 import {
   allValidKeys,
   booleanMetaProps,
@@ -6,7 +7,7 @@ import {
   sizeValidValues,
 } from "./constants.js";
 
-export function validateFieldsIdentifiers(metadataTransform, metadata) {
+export function validateFieldsIdentifiers(metadataTransform, metadata, object) {
   const metadataFieldsIdentifiers = Object.keys(metadata.fields);
 
   const transformRootIdentifiers = Object.keys(metadataTransform);
@@ -18,12 +19,22 @@ export function validateFieldsIdentifiers(metadataTransform, metadata) {
     },
   );
 
-  const allTransformKeys = [
+  const pathIdentifiers = fieldAndFieldsIdentifiers.filter(
+    (identifier) => identifier.includes("."),
+  );
+  
+  validatePathIdentifiers(pathIdentifiers, object);
+
+  const fieldAndFieldsSimpleIdentifiers = fieldAndFieldsIdentifiers.filter(
+    (identifier) => !identifier.includes("."),
+  );
+
+  const allSimpleIdentifiers = [
     ...transformRootIdentifiers,
-    ...fieldAndFieldsIdentifiers,
+    ...fieldAndFieldsSimpleIdentifiers,
   ];
 
-  const invalidFieldIdentifiers = allTransformKeys.filter(
+  const invalidFieldIdentifiers = allSimpleIdentifiers.filter(
     (id) => !metadataFieldsIdentifiers.includes(id),
   );
 
@@ -31,6 +42,19 @@ export function validateFieldsIdentifiers(metadataTransform, metadata) {
     throw new Error(
       `Os seguintes identificadores foram usados mas não estão entre os campos do metadata: "${invalidFieldIdentifiers}"`,
     );
+}
+
+function validatePathIdentifiers(pathIdentifiers, object) {
+
+  pathIdentifiers.forEach(identifier => {
+    
+    const pathArray = identifier.split(".");
+
+    const value = getPathValueFromObject(pathArray, object);
+
+    if (value === undefined)
+      throw new Error(`O caminho "${identifier}" não consta no objeto.`);
+  });
 }
 
 export function validateMetadataTransform(metadataTransform) {
@@ -58,9 +82,14 @@ export function validateConditionalChange(conditionalChange) {
 }
 
 function validateConditionalChangeHelper(conditionalChange) {
-  if (typeof conditionalChange !== "object") {
-    throw new Error("conditionalChange deve ser um objeto");
+
+  if (Array.isArray(conditionalChange)) {
+    conditionalChange.forEach(validateConditionalChangeHelper);
+    return;
   }
+
+  if (typeof conditionalChange !== "object")
+    throw new Error("conditionalChange deve ser um objeto ou array de objetos");
 
   const keys = Object.keys(conditionalChange);
 

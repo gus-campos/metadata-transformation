@@ -71,6 +71,18 @@ const validCases = {
     hidden: true,
     readonly: false,
   },
+
+  valid_array_of_conditions: [
+    {
+      _isNot: "status",
+      readonly: true,
+    },
+    {
+      _fields: ["status1", "status2"],
+      _someIs: "ativo",
+      hidden: true,
+    },
+  ],
 };
 
 // =========================
@@ -162,6 +174,18 @@ const invalidCases = {
     _if: () => true,
     _field: "status",
   },
+
+  invalid_array_of_conditions: [
+    {
+      _isNot: "status",
+      readonly: true,
+    },
+    {
+      _field: ["status1", "status2"], // errado
+      _someIs: "ativo",
+      hidden: true,
+    },
+  ],
 };
 
 describe("Process metadata validation", () => {
@@ -237,6 +261,37 @@ const invalidFieldsIdentifierTransform = {
   },
 };
 
+// Paths
+
+const obj = {
+  fieldA: {
+    fieldB: {
+      fieldC: "value",
+    },
+  },
+};
+
+const validPath = {
+  taxType: {
+    _field: "fieldA.fieldB",
+    _isIn: ["itbi", "iptu"],
+  },
+};
+
+const notFoundPath = {
+  taxType: {
+    _field: "fieldA.field",
+    _isIn: ["itbi", "iptu"],
+  },
+};
+
+const invalidPath = {
+  taxType: {
+    _field: "fieldA.",
+    _isIn: ["itbi", "iptu"],
+  },
+};
+
 describe("Field identifiers validation", () => {
   it("valid_identifier_transform", () => {
     expect(() =>
@@ -268,6 +323,26 @@ describe("Field identifiers validation", () => {
         invalidFieldsIdentifierTransform,
         metadataDefault,
       ),
+    ).toThrow();
+  });
+
+  ////////////////////////////
+
+  it("validPath", () => {
+    expect(() =>
+      validateFieldsIdentifiers(validPath, metadataDefault, obj),
+    ).not.toThrow();
+  });
+
+  it("notFoundPath", () => {
+    expect(() =>
+      validateFieldsIdentifiers(notFoundPath, metadataDefault, obj),
+    ).toThrow();
+  });
+
+  it("invalidPath", () => {
+    expect(() =>
+      validateFieldsIdentifiers(invalidPath, metadataDefault, obj),
     ).toThrow();
   });
 });

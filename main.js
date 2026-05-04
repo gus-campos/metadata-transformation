@@ -1,64 +1,82 @@
-import { processMetadata } from "./src/processing.js";
+// import { processMetadata } from "./src/processing.js";
 
-const _metadata = {
-  _fields: {
-    taxType: {
-      readonly: false,
-      required: false,
-      hidden: false,
-      breakLine: false,
-      size: "sm",
-    },
-    documentType: {
-      readonly: false,
-      required: false,
-      hidden: false,
-      breakLine: false,
-      size: "sm",
-    },
-    cep: {
-      readonly: false,
-      required: false,
-      hidden: false,
-      breakLine: false,
-      size: "sm",
-    },
-    adress: {
-      readonly: false,
-      required: false,
-      hidden: false,
-      breakLine: false,
-      size: "sm",
-    },
-  },
-};
+import { getPathValueFromObject } from "./src/commom.js";
 
-const _object = {
-  taxType: "iptu",
-  documentType: "cpf",
-  cep: "36000-000",
-  adress: "",
-};
+// const _metadata = {
+//   _fields: {
+//     taxType: {
+//       readonly: false,
+//       required: false,
+//       hidden: false,
+//       breakLine: false,
+//       size: "sm",
+//     },
+//     documentType: {
+//       readonly: false,
+//       required: false,
+//       hidden: false,
+//       breakLine: false,
+//       size: "sm",
+//     },
+//     cep: {
+//       readonly: false,
+//       required: false,
+//       hidden: false,
+//       breakLine: false,
+//       size: "sm",
+//     },
+//     adress: {
+//       readonly: false,
+//       required: false,
+//       hidden: false,
+//       breakLine: false,
+//       size: "sm",
+//     },
+//   },
+// };
 
-const metadataTransform = {
-  documentType: {
-    _field: "taxType",
-    _isIn: ["iptu", "itbi"],
-    hidden: true,
-    required: false,
-  },
-  adress: {
-    _if: (object) => isValidCep(object.cep),
-    readonly: true,
-    size: "lg",
-  },
-};
+// const _object = {
+//   taxType: "iptu",
+//   documentType: "cpf",
+//   cep: "36000-000",
+//   adress: "",
+// };
 
-processMetadata(metadataTransform, _metadata, _object);
+// const metadataTransform = {
+//   documentType: {
+//     _field: "taxType",
+//     _isIn: ["iptu", "itbi"],
+//     hidden: true,
+//     required: false,
+//   },
+//   adress: {
+//     _if: (object) => isValidCep(object.cep),
+//     readonly: true,
+//     size: "lg",
+//   },
+// };
 
-console.log("\n\n");
-console.log(_metadata);
+// processMetadata(metadataTransform, _metadata, _object);
 
-function isValidCep() {
-  return true;
+// console.log("\n\n");
+// console.log(_metadata);
+
+// function isValidCep() {
+//   return true;
+// }
+
+const obj = {
+  a: {
+    b: {
+      c: {
+        d: "AAA"
+      }
+    }
+  }
 }
+
+console.log("\n\n\n")
+
+const value = getPathValueFromObject(["b"], obj);
+
+console.log(value);

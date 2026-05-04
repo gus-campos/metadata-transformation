@@ -12,7 +12,7 @@ import {
 import { applyChange } from "./transformation.js";
 
 export function processMetadata(metadataTransform, metadata, object) {
-  preprocessConditionalChange(metadataTransform);
+  preprocessMetadataTransform(metadataTransform);
   validateFieldsIdentifiers(metadataTransform, metadata);
   validateMetadataTransform(metadataTransform, metadata);
 
@@ -20,7 +20,13 @@ export function processMetadata(metadataTransform, metadata, object) {
     metadataTransform,
   )) {
     const metadataField = metadata.fields[fieldIdentifier];
-    processConditionalChange(metadataField, conditionalChange, object);
+    if (Array.isArray(conditionalChange)) {
+      conditionalChange.forEach((unitConditionalChange) =>
+        processConditionalChange(metadataField, unitConditionalChange, object),
+      );
+    } else {
+      processConditionalChange(metadataField, conditionalChange, object);
+    }
   }
 }
 
@@ -44,27 +50,39 @@ function processConditionalChange(metadataField, conditionalChange, object) {
     applyChange(metadataField, conditionalChange);
 }
 
-function preprocessConditionalChange(metadataTransform) {
-
+function preprocessMetadataTransform(metadataTransform) {
+  
   for (const [fieldIdentifier, conditionalChange] of Object.entries(
-    metadataTransform
+    metadataTransform,
   )) {
-    const keys = Object.keys(conditionalChange);
 
-    
-    const exclusiveKeysIncluded = keys.filter((key) =>
-      exclusiveKeys.includes(key),
-    );
+    if (Array.isArray(conditionalChange)) {
+      conditionalChange.forEach((unitCondicionalChange) =>
+        preprocessConditionalChange(fieldIdentifier, unitCondicionalChange),
+      );
+      continue;
+    }
 
-    if (exclusiveKeysIncluded.length > 0) continue;
-
-    const keysDependantToFieldFound = keys.map((key) =>
-      dependantToExclusiveKeys._field.includes(key),
-    );
-
-    if (keysDependantToFieldFound.length === 0) continue;
-
-    // Usa field implicitamente, então incluir explicitamente
-    conditionalChange._field = fieldIdentifier;
+    preprocessConditionalChange(fieldIdentifier, conditionalChange);
   }
+}
+
+function preprocessConditionalChange(fieldIdentifier, conditionalChange) {
+  const keys = Object.keys(conditionalChange);
+  
+
+  const exclusiveKeysIncluded = keys.filter((key) =>
+    exclusiveKeys.includes(key),
+  );
+
+  if (exclusiveKeysIncluded.length > 0) return;
+
+  const keysDependantToFieldFound = keys.map((key) =>
+    dependantToExclusiveKeys._field.includes(key),
+  );
+
+  if (keysDependantToFieldFound.length === 0) return;
+
+  // Usa field implicitamente, então incluir explicitamente
+  conditionalChange._field = fieldIdentifier;
 }

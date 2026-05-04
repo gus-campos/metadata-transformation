@@ -30,7 +30,7 @@ const metadataDefault = {
 const object = {
   taxType: "iptu",
   documentType: "cpf",
-  implicitField: "auto"
+  implicitField: "auto",
 };
 
 const defaultChangesToApply = {
@@ -75,6 +75,21 @@ const falsyTruthyFalsyCase = {
   },
 };
 
+const array_of_conditions = {
+  documentType: [
+    {
+      _isNot: "cnpj",
+      readonly: true,
+    },
+    {
+      _field: "taxType", // errado
+      _isIn: ["iptu", "itbi"],
+      hidden: true,
+      size: "md"
+    },
+  ]
+}
+
 let metadata;
 
 describe("Process metadata evaluation", () => {
@@ -95,6 +110,21 @@ describe("Process metadata evaluation", () => {
     processMetadata(falsyTruthyFalsyCase, metadata, object);
     expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);
     expect(metadata.fields.documentType).toEqual(defaultChangesToApply);
-    expect(metadata.fields.implicitField).toEqual(metadataDefault.fields.implicitField);
+    expect(metadata.fields.implicitField).toEqual(
+      metadataDefault.fields.implicitField,
+    );
+  });
+
+
+    it("array_of_conditions", (name, conditionalChange) => {
+
+    processMetadata(array_of_conditions, metadata, object);
+    expect(metadata.fields.documentType).toEqual({
+      readonly: true,
+      required: true,
+      hidden: true,
+      breakLine: true,
+      size: "md",
+    });
   });
 });

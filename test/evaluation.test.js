@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { validateConditionalChange } from "../src/validation.js"
-import { areConditionsMet } from "../src/evaluation.js"
+import { validateConditionalChange } from "../src/validation.js";
+import { areConditionsMet } from "../src/evaluation.js";
 
 const object = {
   taxType: "iptu",
   documentType: "cpf",
+  complexField: {
+    innerField: {
+      innerMostField: "valid",
+    },
+  },
 };
 
 const truthyCases = {
@@ -31,6 +36,11 @@ const truthyCases = {
     _fields: ["taxType", "documentType"],
     _someIs: "iptu",
   },
+  // Path
+  truthyDocumentType: {
+    _field: "complexField.innerField.innerMostField",
+    _is: "valid",
+  },
 };
 
 const falsyCases = {
@@ -56,6 +66,10 @@ const falsyCases = {
   falsySomeIsEqual: {
     _fields: ["taxType", "documentType"],
     _someIs: "cnpj",
+  },
+  falsyDocumentType: {
+    _field: "complexField.innerField.innerMostField",
+    _is: "invalid",
   },
 };
 
