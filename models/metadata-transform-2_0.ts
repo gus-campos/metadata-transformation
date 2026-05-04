@@ -6,8 +6,7 @@ type MetaProps = {
   size?: "sm" | "md" | "lg";
 };
 
-type BaseValue = boolean | string | Date | null;
-type Value = BaseValue | { not: BaseValue };
+type Value = boolean | string | Date | null;
 
 type FieldId = { _field?: string }; // opcional -> se não passado, assume o próprio campo
 type FieldsIds = { _fields: string[] };
@@ -30,6 +29,34 @@ type Condition =
 type ConditionalChange = Condition & MetaProps;
 type UnitTransform = MetaProps | ConditionalChange | ConditionalChange[];
 type MetadataTransform = Record<string, UnitTransform>;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // function getDotPathValue(dotPath, object) {
 //   // validar path (se tem ponto, n pode ter no inicio nem fim)
@@ -79,7 +106,7 @@ const exemploC = {
   ],
 };
 
-// Próximas funcionalidades:
+// ===== Próximas funcionalidades =====
 // * Incluir mais metaprops, como o valueOptions  (internamente é dado push)
 
 // ===== Talvez seja demais =====
@@ -89,7 +116,7 @@ const exemploC = {
 // Talvez só o lambda já ia melhorar mto a coisa
 // * Composição através de _all, _any, _not (só vale pra condições, não nome de campos)
 
-// Não será feito:
+// ===== Não será feito =====
 // * Are aceitando condições em array -> usar _all:
 // * String fazendo operações entre campos -> usar _if
 // * Uso de "!" dentro do campo para indicar negação -> confuso, gambiarra, e não escalável
