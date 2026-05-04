@@ -1,82 +1,76 @@
-// import { processMetadata } from "./src/processing.js";
+import { processMetadata } from "./src/processing.js";
 
 import { getPathValueFromObject } from "./src/commom.js";
 
-// const _metadata = {
-//   _fields: {
-//     taxType: {
-//       readonly: false,
-//       required: false,
-//       hidden: false,
-//       breakLine: false,
-//       size: "sm",
-//     },
-//     documentType: {
-//       readonly: false,
-//       required: false,
-//       hidden: false,
-//       breakLine: false,
-//       size: "sm",
-//     },
-//     cep: {
-//       readonly: false,
-//       required: false,
-//       hidden: false,
-//       breakLine: false,
-//       size: "sm",
-//     },
-//     adress: {
-//       readonly: false,
-//       required: false,
-//       hidden: false,
-//       breakLine: false,
-//       size: "sm",
-//     },
-//   },
-// };
+const _metadata = {
+  fields: {
+    taxType: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+    documentType: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+    adress: {
+      readonly: false,
+      required: false,
+      hidden: false,
+      breakLine: false,
+      size: "sm",
+    },
+  },
+};
 
-// const _object = {
-//   taxType: "iptu",
-//   documentType: "cpf",
-//   cep: "36000-000",
-//   adress: "",
-// };
+const _object = {
+  taxType: "iptu",
+  documentType: "cpf",
+  adress: {
+    cep: "36000-000",
+    street: "",
+  },
+};
 
-// const metadataTransform = {
-//   documentType: {
-//     _field: "taxType",
-//     _isIn: ["iptu", "itbi"],
-//     hidden: true,
-//     required: false,
-//   },
-//   adress: {
-//     _if: (object) => isValidCep(object.cep),
-//     readonly: true,
-//     size: "lg",
-//   },
-// };
 
-// processMetadata(metadataTransform, _metadata, _object);
 
-// console.log("\n\n");
-// console.log(_metadata);
 
-// function isValidCep() {
-//   return true;
-// }
 
-const obj = {
-  a: {
-    b: {
-      c: {
-        d: "AAA"
-      }
-    }
-  }
-}
+///////////////////////////////////////////////////////////////
 
-console.log("\n\n\n")
+const metadataTransform = {
+  taxType: {
+    _is: null,
+    hidden: true,
+    required: false,
+  },
+  documentType: {
+    _field: "adress.cep",
+    _isNot: null,
+    hidden: true,
+    required: true,
+  },
+  adress: {
+    _if: (object) => true,
+    readonly: true,
+    size: "lg",
+  },
+};
 
-const value = getPathValueFromObject(["b"], obj);
+processMetadata(metadataTransform, _metadata, _object);
 
-console.log(value);
+///////////////////////////////////////////////////////////////
+
+
+
+
+
+console.log("\n\n");
+console.log(_metadata);
+
+console.log("\n\n\n");

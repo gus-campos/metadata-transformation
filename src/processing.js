@@ -13,8 +13,8 @@ import { applyChange } from "./transformation.js";
 
 export function processMetadata(metadataTransform, metadata, object) {
   preprocessMetadataTransform(metadataTransform);
-  validateFieldsIdentifiers(metadataTransform, metadata);
-  validateMetadataTransform(metadataTransform, metadata);
+  validateFieldsIdentifiers(metadataTransform, metadata, object);
+  validateMetadataTransform(metadataTransform);
 
   for (const [fieldIdentifier, conditionalChange] of Object.entries(
     metadataTransform,
