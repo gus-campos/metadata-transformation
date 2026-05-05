@@ -62,16 +62,17 @@ const metadataTransform = {
     required: false,
   },
   documentType: {
-    _field: "adress.cep",
+    _field: "adress",
     _isNot: null,
     hidden: true,
-    required: true,
+    required: false,
   },
   adress: {
     _if: (obj) => isValidCep(obj.cep),
     readonly: true,
     size: "lg",
   },
+  // Aplica todas que forem verdadeiras, em ordem
   propertyType: [
     {
       _field: "taxType",
@@ -84,6 +85,7 @@ const metadataTransform = {
       readonly: true,
     },
   ],
+  // Compara dois a dois
   cityIdentification: {
     _fields: ["propertyType", "documentType"],
     _are: ["urban", "cpf"],
