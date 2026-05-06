@@ -1,3 +1,4 @@
+
 // ================================== CONFIG ==================================
 
 // Behavior
@@ -73,33 +74,31 @@ const metadataTransform: MetadataTransform = {
   documentType: {
     _field: "adress",
     _isNot: null,
-    hidden: true,
-    required: false,
+    behavior: "omitted"
   },
   adress: {
     _if: (obj: any) => isValidCep(obj.cep),
-    readonly: true,
     size: "lg",
+    behavior: "displayed"
   },
   // Aplica todas que forem verdadeiras, em ordem
   propertyType: [
     {
       _field: "taxType",
       _is: null,
-      hidden: true,
+      hidden: false,
     },
     {
       _field: "taxType",
       _isIn: ["iptu", "itbi"],
-      readonly: true,
+      required: true,
     },
   ],
   // Compara dois a dois
   cityIdentification: {
     _fields: ["propertyType", "documentType"],
     _are: ["urban", "cpf"],
-    hidden: false,
-    required: true,
+    behavior: "mandatory"
   },
 };
 
