@@ -1,5 +1,8 @@
+//
 
-// ================================== CONFIG ==================================
+type Value = boolean | string | Date | null;
+
+// ================================== METADATA SET ==================================
 
 // Behavior
 
@@ -22,48 +25,70 @@ type LayoutConfig = {
 
 // Selection
 
-type Option = { value: string; identifier: string };
-type SelectionConfig = { options?: Option[] } | { query?: Object };
+type SelectOption = { value: string; identifier: string };
+type SelectionConfig = { options?: SelectOption[] } | { query?: Object };
 
 // Field
 
-type FieldConfig = BehaviorConfig & LayoutConfig & SelectionConfig;
+type MetadataConfig = BehaviorConfig & LayoutConfig & SelectionConfig;
 
-// ================================== CONDITIONS ==================================
+// ================================== VALUE SET ==================================
 
-type Value = boolean | string | Date | null;
+type ValueSet = { setValue: Value };
+
+// ================================== VALUE CONDITIONS ==================================
 
 type FieldId = { _field?: string };
 type FieldsIds = { _fields: string[] };
 
-type UnitCondition =
+type ValueCondition =
   | (FieldId & { _is: Value })
   | (FieldId & { _isNot: Value })
   | (FieldId & { _isIn: Value[] })
   | (FieldId & { _isNotIn: Value[] })
   | (FieldsIds & { _are: Value[] })
   | (FieldsIds & { _someIs: Value })
-  | { _if: (obj: any) => boolean };
+  
+type ValueCustomCondtion = { _if: (obj: any) => boolean };
 
-// type Condition =
+type UnitValueCondition = ValueCondition | ValueCustomCondtion;
+
+// type MetadataCondition =
 //   | UnitCondition
 //   | { _all: Condition[] }
 //   | { _any: Condition[] }
 //   | { _not: Condition };
 
-type ConditionalChange = UnitCondition & FieldConfig;
+// ================================== DRAFT CONDITIONS ==================================
 
-// ================================== TRANSFORM ==================================
+type ChangedCondition =
+  | { _fieldChanged?: string }
+  | { _someFieldChanged?: string[] };
 
-type UnitTransform = BehaviorConfig | ConditionalChange | ConditionalChange[];
-export type MetadataTransform = Record<string, UnitTransform>;
+// ================================== METADATA TRANSFORM ==================================
 
-// function getDotPathValue(dotPath, object) {
-//   // validar path (se tem ponto, n pode ter no inicio nem fim)
-//   // Tem que existir no object
-//   const path = dotPath.split(".");
-//   // Recursivamente obter
-// }
+type ConditionalMetadata = UnitValueCondition & MetadataConfig;
+
+type FieldMetadataTransform =
+  | BehaviorConfig
+  | ConditionalMetadata
+  | ConditionalMetadata[];
+
+export type MetadataTransform = Record<string, FieldMetadataTransform>;
+
+// ================================== DRAFT TRANSFORM ==================================
+
+type DraftCondition = UnitValueCondition | ChangedCondition;
+type ConditionalValueSet = DraftCondition & ValueSet;
+
+type FieldDraftTransform =
+  | ValueSet
+  | ConditionalValueSet
+  | ConditionalValueSet[];
+
+export type DraftTransform = Record<string, FieldDraftTransform>;
+
+// ======================================================================================
 
 const metadataTransform: MetadataTransform = {
   taxType: {
@@ -74,12 +99,12 @@ const metadataTransform: MetadataTransform = {
   documentType: {
     _field: "adress",
     _isNot: null,
-    behavior: "omitted"
+    behavior: "omitted",
   },
   adress: {
     _if: (obj: any) => isValidCep(obj.cep),
     size: "lg",
-    behavior: "displayed"
+    behavior: "displayed",
   },
   // Aplica todas que forem verdadeiras, em ordem
   propertyType: [
@@ -98,7 +123,7 @@ const metadataTransform: MetadataTransform = {
   cityIdentification: {
     _fields: ["propertyType", "documentType"],
     _are: ["urban", "cpf"],
-    behavior: "mandatory"
+    behavior: "mandatory",
   },
 };
 
