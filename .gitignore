@@ -1,2 +1,3 @@
 **/old-example.js
 examples/transform-example.js
+**/node_modules/**

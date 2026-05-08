@@ -12,7 +12,7 @@ export const sizeValidValues = ["sm", "md", "lg"];
 
 export const exclusiveKeys = ["_field", "_fields", "_if"];
 
-export const dependantToExclusiveKeys = {
+export const dependantToExclusiveKeys: Record<string, string[]> = {
   _field: ["_is", "_isNot", "_isIn", "_isNotIn"],
   _fields: ["_are", "_someIs"],
   _if: [],

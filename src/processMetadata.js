@@ -4,7 +4,7 @@ import {
   exclusiveKeys,
   metaPropsKeys,
 } from "./constants.js";
-import { areConditionsMet } from "./evaluation.js";
+import { areMetadataConditionsMet } from "./evaluation.js";
 import {
   validateFieldsIdentifiers,
   validateMetadataTransform,
@@ -46,7 +46,7 @@ function processConditionalChange(metadataField, conditionalChange, object) {
     applyChange(metadataFields, conditionalChange);
 
   // com propriedades e condições -> avalia pra aplicar
-  if (areConditionsMet(conditionalChange, object))
+  if (areMetadataConditionsMet(conditionalChange, object))
     applyChange(metadataField, conditionalChange);
 }
 
