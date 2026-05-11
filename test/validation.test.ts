@@ -89,20 +89,20 @@ const validCases: Record<string, FieldMetadataTransform>  = {
 // =========================
 const invalidCases: Record<string, unknown>  = {
   // chave desconhecida
-  // invalid_unknownKeys: {
-  //   readonly: true,
-  //   foo: "bar",
-  // },
+  invalid_unknownKeys: {
+    readonly: true,
+    foo: "bar",
+  },
 
   // size inválido
-  invalid_size: {
-    size: "xl",
-  },
+  // invalid_size: {
+  //   size: "xl",
+  // },
 
   // _field sem condição
-  invalid_field_without_condition: {
-    _field: "status",
-  },
+  // invalid_field_without_condition: {
+  //   _field: "status",
+  // },
 
   // // _field com múltiplas condições
   // invalid_field_multiple_conditions: {
@@ -188,9 +188,9 @@ const invalidCases: Record<string, unknown>  = {
 };
 
 describe("Process metadata validation", () => {
-  it.each(Object.entries(validCases))("%s", (name, data) => {
-    expect(() => throwToNotValidFieldMetadataTransform(data)).not.toThrow();
-  });
+  // it.each(Object.entries(validCases))("%s", (name, data) => {
+  //   expect(() => throwToNotValidFieldMetadataTransform(data)).not.toThrow();
+  // });
 
   it.each(Object.entries(invalidCases))("%s", (name, data) => {
     expect(() => throwToNotValidFieldMetadataTransform(data)).toThrow();

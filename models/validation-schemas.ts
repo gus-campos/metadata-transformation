@@ -1,56 +1,74 @@
 import { z } from "zod";
+import { strictAndHelper } from "../src/utils/flatten-union";
 
 // Behavior
 
-const schema_behavior = z.object({
-  behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]),
-});
+const schema_behavior = z
+  .object({
+    behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]),
+  })
+  .strict();
 
-const schema_behaviorProps = z.object({
-  readonly: z.boolean().optional(),
-  required: z.boolean().optional(),
-  hidden: z.boolean().optional(),
-});
+const schema_behaviorProps = z
+  .object({
+    readonly: z.boolean().optional(),
+    required: z.boolean().optional(),
+    hidden: z.boolean().optional(),
+  })
+  .strict();
 
 const schema_behaviorConfig = z.union([schema_behavior, schema_behaviorProps]);
 
 // Layout
 
-const schema_layoutConfig = z.object({
-  breakLine: z.boolean().optional(),
-  size: z.enum(["sm", "md", "lg"]).optional(),
-});
+const schema_layoutConfig = z
+  .object({
+    breakLine: z.boolean().optional(),
+    size: z.enum(["sm", "md", "lg"]).optional(),
+  })
+  .strict();
 
 // Selection
 
-const schema_selectOption = z.object({
-  value: z.string(),
-  identifier: z.string(),
-});
+const schema_selectOption = z
+  .object({
+    value: z.string(),
+    identifier: z.string(),
+  })
+  .strict();
 
-const schema_selectOptions = z.object({
-  options: z.array(schema_selectOption).optional(),
-});
+const schema_selectOptions = z
+  .object({
+    options: z.array(schema_selectOption).optional(),
+  })
+  .strict();
 
-const schema_selectQuery = z.object({
-  query: z.unknown().optional(),
-});
+const schema_selectQuery = z
+  .object({
+    query: z.unknown().optional(),
+  })
+  .strict();
 
-const schema_selectionConfig = z.object({
-  ...schema_selectOptions.shape,
-  ...schema_selectQuery.shape,
-});
+const schema_selectionConfig = z
+  .object({
+    ...schema_selectOptions.shape,
+    ...schema_selectQuery.shape,
+  })
+  .strict();
 
 // Field
 
-const schema_metadataProps = z.object({
-  ...schema_behaviorProps.required().shape,
-  ...schema_layoutConfig.required().shape,
-  options: z.array(schema_selectOption),
-  query: z.unknown(),
-});
+const schema_metadataProps = z
+  .object({
+    ...schema_behaviorProps.required().shape,
+    ...schema_layoutConfig.required().shape,
+    options: z.array(schema_selectOption),
+    query: z.unknown(),
+  })
+  .strict();
 
-const schema_metadataConfig = schema_behaviorConfig.and(
+const schema_metadataConfig = strictAndHelper(
+  schema_behaviorConfig,
   z.object({
     ...schema_layoutConfig.shape,
     ...schema_selectionConfig.shape,
@@ -67,52 +85,70 @@ const schema_instanceObject: z.ZodType<unknown> = z.lazy(() =>
 
 // Fields
 
-const schema_fieldId = z.object({
-  _field: z.string().optional(),
-});
+const schema_fieldId = z
+  .object({
+    _field: z.string().optional(),
+  })
+  .strict();
 
-const schema_fieldsIds = z.object({
-  _fields: z.array(z.string()),
-});
+const schema_fieldsIds = z
+  .object({
+    _fields: z.array(z.string()),
+  })
+  .strict();
 
 // Conditions
 
-const schema_valueConditionIs = z.object({
-  ...schema_fieldId.shape,
-  _is: schema_value,
-});
+const schema_valueConditionIs = z
+  .object({
+    ...schema_fieldId.shape,
+    _is: schema_value,
+  })
+  .strict();
 
-const schema_valueConditionIsNot = z.object({
-  ...schema_fieldId.shape,
-  _isNot: schema_value,
-});
+const schema_valueConditionIsNot = z
+  .object({
+    ...schema_fieldId.shape,
+    _isNot: schema_value,
+  })
+  .strict();
 
-const schema_valueConditionIsIn = z.object({
-  ...schema_fieldId.shape,
-  _isIn: z.array(schema_value),
-});
+const schema_valueConditionIsIn = z
+  .object({
+    ...schema_fieldId.shape,
+    _isIn: z.array(schema_value),
+  })
+  .strict();
 
-const schema_valueConditionIsNotIn = z.object({
-  ...schema_fieldId.shape,
-  _isNotIn: z.array(schema_value),
-});
+const schema_valueConditionIsNotIn = z
+  .object({
+    ...schema_fieldId.shape,
+    _isNotIn: z.array(schema_value),
+  })
+  .strict();
 
-const schema_valueConditionAre = z.object({
-  ...schema_fieldsIds.shape,
-  _are: z.array(schema_value),
-});
+const schema_valueConditionAre = z
+  .object({
+    ...schema_fieldsIds.shape,
+    _are: z.array(schema_value),
+  })
+  .strict();
 
-const schema_valueConditionSomeIs = z.object({
-  ...schema_fieldsIds.shape,
-  _someIs: schema_value,
-});
+const schema_valueConditionSomeIs = z
+  .object({
+    ...schema_fieldsIds.shape,
+    _someIs: schema_value,
+  })
+  .strict();
 
-const schema_valueConditionIf = z.object({
-  _if: z.function({
-    input: z.tuple([schema_instanceObject]),
-    output: z.boolean(),
-  }),
-});
+const schema_valueConditionIf = z
+  .object({
+    _if: z.function({
+      input: z.tuple([schema_instanceObject]),
+      output: z.boolean(),
+    }),
+  })
+  .strict();
 
 // Condition
 
@@ -139,14 +175,16 @@ const schema_composedValueCondition: z.ZodType<unknown> = z.lazy(() =>
 );
 
 const schema_unitChangedCondition = z.union([
-  z.object({ _fieldChanged: z.string().optional() }),
-  z.object({ _someFieldChanged: z.array(z.string()).optional() }),
-  z.object({
-    _if: z.function({
-      input: z.tuple([schema_instanceObject, schema_instanceObject]),
-      output: z.boolean(),
-    }),
-  }),
+  z.object({ _fieldChanged: z.string().optional() }).strict(),
+  z.object({ _someFieldChanged: z.array(z.string()).optional() }).strict(),
+  z
+    .object({
+      _if: z.function({
+        input: z.tuple([schema_instanceObject, schema_instanceObject]),
+        output: z.boolean(),
+      }),
+    })
+    .strict(),
 ]);
 
 const schema_unitDraftCondition = z.union([
@@ -154,12 +192,16 @@ const schema_unitDraftCondition = z.union([
   schema_unitValueCondition,
 ]);
 
-const schema_draftConfig = z.object({
-  setValue: schema_value,
-});
+const schema_draftConfig = z
+  .object({
+    setValue: schema_value,
+  })
+  .strict();
 
-const schema_conditionalValueSet =
-  schema_unitDraftCondition.and(schema_draftConfig);
+const schema_conditionalValueSet = strictAndHelper(
+  schema_unitDraftCondition,
+  schema_draftConfig,
+);
 
 const schema_fieldDraftTransform = z.union([
   schema_draftConfig,
@@ -169,10 +211,10 @@ const schema_fieldDraftTransform = z.union([
 
 const schema_unitMetadataCondition = schema_unitValueCondition;
 
-
 // Interface expota
 
-const schema_conditionalMetadata = schema_unitMetadataCondition.and(
+const schema_conditionalMetadata = strictAndHelper(
+  schema_unitMetadataCondition,
   schema_metadataConfig,
 );
 
@@ -187,9 +229,11 @@ export const schema_metadataTransform = z.record(
   schema_fieldMetadataTransform,
 );
 
-export const schema_metadata = z.object({
-  fields: z.record(z.string(), schema_metadataProps),
-});
+export const schema_metadata = z
+  .object({
+    fields: z.record(z.string(), schema_metadataProps),
+  })
+  .strict();
 
 export const schema_draftTransform = z.record(
   z.string(),

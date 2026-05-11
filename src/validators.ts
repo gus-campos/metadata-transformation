@@ -1,7 +1,7 @@
 
 import { Metadata } from "../models/common";
 import { DraftTransform } from "../models/draft-transform";
-import { MetadataTransform } from "../models/metadata-transform";
+import { FieldMetadataTransform, MetadataTransform } from "../models/metadata-transform";
 import {
   schema_draftTransform,
   schema_fieldMetadataTransform,
@@ -18,27 +18,27 @@ import {
 export function throwToNotValidMetadataTransform(
   candidate: unknown,
 ): candidate is MetadataTransform {
-  const result = schema_metadataTransform.parse(candidate);
+  schema_metadataTransform.parse(candidate);
   return true;
 }
 
 export function throwToNotValidDraftTransform(
   candidate: unknown,
 ): candidate is DraftTransform {
-  const result = schema_draftTransform.parse(candidate);
+  schema_draftTransform.parse(candidate);
   return true;
 }
 
 export function throwToNotValidMetadata(
   candidate: unknown,
 ): candidate is Metadata {
-  const result = schema_metadata.parse(candidate);
+  schema_metadata.parse(candidate);
   return true;
 }
 
 export function throwToNotValidFieldMetadataTransform(
   candidate: unknown,
-): candidate is Metadata {
-  const result = schema_fieldMetadataTransform.parse(candidate);
+): candidate is FieldMetadataTransform {
+  schema_fieldMetadataTransform.parse(candidate);
   return true;
 }
