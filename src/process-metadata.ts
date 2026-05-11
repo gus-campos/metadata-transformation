@@ -1,91 +1,169 @@
+import { InstanceObject, Metadata } from "../models/commom";
 import {
   Behavior,
   BehaviorConfig,
   BehaviorProps,
-  FieldMetadataTransform,
-  InstanceObject,
   LayoutConfig,
-  Metadata,
   MetadataConfig,
-  MetadataTransform,
   SelectionConfig,
-  UnitMetadataCondition
+} from "../models/metadata-config";
+import {
+  ConditionalMetadata,
+  FieldMetadataTransform,
+  MetadataTransform,
+  UnitMetadataCondition,
 } from "../models/metadata-transform";
+import { checkValueCondition } from "./check-value-condition";
+import { conditionalValuekeys, metadataConfigKeys } from "./constants";
+import { typedAssignValueToObject } from "./utils/extra";
+import { throwToNotValidMetadataTransform } from "./validators";
 
-// processMetadata
+let _object: InstanceObject;
+let _metadata: Metadata;
 
-// 	<iterar>
-// 	MetadataTransform
+export function transformMetadata(
+  metadata: Metadata,
+  object: InstanceObject,
+  metadataTransform: unknown,
+) {
+  _metadata = metadata;
+  _object = object;
 
-// 		<avaliar root>
-// 		FieldMetadataTransform -> evaluate
+  // Internamente lança erro se não for
+  if (throwToNotValidMetadataTransform(metadataTransform))
+    transformValidatedMetadata(metadata, object, metadataTransform);
+}
 
-// 			<decidir e avaliar>
-// 			BehaviorConfig
-// 			ConditionalMetadata[]
-// 			ConditionalMetadata
-
-// 				<avaliar, decidir aplicação e aplicar>
-// 				UnitValueCondition
-// 				MetadataConfig
-
-let object: InstanceObject;
-let metadata: Metadata;
-
-function processMetadata(
+export function transformValidatedMetadata(
   metadata: Metadata,
   object: InstanceObject,
   metadataTransform: MetadataTransform,
 ) {
-  // set globals
-  // iterar para cada campo (entrada)
-  // chamar processFieldTransform
+  _metadata = metadata;
+  _object = object;
+
+  // espera que campos estejam validadosestar validado
+  for (const [fieldIdentifier, fieldTransform] of Object.entries(
+    metadataTransform,
+  )) {
+    processFieldTransform(fieldIdentifier, fieldTransform);
+  }
 }
 
-function processFieldTransform(fieldTransform: FieldMetadataTransform) {
-  // se não tiver condição, aplicar
-  // se for único, avaliar e aplicar
-  // se for múltiplo, avaliar cada um
-    // se não tiver condição, aplicar
-    // do contrário avaliar e aplicar
+function processFieldTransform(
+  fieldIdentifier: string,
+  fieldTransform: FieldMetadataTransform,
+) {
+  if (Array.isArray(fieldTransform)) {
+    const conditionalMetadata: ConditionalMetadata[] = fieldTransform;
+
+    for (const unitMetadataTransform of conditionalMetadata)
+      processFieldTransform(fieldIdentifier, unitMetadataTransform);
+    return;
+  }
+
+  if (conditionalValuekeys.some((key) => key in fieldTransform)) {
+    const conditionalMetadata = fieldTransform as ConditionalMetadata;
+
+    if (checkMetadataCondition(conditionalMetadata))
+      applyMetadataConfig(fieldIdentifier, fieldTransform);
+    return;
+  }
+
+  const metadataConfig: MetadataConfig = fieldTransform;
+  applyMetadataConfig(fieldIdentifier, metadataConfig);
 }
 
-function checkMetadataCondition(unitCondition: UnitMetadataCondition) {
-  // Só chama isValueConditionMet
-  // deixa flexível pra mudança
+function checkMetadataCondition(unitCondition: UnitMetadataCondition): boolean {
+  // Inútil por enquanto, mas deixa flexível para 
+  // considerar condição composta futuramente
+  return checkValueCondition(unitCondition, _object);
 }
 
-function applyMetadataConfig(unitCondition: MetadataConfig) {
-  // verificar qual o formato
-  // aplicar
+function applyMetadataConfig(
+  fieldIdentifier: string,
+  metadataConfig: MetadataConfig,
+) {
+  if (metadataConfigKeys.behavior.some((key) => key in metadataConfig)) {
+    const behaviorConfig = metadataConfig as Behavior;
+    applyBehavior(fieldIdentifier, behaviorConfig);
+  }
+
+  if (metadataConfigKeys.behaviorProps.some((key) => key in metadataConfig)) {
+    const behaviorProps = metadataConfig as BehaviorProps;
+    applyBehaviorProps(fieldIdentifier, behaviorProps);
+  }
+
+  if (metadataConfigKeys.layoutConfig.some((key) => key in metadataConfig)) {
+    const layoutConfig = metadataConfig as LayoutConfig;
+    applyLayoutConfig(fieldIdentifier, layoutConfig);
+  }
+
+  if (metadataConfigKeys.selectionConfig.some((key) => key in metadataConfig)) {
+    const SelectionConfig = metadataConfig as SelectionConfig;
+    applySelectionConfig(fieldIdentifier, SelectionConfig);
+  }
 }
 
-function applyBehaviorConfig(behaviorConfig: BehaviorConfig) {
-  // Decidir se 
-  // applyBehavior
-  // applyBehaviorProps
+function applyBehavior(
+  fieldIdentifier: string,
+  behaviorConfig: BehaviorConfig,
+) {
+  if ("behavior" in behaviorConfig) {
+    applyBehavior(fieldIdentifier, behaviorConfig);
+    return;
+  }
+
+  applyBehaviorProps(fieldIdentifier, behaviorConfig);
 }
 
-function applyBehavior(behavior: Behavior) {
+function applyBehaviorProps(
+  fieldIdentifier: string,
+  behaviorProps: BehaviorProps,
+) {
+  const fieldMetadata = _metadata.fields[fieldIdentifier];
+  const keys = metadataConfigKeys.behaviorProps as (keyof BehaviorProps)[];
 
-  // criar constante com as props pra cada behavior
-  // fazer switch
-  // chamar applyBehaviorProps
+  for (const behaviorPropKey of keys) {
+    const value = behaviorProps[behaviorPropKey];
+    if (value === undefined) continue;
+    fieldMetadata[behaviorPropKey] = value;
+  }
 }
 
-function applyBehaviorProps(optionsConfig: BehaviorProps) {
-  
-  // setar props
+function applySelectionConfig(
+  fieldIdentifier: string,
+  selectionConfig: SelectionConfig,
+) {
+  const fieldMetadata = _metadata.fields[fieldIdentifier];
+
+  if ("query" in selectionConfig && selectionConfig.query) {
+    // FIXME: if (!fieldMetadata.classRef) throw
+
+    fieldMetadata.query = selectionConfig.query;
+  }
+
+  // Remove todos itens e adiciona novos (este array não pode ser reatribuído)
+  if ("options" in selectionConfig && selectionConfig.options) {
+    // FIXME: if (fieldMetadata.classRef) throw
+    fieldMetadata.options.splice(
+      0,
+      fieldMetadata.options.length,
+      ...selectionConfig.options,
+    );
+  }
 }
 
-function applySelectionConfig(optionsConfig: SelectionConfig) {
-  // verificar se query ou value options
-  // validar se é permitido (exemplo: se for ref não pode setar options)
-  // se for text não pode query
-  // push e splice em value options
-}
+function applyLayoutConfig(
+  fieldIdentifier: string,
+  layoutConfig: LayoutConfig,
+) {
+  const fieldMetadata = _metadata.fields[fieldIdentifier];
+  const layoutkeys = metadataConfigKeys.layoutConfig as (keyof LayoutConfig)[];
 
-function applyLayoutConfig(optionsConfig: LayoutConfig) {
- 
-  // setar props
+  for (const layoutKey of layoutkeys) {
+    const value = layoutConfig[layoutKey];
+    if (value === undefined) continue;
+    typedAssignValueToObject(fieldMetadata, layoutKey, value);
+  }
 }
