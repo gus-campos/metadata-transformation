@@ -1,7 +1,10 @@
-
+import { ZodAny, ZodType } from "zod";
 import { Metadata } from "../models/common";
 import { DraftTransform } from "../models/draft-transform";
-import { FieldMetadataTransform, MetadataTransform } from "../models/metadata-transform";
+import {
+  FieldMetadataTransform,
+  MetadataTransform,
+} from "../models/metadata-transform";
 import {
   schema_draftTransform,
   schema_fieldMetadataTransform,
@@ -18,27 +21,36 @@ import {
 export function throwToNotValidMetadataTransform(
   candidate: unknown,
 ): candidate is MetadataTransform {
-  schema_metadataTransform.parse(candidate);
+  validateCandidateWithSchema(schema_metadataTransform, candidate);
   return true;
 }
 
 export function throwToNotValidDraftTransform(
   candidate: unknown,
 ): candidate is DraftTransform {
-  schema_draftTransform.parse(candidate);
+  validateCandidateWithSchema(schema_draftTransform, candidate);
   return true;
 }
 
 export function throwToNotValidMetadata(
   candidate: unknown,
 ): candidate is Metadata {
-  schema_metadata.parse(candidate);
+  validateCandidateWithSchema(schema_metadata, candidate);
   return true;
 }
 
 export function throwToNotValidFieldMetadataTransform(
   candidate: unknown,
 ): candidate is FieldMetadataTransform {
-  schema_fieldMetadataTransform.parse(candidate);
+  validateCandidateWithSchema(schema_fieldMetadataTransform, candidate);
   return true;
+}
+
+function validateCandidateWithSchema(schema: ZodType<any>, candidate: unknown) {
+  const result = schema.safeParse(candidate);
+  if (!result.success) {
+    const issue = result.error.issues[0];
+    const message = issue.message + `, em: "${issue.input}"`;
+    throw new Error(message);
+  }
 }

@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 
-import { ConditionalMetadata, FieldMetadataTransform } from "../models/metadata-transform";
+import { FieldMetadataTransform } from "../models/metadata-transform";
 import { throwToNotValidFieldMetadataTransform } from "../src/validators";
 
-const validCases: Record<string, FieldMetadataTransform>  = {
+const validCases: Record<string, FieldMetadataTransform> = {
   valid_nothing: {},
 
   valid_onlyMetaProps: {
@@ -87,7 +87,7 @@ const validCases: Record<string, FieldMetadataTransform>  = {
 // =========================
 // NEGATIVOS (inválidos)
 // =========================
-const invalidCases: Record<string, unknown>  = {
+const invalidCases: Record<string, unknown> = {
   // chave desconhecida
   invalid_unknownKeys: {
     readonly: true,
@@ -95,105 +95,119 @@ const invalidCases: Record<string, unknown>  = {
   },
 
   // size inválido
-  // invalid_size: {
-  //   size: "xl",
-  // },
+  invalid_size: {
+    size: "xl",
+  },
 
   // _field sem condição
-  // invalid_field_without_condition: {
-  //   _field: "status",
-  // },
+  invalid_field_without_condition: {
+    _field: "status",
+  },
 
-  // // _field com múltiplas condições
-  // invalid_field_multiple_conditions: {
-  //   _field: "status",
-  //   _is: "A",
-  //   _isIn: ["A", "B"],
-  // },
+  // _field com múltiplas condições
+  invalid_field_multiple_conditions: {
+    _field: "status",
+    _is: "A",
+    _isIn: ["A", "B"],
+  },
 
-  // // _isIn não é array
-  // invalid_oneOf_notArray: {
-  //   _field: "status",
-  //   _isIn: "A",
-  // },
+  // _isIn não é array
+  invalid_oneOf_notArray: {
+    _field: "status",
+    _isIn: "A",
+  },
 
-  // invalid_field_isNotIn: {
-  //   _field: "tipo",
-  //   _isNotIn: "status",
-  //   readonly: true,
-  // },
+  invalid_field_isNotIn: {
+    _field: "tipo",
+    _isNotIn: "status",
+    readonly: true,
+  },
 
-  // invalid_implicit_field_isNotIn: {
-  //   _isNotIn: "status",
-  //   readonly: true,
-  // },
+  invalid_implicit_field_isNotIn: {
+    _isNotIn: "status",
+    readonly: true,
+  },
 
-  // invalid_implicit_field_isNot: {
-  //   _isNot: ["status"],
-  //   readonly: true,
-  // },
+  invalid_implicit_field_isNot: {
+    _isNot: ["status"],
+    readonly: true,
+  },
 
-  // // _fields sem condição
-  // invalid_fields_without_condition: {
-  //   _fields: ["a", "b"],
-  // },
+  // _fields sem condição
+  invalid_fields_without_condition: {
+    _fields: ["a", "b"],
+  },
 
-  // // _fields com múltiplas condições
-  // invalid_fields_multiple_conditions: {
-  //   _fields: ["a", "b"],
-  //   _someIs: "A",
-  //   _are: ["A", "B"],
-  // },
+  // _fields com múltiplas condições
+  invalid_fields_multiple_conditions: {
+    _fields: ["a", "b"],
+    _someIs: "A",
+    _are: ["A", "B"],
+  },
 
-  // // _are não é array
-  // invalid_equalsPairwise_notArray: {
-  //   _fields: ["a", "b"],
-  //   _are: "A",
-  // },
+  // _are não é array
+  invalid_equalsPairwise_notArray: {
+    _fields: ["a", "b"],
+    _are: "A",
+  },
 
-  // // tamanho diferente de _fields
-  // invalid_equalsPairwise_wrong_length: {
-  //   _fields: ["a", "b"],
-  //   _are: ["A"],
-  // },
+  // tamanho diferente de _fields
+  invalid_equalsPairwise_wrong_length: {
+    _fields: ["a", "b"],
+    _are: ["A"],
+  },
 
-  // // _someIs tipo inválido (array em vez de valor)
-  // invalid_someIsEqual_type: {
-  //   _fields: ["a", "b"],
-  //   _someIs: ["A"],
-  // },
+  // _someIs tipo inválido (array em vez de valor)
+  invalid_someIsEqual_type: {
+    _fields: ["a", "b"],
+    _someIs: ["A"],
+  },
 
-  // // _if não é função
-  // invalid_rule_notFunction: {
-  //   _if: true,
-  // },
+  // _if não é função
+  invalid_rule_notFunction: {
+    _if: true,
+  },
 
-  // // mistura _if com _field
-  // invalid_rule_with_field: {
-  //   _if: () => true,
-  //   _field: "status",
-  // },
+  // mistura _if com _field
+  invalid_rule_with_field: {
+    _if: () => true,
+    _field: "status",
+  },
 
-  // invalid_array_of_conditions: [
-  //   {
-  //     _isNot: "status",
-  //     readonly: true,
-  //   },
-  //   {
-  //     _field: ["status1", "status2"], // errado
-  //     _someIs: "ativo",
-  //     hidden: true,
-  //   },
-  // ],
+  invalid_array_of_conditions: [
+    {
+      _isNot: "status",
+      readonly: true,
+    },
+    {
+      _field: ["status1", "status2"], // errado
+      _someIs: "ativo",
+      hidden: true,
+    },
+  ],
 };
 
 describe("Process metadata validation", () => {
-  // it.each(Object.entries(validCases))("%s", (name, data) => {
-  //   expect(() => throwToNotValidFieldMetadataTransform(data)).not.toThrow();
-  // });
+  it.each(Object.entries(validCases))("%s", (name, data) => {
+    expect(() => {
+      try {
+        throwToNotValidFieldMetadataTransform(data);
+      } catch (e) {
+        console.log((e as any)?.message ?? "");
+        throw e;
+      }
+    }).toThrow();
+  });
 
   it.each(Object.entries(invalidCases))("%s", (name, data) => {
-    expect(() => throwToNotValidFieldMetadataTransform(data)).toThrow();
+    expect(() => {
+      try {
+        throwToNotValidFieldMetadataTransform(data);
+      } catch (e) {
+        console.log((e as any)?.message ?? "");
+        throw e;
+      }
+    }).toThrow();
   });
 });
 
