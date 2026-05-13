@@ -1,3 +1,3 @@
-import { Value } from "./commom";
+import { Value } from "./common";
 
 export type DraftConfig = { setValue: Value };

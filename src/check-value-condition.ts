@@ -1,4 +1,4 @@
-import { InstanceObject, Value } from "../models/commom";
+import { InstanceObject, Value } from "./models/common";
 import {
   UnitValueCondition,
   ValueConditionAre,
@@ -8,7 +8,7 @@ import {
   ValueConditionIsNot,
   ValueConditionIsNotIn,
   ValueConditionSomeIs,
-} from "../models/value-condition";
+} from "./models/value-condition";
 import { accessPathInObject } from "./path-access";
 import { areObjectsEquals } from "./utils/are-objects-equals";
 import { isPlainObject } from "./utils/extra";

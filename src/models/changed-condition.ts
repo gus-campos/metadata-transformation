@@ -1,4 +1,4 @@
-import { InstanceObject } from "./commom";
+import { InstanceObject } from "./common";
 
 export type UnitChangedCondition =
   | { _fieldChanged?: string }

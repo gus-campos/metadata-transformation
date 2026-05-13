@@ -1,4 +1,4 @@
-import { InstanceObject } from "../../models/commom";
+import { InstanceObject } from "../models/common";
 import { isPlainObject } from "./extra";
 
 export function areObjectsEquals(

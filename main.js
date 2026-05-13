@@ -1,6 +1,6 @@
 import { processMetadata } from "./src/processing.js";
 
-import { getPathValueFromObject } from "./src/commom.js";
+import { getPathValueFromObject } from "./src/common.js";
 
 const _metadata = {
   fields: {

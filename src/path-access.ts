@@ -1,4 +1,4 @@
-import { InstanceObject, Value } from "../models/common";
+import { InstanceObject, Value } from "./models/common";
 
 export function accessPathInObject(path: string, object: InstanceObject) {
   const pathArray = path.split(".");

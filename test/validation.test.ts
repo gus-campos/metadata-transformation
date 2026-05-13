@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 
-import { FieldMetadataTransform } from "../models/metadata-transform";
+import { FieldMetadataTransform } from "../src/models/metadata-transform";
 import { throwToNotValidFieldMetadataTransform } from "../src/validators";
+import { printErrorBeforeThrow } from "../src/utils/print-error-before-throw";
 
 const validCases: Record<string, FieldMetadataTransform> = {
   valid_nothing: {},
@@ -189,31 +190,19 @@ const invalidCases: Record<string, unknown> = {
 
 describe("Process metadata validation", () => {
   it.each(Object.entries(validCases))("%s", (name, data) => {
-    expect(() => {
-      try {
-        throwToNotValidFieldMetadataTransform(data);
-      } catch (e) {
-        console.log((e as any)?.message ?? "");
-        throw e;
-      }
-    }).toThrow();
+    expect(() => throwToNotValidFieldMetadataTransform(data)).not.toThrow();
   });
 
   it.each(Object.entries(invalidCases))("%s", (name, data) => {
-    expect(() => {
-      try {
-        throwToNotValidFieldMetadataTransform(data);
-      } catch (e) {
-        console.log((e as any)?.message ?? "");
-        throw e;
-      }
-    }).toThrow();
+    expect(
+      printErrorBeforeThrow(() => throwToNotValidFieldMetadataTransform(data)),
+    ).toThrow();
   });
 });
 
 // const metadataDefault = {
 //   fields: {
-//     taxType: {
+//     taxTypeconstructor: {
 //       readonly: false,
 //       required: true,
 //       hidden: false,

@@ -1,4 +1,4 @@
-import { Behavior, BehaviorProps, LayoutConfig, SelectionConfig, SelectOptions, SelectQuery } from "../models/metadata-config";
+import { Behavior, BehaviorProps, LayoutConfig, SelectionConfig, SelectOptions, SelectQuery } from "./models/metadata-config";
 
 export const conditionalValuekeys = [
   "_field",

@@ -1,4 +1,4 @@
-import { InstanceObject, Metadata } from "../models/commom";
+import { InstanceObject, Metadata } from "./models/common";
 import {
   Behavior,
   BehaviorConfig,
@@ -6,13 +6,13 @@ import {
   LayoutConfig,
   MetadataConfig,
   SelectionConfig,
-} from "../models/metadata-config";
+} from "./models/metadata-config";
 import {
   ConditionalMetadata,
   FieldMetadataTransform,
   MetadataTransform,
   UnitMetadataCondition,
-} from "../models/metadata-transform";
+} from "./models/metadata-transform";
 import { checkValueCondition } from "./check-value-condition";
 import { conditionalValuekeys, metadataConfigKeys } from "./constants";
 import { typedAssignValueToObject } from "./utils/extra";

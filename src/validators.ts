@@ -1,16 +1,16 @@
 import { ZodAny, ZodType } from "zod";
-import { Metadata } from "../models/common";
-import { DraftTransform } from "../models/draft-transform";
+import { Metadata } from "./models/common";
+import { DraftTransform } from "./models/draft-transform";
 import {
   FieldMetadataTransform,
   MetadataTransform,
-} from "../models/metadata-transform";
+} from "./models/metadata-transform";
 import {
   schema_draftTransform,
   schema_fieldMetadataTransform,
   schema_metadata,
   schema_metadataTransform,
-} from "../models/validation-schemas";
+} from "./models/validation-schemas";
 
 // Observação: Objeto da instância não é validado, nem as chaves de objeto
 // Elas apenas retornam "caminho não encontrado", quando tenta ler
