@@ -1,8 +1,4 @@
-import type {
-  Value,
-  InstanceObject,
-  Metadata,
-} from "../models/common";
+import type { Value, InstanceObject, Metadata } from "../models/common";
 
 import type {
   Behavior,
@@ -178,14 +174,18 @@ export function assertBehavior(candidate: unknown): candidate is Behavior {
   if (!("behavior" in candidate)) {
     return fail(
       `Esperado: Behavior — campo 'behavior' ausente\n` +
-        `  Valores válidos: ${BEHAVIOR_VALUES.join(", ")}`,
+        `  Valores válidos: ${BEHAVIOR_VALUES.map((v) => `"${v}"`).join(" | ")}`,
       candidate,
     );
   }
 
-  if (!BEHAVIOR_VALUES.includes(candidate.behavior as (typeof BEHAVIOR_VALUES)[number])) {
+  if (
+    !BEHAVIOR_VALUES.includes(
+      candidate.behavior as (typeof BEHAVIOR_VALUES)[number],
+    )
+  ) {
     return fail(
-      `Esperado: behavior deve ser um de: ${BEHAVIOR_VALUES.join(", ")}`,
+      `Esperado: behavior deve ser um de: ${BEHAVIOR_VALUES.map((v) => `"${v}"`).join(" | ")}`,
       candidate.behavior,
     );
   }
@@ -205,10 +205,7 @@ export function assertBehaviorProps(
 
   for (const key of BEHAVIOR_PROP_KEYS) {
     if (key in candidate && typeof candidate[key] !== "boolean") {
-      return fail(
-        `BehaviorProps: '${key}' deve ser boolean`,
-        candidate[key],
-      );
+      return fail(`BehaviorProps: '${key}' deve ser boolean`, candidate[key]);
     }
   }
 
@@ -220,7 +217,7 @@ export function assertBehaviorConfig(
 ): candidate is BehaviorConfig {
   if (!isPlainObject(candidate)) {
     return fail(
-      `Esperado: BehaviorConfig\n  Variante A: { behavior: "${BEHAVIOR_VALUES.join('" | "')}" }\n  Variante B: { readonly?: boolean; required?: boolean; hidden?: boolean }`,
+      `Esperado: BehaviorConfig\n  Variante A: { behavior: "${BEHAVIOR_VALUES.map((v) => `"${v}"`).join(" | ")}" }\n  Variante B: { readonly?: boolean; required?: boolean; hidden?: boolean }`,
       candidate,
     );
   }
@@ -247,13 +244,16 @@ export function assertLayoutConfig(
 ): candidate is LayoutConfig {
   if (!isPlainObject(candidate)) {
     return fail(
-      `Esperado: LayoutConfig\n  Formato: { breakLine?: boolean; size?: "${SIZE_VALUES.join('" | "')}" }`,
+      `Esperado: LayoutConfig\n  Formato: { breakLine?: boolean; size?: "${SIZE_VALUES.map((v) => `"${v}"`).join(" | ")}" }`,
       candidate,
     );
   }
 
   if ("breakLine" in candidate && typeof candidate.breakLine !== "boolean") {
-    return fail(`LayoutConfig: 'breakLine' deve ser boolean`, candidate.breakLine);
+    return fail(
+      `LayoutConfig: 'breakLine' deve ser boolean`,
+      candidate.breakLine,
+    );
   }
 
   if (
@@ -261,7 +261,7 @@ export function assertLayoutConfig(
     !SIZE_VALUES.includes(candidate.size as (typeof SIZE_VALUES)[number])
   ) {
     return fail(
-      `LayoutConfig: 'size' deve ser um de: ${SIZE_VALUES.join(", ")}`,
+      `LayoutConfig: 'size' deve ser um de: ${SIZE_VALUES.map((v) => `"${v}"`).join(" | ")}`,
       candidate.size,
     );
   }
@@ -307,7 +307,10 @@ export function assertSelectOptions(
 
   if ("options" in candidate) {
     if (!Array.isArray(candidate.options)) {
-      return fail(`SelectOptions: 'options' deve ser um array`, candidate.options);
+      return fail(
+        `SelectOptions: 'options' deve ser um array`,
+        candidate.options,
+      );
     }
 
     for (const [i, opt] of candidate.options.entries()) {
@@ -365,7 +368,10 @@ export function assertMetadataProps(
     return fail(`MetadataProps: campo 'breakLine' é obrigatório`, candidate);
   }
   if (typeof candidate.breakLine !== "boolean") {
-    return fail(`MetadataProps: 'breakLine' deve ser boolean`, candidate.breakLine);
+    return fail(
+      `MetadataProps: 'breakLine' deve ser boolean`,
+      candidate.breakLine,
+    );
   }
 
   if (!("size" in candidate)) {
@@ -373,7 +379,7 @@ export function assertMetadataProps(
   }
   if (!SIZE_VALUES.includes(candidate.size as (typeof SIZE_VALUES)[number])) {
     return fail(
-      `MetadataProps: 'size' deve ser um de: ${SIZE_VALUES.join(", ")}`,
+      `MetadataProps: 'size' deve ser um de: ${SIZE_VALUES.map((v) => `"${v}"`).join(" | ")}`,
       candidate.size,
     );
   }
@@ -382,7 +388,10 @@ export function assertMetadataProps(
     return fail(`MetadataProps: campo 'options' é obrigatório`, candidate);
   }
   if (!Array.isArray(candidate.options)) {
-    return fail(`MetadataProps: 'options' deve ser um array`, candidate.options);
+    return fail(
+      `MetadataProps: 'options' deve ser um array`,
+      candidate.options,
+    );
   }
   for (const [i, opt] of candidate.options.entries()) {
     try {
@@ -452,10 +461,7 @@ export function assertMetadata(candidate: unknown): candidate is Metadata {
 
 export function assertFieldId(candidate: unknown): candidate is FieldId {
   if (!isPlainObject(candidate)) {
-    return fail(
-      `Esperado: FieldId\n  Formato: { _field?: string }`,
-      candidate,
-    );
+    return fail(`Esperado: FieldId\n  Formato: { _field?: string }`, candidate);
   }
 
   if ("_field" in candidate && typeof candidate._field !== "string") {
@@ -546,7 +552,10 @@ export function assertValueConditionIsIn(
   assertFieldId(candidate);
 
   if (!Array.isArray(candidate._isIn)) {
-    return fail(`ValueConditionIsIn: '_isIn' deve ser um array`, candidate._isIn);
+    return fail(
+      `ValueConditionIsIn: '_isIn' deve ser um array`,
+      candidate._isIn,
+    );
   }
 
   for (const [i, v] of candidate._isIn.entries()) {
@@ -680,13 +689,17 @@ const assertByValueConditionKey: Record<
   ValueConditionKey,
   (c: unknown) => c is UnitValueCondition
 > = {
-  _is:      assertValueConditionIs      as (c: unknown) => c is UnitValueCondition,
-  _isNot:   assertValueConditionIsNot   as (c: unknown) => c is UnitValueCondition,
-  _isIn:    assertValueConditionIsIn    as (c: unknown) => c is UnitValueCondition,
-  _isNotIn: assertValueConditionIsNotIn as (c: unknown) => c is UnitValueCondition,
-  _are:     assertValueConditionAre     as (c: unknown) => c is UnitValueCondition,
-  _someIs:  assertValueConditionSomeIs  as (c: unknown) => c is UnitValueCondition,
-  _if:      assertValueConditionIf      as (c: unknown) => c is UnitValueCondition,
+  _is: assertValueConditionIs as (c: unknown) => c is UnitValueCondition,
+  _isNot: assertValueConditionIsNot as (c: unknown) => c is UnitValueCondition,
+  _isIn: assertValueConditionIsIn as (c: unknown) => c is UnitValueCondition,
+  _isNotIn: assertValueConditionIsNotIn as (
+    c: unknown,
+  ) => c is UnitValueCondition,
+  _are: assertValueConditionAre as (c: unknown) => c is UnitValueCondition,
+  _someIs: assertValueConditionSomeIs as (
+    c: unknown,
+  ) => c is UnitValueCondition,
+  _if: assertValueConditionIf as (c: unknown) => c is UnitValueCondition,
 };
 
 export function assertUnitValueCondition(
@@ -717,7 +730,9 @@ export function assertUnitValueCondition(
     );
   }
 
-  return assertByValueConditionKey[present[0] as ValueConditionKey](candidate);
+  const valueConditionKey = present[0] as ValueConditionKey;
+  const assertConditionValue = assertByValueConditionKey[valueConditionKey];
+  return assertConditionValue(candidate);
 }
 
 // ─── Changed Condition ────────────────────────────────────────────────────────
@@ -797,10 +812,14 @@ export function assertUnitDraftCondition(
     );
   }
 
-  const exclusiveValueKeys   = VALUE_CONDITION_KEYS.filter((k) => k !== "_if" && k in candidate);
-  const exclusiveChangedKeys = CHANGED_CONDITION_KEYS.filter((k) => k !== "_if" && k in candidate);
+  const exclusiveValueKeys = VALUE_CONDITION_KEYS.filter(
+    (k) => k !== "_if" && k in candidate,
+  );
+  const exclusiveChangedKeys = CHANGED_CONDITION_KEYS.filter(
+    (k) => k !== "_if" && k in candidate,
+  );
   const hasIf = "_if" in candidate;
-
+   
   if (exclusiveValueKeys.length > 0 && exclusiveChangedKeys.length > 0) {
     return fail(
       `UnitDraftCondition: não é possível combinar condições de valor com condições de alteração\n` +
@@ -819,7 +838,8 @@ export function assertUnitDraftCondition(
     );
   }
 
-  if (exclusiveChangedKeys.length > 0) return assertUnitChangedCondition(candidate);
+  if (exclusiveChangedKeys.length > 0)
+    return assertUnitChangedCondition(candidate);
   return assertUnitValueCondition(candidate);
 }
 
@@ -884,9 +904,12 @@ export function assertFieldDraftTransform(
     );
   }
 
-  const allConditionKeys = [...VALUE_CONDITION_KEYS, ...CHANGED_CONDITION_KEYS] as const;
+  const allConditionKeys = [
+    ...VALUE_CONDITION_KEYS,
+    ...CHANGED_CONDITION_KEYS,
+  ] as const;
   const hasCondition = allConditionKeys.some((k) => k in candidate);
-  const hasSetValue  = "setValue" in candidate;
+  const hasSetValue = "setValue" in candidate;
 
   if (!hasCondition && !hasSetValue) {
     return fail(
@@ -955,7 +978,7 @@ export function assertFieldMetadataTransform(
         assertConditionalMetadata(item);
       } catch (e) {
         throw new ValidationError(
-          `FieldMetadataTransform[${i}]: ${(e as Error).message}`,
+          `FieldMetadataTransform[${i}] com valor: "${JSON.stringify(item, null, 2)}": \n${(e as Error).message}`,
         );
       }
     }
@@ -987,12 +1010,12 @@ export function assertMetadataTransform(
     );
   }
 
-  for (const [key, val] of Object.entries(candidate)) {
+  for (const [key, value] of Object.entries(candidate)) {
     try {
-      assertFieldMetadataTransform(val);
+      assertFieldMetadataTransform(value);
     } catch (e) {
       throw new ValidationError(
-        `MetadataTransform['${key}']: ${(e as Error).message}`,
+        `MetadataTransform['${key}'] com valor "${JSON.stringify(value, null, 2)}". ${(e as Error).message}`,
       );
     }
   }
