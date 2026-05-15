@@ -6,6 +6,8 @@ import {
   schema_selectQuery,
 } from "./metadata-config";
 
+// A compatibilidade deste tipo com a tipagem do esquema abaixo
+// deve ser mantida manualmente, pois não é verificada
 export type Value =
   | { [key: string]: Value }
   | number
@@ -22,6 +24,15 @@ export const schema_value: z.ZodType<Value> = z.lazy(() =>
     z.null(),
   ]),
 );
+
+// =================================================================================================
+
+// 3. O GUARDA-COSTAS (Verificação Estática Estrita)
+// TODO: Verificar que está funcionando 
+type AssertEqual<T, U> = T extends U ? (U extends T ? true : false) : false;
+const _assertTypesAreEqual: AssertEqual<Value, z.infer<typeof schema_value>> = true;
+
+// =================================================================================================
 
 export const schema_instanceObject = z.record(z.string(), schema_value);
 
