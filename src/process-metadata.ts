@@ -16,7 +16,7 @@ import {
 import { checkValueCondition } from "./check-value-condition";
 import { conditionalValuekeys, metadataConfigKeys } from "./constants";
 import { typedAssignValueToObject } from "./utils/extra";
-import { throwToNotValidMetadataTransform } from "./validators";
+import { assertMetadataTransform } from "./validators/all";
 
 let _object: InstanceObject;
 let _metadata: Metadata;
@@ -30,7 +30,7 @@ export function transformMetadata(
   _object = object;
 
   // Internamente lança erro se não for
-  if (throwToNotValidMetadataTransform(metadataTransform))
+  if (assertMetadataTransform(metadataTransform))
     transformValidatedMetadata(metadata, object, metadataTransform);
 }
 

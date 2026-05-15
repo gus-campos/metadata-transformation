@@ -1,10 +1,7 @@
 import { FieldMetadataTransform } from "../src/models/metadata-transform";
 import { printErrorBeforeThrow } from "../src/utils/print-error-before-throw";
-import {
-  assertFieldMetadataTransform,
-  ValidationError,
-} from "../src/validators/all";
 import { describe, expect, it } from "vitest";
+import { assertFieldMetadataTransform } from "../src/validators/metadata-transform";
 
 const validCases: Record<string, FieldMetadataTransform> = {
   valid_nothing: {},
@@ -160,7 +157,7 @@ const invalidCases: Record<string, unknown> = {
     _are: ["A"],
   },
 
-  // _someIs tipo inválido (array em vez de valor) -> podia dar mais contexto
+  // _someIs tipo inválido (array em vez de valor) -> Podia dar mais contexto
   invalid_someIsEqual_type: {
     _fields: ["a", "b"],
     _someIs: ["A"],
@@ -171,18 +168,18 @@ const invalidCases: Record<string, unknown> = {
     _if: true,
   },
 
-  // // mistura _if com _field
-  // invalid_rule_with_field: {
-  //   _if: () => true,
-  //   _field: "status",
-  // },
+  // mistura _if com _field
+  invalid_rule_with_field: {
+    _if: () => true,
+    _field: "status",
+  },
 
   invalid_array_of_conditions: [
     {
       _isNot: "status",
       readonly: true,
     },
-    // Reclama que não tem fields, mas deveria reclamar de 
+    // Reclama que não tem fields, mas deveria reclamar de
     // ter junto o field e o someIs
     {
       _field: ["status1", "status2"], // errado
