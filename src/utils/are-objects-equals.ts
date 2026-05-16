@@ -1,9 +1,9 @@
-import { InstanceObject } from "../models/common";
-import { isPlainObject } from "./extra";
+import { PlainObject } from "../models/common";
+import { isPlainObject } from "../validation/utils";
 
 export function areObjectsEquals(
-  obj1: InstanceObject | null,
-  obj2: InstanceObject | null,
+  obj1: PlainObject | null,
+  obj2: PlainObject | null,
 ) {
   if (obj1 === null || obj2 === null) return obj1 === obj2;
 
@@ -16,10 +16,10 @@ export function areObjectsEquals(
   return JSON.stringify(sortedObj1) === JSON.stringify(sortedObj2);
 }
 
-function sortObjectKeys(obj: InstanceObject): InstanceObject {
+function sortObjectKeys(obj: PlainObject): PlainObject {
   
   /* 
-  * Ordena recursivamente os objetos dentro do objeto
+  * Ordena recursivamente as chaves dentro do objeto
   * Ignora campos do sistema, já que podem mudar de forma inesperada
   */
 
@@ -32,14 +32,13 @@ function sortObjectKeys(obj: InstanceObject): InstanceObject {
       const childObj = obj[key];
       if (isPlainObject(childObj)) return (acc[key] = sortObjectKeys(childObj));
       return acc;
-    }, {} as InstanceObject);
+    }, {} as PlainObject);
 }
 
-function convertToNonRecursiveObject(obj: InstanceObject) {
+function convertToNonRecursiveObject(obj: PlainObject) {
   // CONTEXTUALIZAÇÃO: O stringify da sydle remove referências recursivas
   // que são comuns em objetos da Sydle
-  // FIXME: Mas melhor usar solução própria e testar no ONE se funciona
+  // TODO: Melhor usar solução própria e testar no ONE se funciona
 
   return obj;
-  // return JSON.parse(_utils.stringifyAsJson(obj));
 }

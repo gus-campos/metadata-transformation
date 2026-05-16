@@ -1,8 +1,6 @@
 import { UnitChangedCondition } from "./changed-condition";
 import { UnitValueCondition } from "./value-condition";
 
-// => Tipos que devem ser validados manualmente
-
 export type UnitDraftCondition = UnitChangedCondition | UnitValueCondition;
 
 // Implementação futura

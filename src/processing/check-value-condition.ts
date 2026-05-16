@@ -1,22 +1,30 @@
-import { InstanceObject, Value } from "./models/common";
+import z from "zod";
+import { PlainObject, Value } from "../models/common";
 import {
+  schema_if,
   UnitValueCondition,
-  ValueConditionAre,
   ValueConditionIf,
   ValueConditionIs,
   ValueConditionIsIn,
   ValueConditionIsNot,
   ValueConditionIsNotIn,
-  ValueConditionSomeIs,
-} from "./models/value-condition";
+} from "../models/value-condition";
+import { areObjectsEquals } from "../utils/are-objects-equals";
+import { fail, isPlainObject, ValidationError } from "../validation/utils";
 import { accessPathInObject } from "./path-access";
-import { areObjectsEquals } from "./utils/are-objects-equals";
-import { isPlainObject } from "./utils/extra";
+import { wrappedError } from "./wrap-error";
 
 export function checkValueCondition(
   valueCondition: UnitValueCondition,
-  object: InstanceObject,
+  object: PlainObject,
+  fieldIdentifier: string,
 ): boolean {
+  if ("_if" in valueCondition)
+    return checkValueConditionIf(valueCondition, object);
+
+  // Explicitar o campos _field que veio implícito
+  if (!("_field" in valueCondition)) valueCondition._field = fieldIdentifier;
+
   if ("_is" in valueCondition)
     return checkValueConditionIs(valueCondition, object);
 
@@ -29,21 +37,12 @@ export function checkValueCondition(
   if ("_isNotIn" in valueCondition)
     return checkValueConditionIsNotIn(valueCondition, object);
 
-  if ("_are" in valueCondition)
-    return checkValueConditionAre(valueCondition, object);
-
-  if ("_someIs" in valueCondition)
-    return checkValueConditionSomeIs(valueCondition, object);
-
-  if ("_if" in valueCondition)
-    return checkValueConditionIf(valueCondition, object);
-
   return false;
 }
 
 function checkValueConditionIs(
   valueCondition: ValueConditionIs,
-  object: InstanceObject,
+  object: PlainObject,
 ): boolean {
   if (!valueCondition._field) {
     throw new Error("Condição não especificada");
@@ -57,9 +56,11 @@ function checkValueConditionIs(
 
 function checkValueConditionIsNot(
   valueCondition: ValueConditionIsNot,
-  object: InstanceObject,
+  object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) throw new Error("Condição não especificada");
+  if (!valueCondition._field) {
+    throw new Error("Campo _field não especificado");
+  }
 
   const value = accessPathInObject(valueCondition._field, object);
   const expectedValue = valueCondition._isNot;
@@ -69,9 +70,11 @@ function checkValueConditionIsNot(
 
 function checkValueConditionIsIn(
   valueCondition: ValueConditionIsIn,
-  object: InstanceObject,
+  object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) throw new Error("Condição não especificada");
+  if (!valueCondition._field) {
+    throw new Error("Campo _field não especificado");
+  }
 
   const value = accessPathInObject(valueCondition._field, object);
   const expectedValues = valueCondition._isIn;
@@ -81,9 +84,11 @@ function checkValueConditionIsIn(
 
 function checkValueConditionIsNotIn(
   valueCondition: ValueConditionIsNotIn,
-  object: InstanceObject,
+  object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) throw new Error("Condição não especificada");
+  if (!valueCondition._field) {
+    throw new Error("Campo _field não especificado");
+  }
 
   const value = accessPathInObject(valueCondition._field, object);
   const expectedValues = valueCondition._isNotIn;
@@ -91,43 +96,39 @@ function checkValueConditionIsNotIn(
   return !expectedValues.some((item) => areValuesEquals(value, item));
 }
 
-function checkValueConditionAre(
-  valueCondition: ValueConditionAre,
-  object: InstanceObject,
-): boolean {
-  const expectedValues = valueCondition._are;
-
-  if (valueCondition._fields.length !== expectedValues.length) return false;
-
-  return valueCondition._fields.every((field, index) => {
-    const value = accessPathInObject(field, object);
-    const expectedValue = expectedValues[index];
-
-    return areValuesEquals(value, expectedValue);
-  });
-}
-
-function checkValueConditionSomeIs(
-  valueCondition: ValueConditionSomeIs,
-  object: InstanceObject,
-): boolean {
-  const expectedValue = valueCondition._someIs;
-
-  return valueCondition._fields.some((field) => {
-    const value = accessPathInObject(field, object);
-    return areValuesEquals(value, expectedValue);
-  });
-}
-
 function checkValueConditionIf(
   valueCondition: ValueConditionIf,
-  object: InstanceObject,
+  object: PlainObject,
 ): boolean {
   const predicate = valueCondition._if;
-  return predicate(object);
+  const safePredicate = schema_if.implement(predicate);
+
+  try {
+    return safePredicate(object);
+  } catch (err) {
+    throw wrapIfError(err);
+  }
 }
 
-export function areValuesEquals(a: Value, b: Value): boolean {
+function wrapIfError(err: unknown) {
+  if (err instanceof z.core.$ZodError) {
+    const issue = err.issues[0];
+
+    const message =
+      issue.code === "invalid_type" && issue.path.length === 0
+        ? `Função lambda _if retornou um tipo inválido:\n${issue.message}`
+        : issue.message;
+
+    throw new ValidationError(message);
+  }
+
+  return wrappedError(
+    "Erro inesperado ao executar lambda passada em chave _if:",
+    err,
+  );
+}
+
+function areValuesEquals(a: Value, b: Value): boolean {
   if (a instanceof Date && b instanceof Date)
     return a.getTime() === b.getTime();
 

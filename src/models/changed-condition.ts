@@ -1,8 +1,7 @@
-import { InstanceObject } from "./common";
 
-// => Tipos que devem ser validados manualmente
+import { PlainObject } from "./common";
 
 export type UnitChangedCondition =
   | { _fieldChanged?: string }
   | { _someFieldChanged?: string[] }
-  | { _if: (oldObj: InstanceObject, newObj: InstanceObject) => boolean };
+  | { _if: (oldObj: PlainObject, newObj: PlainObject) => boolean };

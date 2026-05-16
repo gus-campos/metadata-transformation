@@ -6,9 +6,7 @@ import {
   schema_selectQuery,
 } from "./metadata-config";
 
-// Esta tipagem deve coincidir com a tipagem do especificado pelo schema abaixo
-// É necessário que se garanta manualmente isto, pois o ts não reclamará
-// caso haja algo a mais no tipo declarado explicitamente
+// Manter equivalência entre schema e tipagem explicitada
 export type Value =
   | { [key: string]: Value }
   | number
@@ -17,19 +15,26 @@ export type Value =
   | Date
   | null;
 
-// Manter equivalência deste schema com a tipagem explicitada acima
+// Se mudar tipagem, lembrar de mudar mensagem de erro também!
 export const schema_value: z.ZodType<Value> = z.lazy(() =>
-  z.union([
-    z.record(z.string(), schema_value), // recursão tardia
-    z.number(),
-    z.boolean(),
-    z.string(),
-    z.date(),
-    z.null(),
-  ]),
+  z.union(
+    [
+      z.number(),
+      z.boolean(),
+      z.string(),
+      z.date(),
+      z.null(),
+      schema_plainObject, // recursão tardia
+    ],
+    {
+      error: () => ({
+        message: `Únicos valores aceitos são: number, boolean, string, Date, null ou objeto.`,
+      }),
+    },
+  ),
 );
 
-export const schema_instanceObject = z.record(z.string(), schema_value);
+export const schema_plainObject = z.record(z.string(), schema_value);
 
 export const schema_metadataField = schema_layoutConfig
   .required()
@@ -43,6 +48,6 @@ export const schema_metadata = z.object({
   fields: z.record(z.string(), schema_metadataField),
 });
 
-export type InstanceObject = z.infer<typeof schema_instanceObject>;
+export type PlainObject = z.infer<typeof schema_plainObject>;
 export type MetadataField = z.infer<typeof schema_metadataField>;
 export type Metadata = z.infer<typeof schema_metadata>;

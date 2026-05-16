@@ -28,14 +28,36 @@ export const schema_selectQuery = z.object({
   query: z.unknown().optional(),
 });
 
-export const schema_selectionConfig = schema_selectOptions.and(schema_selectQuery);
+export const schema_selectionConfig =
+  schema_selectOptions.and(schema_selectQuery);
 
 export const schema_metadataConfig = schema_layoutConfig.and(
   schema_behaviorProps.and(schema_selectionConfig),
 );
 
+export const METADATA_CONFIG_KEYS = {
+  behavior: Object.keys(schema_behavior.shape) as (keyof Behavior)[],
+  behaviorProps: Object.keys(
+    schema_behaviorProps.shape,
+  ) as (keyof BehaviorProps)[],
+  layoutConfig: Object.keys(
+    schema_layoutConfig.shape,
+  ) as (keyof LayoutConfig)[],
+  selectionConfig: [
+    ...Object.keys(schema_selectOptions.shape),
+    ...Object.keys(schema_selectQuery.shape),
+  ] as (keyof SelectionConfig)[],
+};
+
+export const ALL_VALID_METADATA_CONFIG_KEYS = [
+  ...METADATA_CONFIG_KEYS.behavior,
+  ...METADATA_CONFIG_KEYS.behaviorProps,
+  ...METADATA_CONFIG_KEYS.layoutConfig,
+  ...METADATA_CONFIG_KEYS.selectionConfig,
+] as const;
+
 export type Behavior = z.infer<typeof schema_behavior>;
-export type BehaviorProps = z.infer<typeof schema_behaviorProps>
+export type BehaviorProps = z.infer<typeof schema_behaviorProps>;
 export type BehaviorConfig = Behavior | BehaviorProps;
 export type LayoutConfig = z.infer<typeof schema_layoutConfig>;
 export type SelectOption = z.infer<typeof schema_selectOption>;

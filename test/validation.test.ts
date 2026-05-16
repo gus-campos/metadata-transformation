@@ -1,6 +1,7 @@
 import { FieldMetadataTransform } from "../src/models/metadata-transform";
-import { printErrorBeforeThrow } from "../src/utils/print-error-before-throw";
 import { describe, expect, it } from "vitest";
+import { printErrorBeforeThrowing } from "./utils";
+import { assertFieldMetadataTransform } from "../src/validation/metadata-transform";
 
 const validCases: Record<string, FieldMetadataTransform> = {
   valid_nothing: {},
@@ -47,18 +48,6 @@ const validCases: Record<string, FieldMetadataTransform> = {
     readonly: true,
   },
 
-  valid_fields_equalsPairwise: {
-    _fields: ["inicio", "fim"],
-    _are: ["2024-01-01", "2024-01-02"],
-    required: true,
-  },
-
-  valid_fields_someIsEqual: {
-    _fields: ["status1", "status2"],
-    _someIs: "ativo",
-    hidden: true,
-  },
-
   valid_rule: {
     _if: (obj: any) => obj.id !== null,
     readonly: true,
@@ -76,9 +65,9 @@ const validCases: Record<string, FieldMetadataTransform> = {
       readonly: true,
     },
     {
-      _fields: ["status1", "status2"],
-      _someIs: "ativo",
-      hidden: true,
+      _field: "tipo",
+      _isNotIn: ["A", "B", "C"],
+      readonly: true,
     },
   ],
 };
@@ -132,36 +121,6 @@ const invalidCases: Record<string, unknown> = {
     readonly: true,
   },
 
-  // // _fields sem condição
-  // invalid_fields_without_condition: {
-  //   _fields: ["a", "b"],
-  // },
-
-  // _fields com múltiplas condições
-  invalid_fields_multiple_conditions: {
-    _fields: ["a", "b"],
-    _someIs: "A",
-    _are: ["A", "B"],
-  },
-
-  // _are não é array
-  invalid_equalsPairwise_notArray: {
-    _fields: ["a", "b"],
-    _are: "A",
-  },
-
-  // tamanho diferente de _fields -> Poderia mostrar os dois arrays
-  invalid_equalsPairwise_wrong_length: {
-    _fields: ["a", "b"],
-    _are: ["A"],
-  },
-
-  // _someIs tipo inválido (array em vez de valor) -> Podia dar mais contexto
-  invalid_someIsEqual_type: {
-    _fields: ["a", "b"],
-    _someIs: ["A"],
-  },
-
   // _if não é função
   invalid_rule_notFunction: {
     _if: true,
@@ -178,14 +137,19 @@ const invalidCases: Record<string, unknown> = {
       _isNot: "status",
       readonly: true,
     },
-    // Reclama que não tem fields, mas deveria reclamar de
-    // ter junto o field e o someIs
     {
       _field: ["status1", "status2"], // errado
-      _someIs: "ativo",
+      _is: "ativo",
       hidden: true,
     },
   ],
+
+  invalid_extra_keys: {
+    _field: "field",
+    _isnot: "status",
+    teste: "teste",
+    readonly: true,
+  },
 };
 
 describe("Process metadata validation", () => {
@@ -195,7 +159,7 @@ describe("Process metadata validation", () => {
 
   it.each(Object.entries(invalidCases))("%s", (name, data) => {
     expect(() =>
-      printErrorBeforeThrow(() => assertFieldMetadataTransform(data)),
+      printErrorBeforeThrowing(() => assertFieldMetadataTransform(data)),
     ).toThrow();
   });
 });

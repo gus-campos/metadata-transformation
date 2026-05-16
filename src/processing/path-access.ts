@@ -1,19 +1,20 @@
-import { InstanceObject, Value } from "./models/common";
+import { PlainObject, Value } from "../models/common";
+import { fail } from "../validation/utils";
 
-export function accessPathInObject(path: string, object: InstanceObject) {
+
+export function accessPathInObject(path: string, object: PlainObject) {
   const pathArray = path.split(".");
   const value = accessSequenceKeysInObject(pathArray, object);
 
-  // TODO: Imprimir objeto?
   if (value === undefined)
-    throw Error(`O caminho ${path} não foi encontrado no objeto.`);
+    fail(`O caminho ${path} não foi encontrado no objeto.`, object);
 
   return value;
 }
 
 function accessSequenceKeysInObject(
   pathArray: string[],
-  object: InstanceObject,
+  object: PlainObject,
 ): Value | undefined {
   /*
    * Lê recursivamente, uma sequência de chaves de um objeto,

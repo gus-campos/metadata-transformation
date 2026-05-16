@@ -1,4 +1,4 @@
-export function printErrorBeforeThrow(action: () => void) {
+export function printErrorBeforeThrowing(action: () => void) {
   try {
     action();
   } catch (e) {
