@@ -1,7 +1,6 @@
 import { FieldMetadataTransform } from "../src/models/metadata-transform";
 import { printErrorBeforeThrow } from "../src/utils/print-error-before-throw";
 import { describe, expect, it } from "vitest";
-import { assertFieldMetadataTransform } from "../src/validators/metadata-transform";
 
 const validCases: Record<string, FieldMetadataTransform> = {
   valid_nothing: {},

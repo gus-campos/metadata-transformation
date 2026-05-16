@@ -5,11 +5,13 @@ import { UnitValueCondition } from "./value-condition";
 
 // Inútil por enquanto, mas deixa flexível pra outros tipos de condições
 export type UnitMetadataCondition = UnitValueCondition;
-export type ConditionalMetadata = UnitMetadataCondition & MetadataConfig;
+// => Validados manualmente
 
+export type UnitFieldMetadataTransform = MetadataConfig | (MetadataConfig & UnitMetadataCondition);
+
+// Prefere uniformidade
 export type FieldMetadataTransform =
-  | MetadataConfig
-  | ConditionalMetadata
-  | ConditionalMetadata[];
+  | UnitFieldMetadataTransform
+  | UnitFieldMetadataTransform[];
 
 export type MetadataTransform = Record<string, FieldMetadataTransform>;

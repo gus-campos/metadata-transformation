@@ -6,33 +6,28 @@ import {
   schema_selectQuery,
 } from "./metadata-config";
 
-// A compatibilidade deste tipo com a tipagem do esquema abaixo
-// deve ser mantida manualmente, pois não é verificada
+// Esta tipagem deve coincidir com a tipagem do especificado pelo schema abaixo
+// É necessário que se garanta manualmente isto, pois o ts não reclamará
+// caso haja algo a mais no tipo declarado explicitamente
 export type Value =
   | { [key: string]: Value }
   | number
   | boolean
+  | string
   | Date
   | null;
 
+// Manter equivalência deste schema com a tipagem explicitada acima
 export const schema_value: z.ZodType<Value> = z.lazy(() =>
   z.union([
     z.record(z.string(), schema_value), // recursão tardia
     z.number(),
     z.boolean(),
+    z.string(),
     z.date(),
     z.null(),
   ]),
 );
-
-// =================================================================================================
-
-// 3. O GUARDA-COSTAS (Verificação Estática Estrita)
-// TODO: Verificar que está funcionando 
-type AssertEqual<T, U> = T extends U ? (U extends T ? true : false) : false;
-const _assertTypesAreEqual: AssertEqual<Value, z.infer<typeof schema_value>> = true;
-
-// =================================================================================================
 
 export const schema_instanceObject = z.record(z.string(), schema_value);
 

@@ -1,6 +1,5 @@
 import z from "zod";
 
-
 export const schema_behavior = z.object({
   behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]),
 });
@@ -12,7 +11,7 @@ export const schema_behaviorProps = z.object({
 });
 
 export const schema_layoutConfig = z.object({
-  breakline: z.boolean().optional(),
+  breakLine: z.boolean().optional(),
   size: z.enum(["sm", "md", "lg"]).optional(),
 });
 
@@ -26,7 +25,7 @@ export const schema_selectOptions = z.object({
 });
 
 export const schema_selectQuery = z.object({
-  query: z.unknown(),
+  query: z.unknown().optional(),
 });
 
 export const schema_selectionConfig = schema_selectOptions.and(schema_selectQuery);
