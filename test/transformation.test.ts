@@ -49,7 +49,7 @@ const metadataFieldWhenConditionMatches: MetadataField = {
  * Dado object = { taxType: "iptu", documentType: "cpf", implicitField: "auto" }:
  *
  * taxType      → _if: obj.taxType === "iptu"   → true  → aplica mudanças
- * documentType → _field: taxType, _is: "itbi"  → false → mantém padrão
+ * documentType → _valueOf: taxType, _is: "itbi"  → false → mantém padrão
  * implicitField → _is: "auto" (field implícito) → true  → aplica mudanças
  */
 const transformTruthyFalsyTruthy: Record<string, UnitValueCondition> = {
@@ -58,7 +58,7 @@ const transformTruthyFalsyTruthy: Record<string, UnitValueCondition> = {
     ...changesWhenConditionMatches,
   },
   documentType: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _is: "itbi",
     ...changesWhenConditionMatches,
   },
@@ -70,7 +70,7 @@ const transformTruthyFalsyTruthy: Record<string, UnitValueCondition> = {
 
 /*
  * taxType      → _if: obj.taxType === "itbi"   → false → mantém padrão
- * documentType → _field: taxType, _is: "iptu"  → true  → aplica mudanças
+ * documentType → _valueOf: taxType, _is: "iptu"  → true  → aplica mudanças
  * implicitField → _is: "none" (field implícito) → false → mantém padrão
  */
 const transformFalsyTruthyFalsy: Record<string, UnitValueCondition> = {
@@ -79,7 +79,7 @@ const transformFalsyTruthyFalsy: Record<string, UnitValueCondition> = {
     ...changesWhenConditionMatches,
   },
   documentType: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _is: "iptu",
     ...changesWhenConditionMatches,
   },
@@ -92,7 +92,7 @@ const transformFalsyTruthyFalsy: Record<string, UnitValueCondition> = {
 /*
  * documentType → array de dois transforms aplicados sequencialmente:
  *   1. _isNot: "cnpj"                  → true  → readonly: true
- *   2. _field: taxType, _isIn: [...]   → true  → hidden: true, size: "md"
+ *   2. _valueOf: taxType, _in: [...]   → true  → hidden: true, size: "md"
  */
 const transformArrayOfConditions = {
   documentType: [
@@ -101,8 +101,8 @@ const transformArrayOfConditions = {
       readonly: true,
     },
     {
-      _field: "taxType",
-      _isIn: ["iptu", "itbi"],
+      _valueOf: "taxType",
+      _in: ["iptu", "itbi"],
       hidden: true,
       size: "md",
     },
@@ -117,7 +117,7 @@ type Case = {
 };
 
 const cases: Record<string, Case> = {
-  "condições verdadeira, falsa e verdadeira (via _if, _field/_is e _field implícito)": {
+  "condições verdadeira, falsa e verdadeira (via _if, _valueOf/_is e _valueOf implícito)": {
     transform: transformTruthyFalsyTruthy,
     assert: (metadata) => {
       expect(metadata.fields.taxType).toEqual(metadataFieldWhenConditionMatches);
@@ -126,7 +126,7 @@ const cases: Record<string, Case> = {
     },
   },
 
-  "condições falsa, verdadeira e falsa (via _if, _field/_is e _field implícito)": {
+  "condições falsa, verdadeira e falsa (via _if, _valueOf/_is e _valueOf implícito)": {
     transform: transformFalsyTruthyFalsy,
     assert: (metadata) => {
       expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);

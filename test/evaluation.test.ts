@@ -27,76 +27,76 @@ const truthyCases: Record<string, UnitValueCondition> = {
 
   // _is — tipos primitivos
   truthyIsString: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _is: "iptu",
   },
   truthyIsNumber: {
-    _field: "count",
+    _valueOf: "count",
     _is: 42,
   },
   truthyIsBoolean: {
-    _field: "active",
+    _valueOf: "active",
     _is: true,
   },
   truthyIsNull: {
-    _field: "nullable",
+    _valueOf: "nullable",
     _is: null,
   },
 
   // _isNot
   truthyIsNotString: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _isNot: "itbi",
   },
   truthyIsNotNumber: {
-    _field: "count",
+    _valueOf: "count",
     _isNot: 0,
   },
   truthyIsNotBoolean: {
-    _field: "active",
+    _valueOf: "active",
     _isNot: false,
   },
   truthyIsNotNull: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _isNot: null,
   },
 
-  // _isIn
+  // _in
   truthyIsIn: {
-    _field: "taxType",
-    _isIn: ["iptu", "itbi"],
+    _valueOf: "taxType",
+    _in: ["iptu", "itbi"],
   },
   truthyIsInNumber: {
-    _field: "count",
-    _isIn: [10, 42, 100],
+    _valueOf: "count",
+    _in: [10, 42, 100],
   },
 
-  // _isNotIn
+  // _notIn
   truthyIsNotIn: {
-    _field: "taxType",
-    _isNotIn: ["itbi", "ipva"],
+    _valueOf: "taxType",
+    _notIn: ["itbi", "ipva"],
   },
   truthyIsNotInNumber: {
-    _field: "count",
-    _isNotIn: [0, 1, 2],
+    _valueOf: "count",
+    _notIn: [0, 1, 2],
   },
 
   // path aninhado
   truthyNestedIs: {
-    _field: "complexField.innerField.innerMostField",
+    _valueOf: "complexField.innerField.innerMostField",
     _is: "valid",
   },
   truthyNestedIsNot: {
-    _field: "complexField.innerField.innerMostField",
+    _valueOf: "complexField.innerField.innerMostField",
     _isNot: "invalid",
   },
   truthyNestedIsIn: {
-    _field: "complexField.innerField.innerMostField",
-    _isIn: ["valid", "other"],
+    _valueOf: "complexField.innerField.innerMostField",
+    _in: ["valid", "other"],
   },
   truthyNestedIsNotIn: {
-    _field: "complexField.innerField.innerMostField",
-    _isNotIn: ["invalid"],
+    _valueOf: "complexField.innerField.innerMostField",
+    _notIn: ["invalid"],
   },
 };
 
@@ -108,76 +108,76 @@ const falsyCases: Record<string, UnitValueCondition> = {
 
   // _is
   falsyIsString: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _is: "itbi",
   },
   falsyIsNumber: {
-    _field: "count",
+    _valueOf: "count",
     _is: 0,
   },
   falsyIsBoolean: {
-    _field: "active",
+    _valueOf: "active",
     _is: false,
   },
   falsyIsNull: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _is: null,
   },
 
   // _isNot
   falsyIsNotString: {
-    _field: "taxType",
+    _valueOf: "taxType",
     _isNot: "iptu",
   },
   falsyIsNotNumber: {
-    _field: "count",
+    _valueOf: "count",
     _isNot: 42,
   },
   falsyIsNotBoolean: {
-    _field: "active",
+    _valueOf: "active",
     _isNot: true,
   },
   falsyIsNotNull: {
-    _field: "nullable",
+    _valueOf: "nullable",
     _isNot: null,
   },
 
-  // _isIn
+  // _in
   falsyIsIn: {
-    _field: "taxType",
-    _isIn: ["itbi", "ipva"],
+    _valueOf: "taxType",
+    _in: ["itbi", "ipva"],
   },
   falsyIsInNumber: {
-    _field: "count",
-    _isIn: [0, 1, 2],
+    _valueOf: "count",
+    _in: [0, 1, 2],
   },
 
-  // _isNotIn
+  // _notIn
   falsyIsNotIn: {
-    _field: "taxType",
-    _isNotIn: ["iptu", "itbi"],
+    _valueOf: "taxType",
+    _notIn: ["iptu", "itbi"],
   },
   falsyIsNotInNumber: {
-    _field: "count",
-    _isNotIn: [10, 42, 100],
+    _valueOf: "count",
+    _notIn: [10, 42, 100],
   },
 
   // path aninhado
   falsyNestedIs: {
-    _field: "complexField.innerField.innerMostField",
+    _valueOf: "complexField.innerField.innerMostField",
     _is: "invalid",
   },
   falsyNestedIsNot: {
-    _field: "complexField.innerField.innerMostField",
+    _valueOf: "complexField.innerField.innerMostField",
     _isNot: "valid",
   },
   falsyNestedIsIn: {
-    _field: "complexField.innerField.innerMostField",
-    _isIn: ["invalid", "other"],
+    _valueOf: "complexField.innerField.innerMostField",
+    _in: ["invalid", "other"],
   },
   falsyNestedIsNotIn: {
-    _field: "complexField.innerField.innerMostField",
-    _isNotIn: ["valid"],
+    _valueOf: "complexField.innerField.innerMostField",
+    _notIn: ["valid"],
   },
 };
 

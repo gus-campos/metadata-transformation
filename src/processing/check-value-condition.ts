@@ -22,14 +22,14 @@ export function checkValueCondition(
   if ("_if" in valueCondition)
     return checkValueConditionIf(valueCondition, object);
 
-  // Explicitar o campo _field que estava implícito
-  if (!("_field" in valueCondition)) {
+  // Explicitar o campo _valueOf que estava implícito
+  if (!("_valueOf" in valueCondition)) {
     if (!fieldIdentifier) {
       throw new Error(
-        "O campo _field está implícito, mas não foi passado um fieldIdentifier",
+        "O campo _valueOf está implícito, mas não foi passado um fieldIdentifier",
       );
     }
-    valueCondition._field = fieldIdentifier;
+    valueCondition._valueOf = fieldIdentifier;
   }
 
   if ("_is" in valueCondition)
@@ -38,10 +38,10 @@ export function checkValueCondition(
   if ("_isNot" in valueCondition)
     return checkValueConditionIsNot(valueCondition, object);
 
-  if ("_isIn" in valueCondition)
+  if ("_in" in valueCondition)
     return checkValueConditionIsIn(valueCondition, object);
 
-  if ("_isNotIn" in valueCondition)
+  if ("_notIn" in valueCondition)
     return checkValueConditionIsNotIn(valueCondition, object);
 
   return false;
@@ -51,11 +51,11 @@ function checkValueConditionIs(
   valueCondition: ValueConditionIs,
   object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) {
+  if (!valueCondition._valueOf) {
     throw new Error("Condição não especificada");
   }
 
-  const path = valueCondition._field;
+  const path = valueCondition._valueOf;
   const value = accessPathInObject(path, object);
   const expectedValue = valueCondition._is;
 
@@ -69,11 +69,11 @@ function checkValueConditionIsNot(
   valueCondition: ValueConditionIsNot,
   object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) {
-    throw new Error("Campo _field não especificado");
+  if (!valueCondition._valueOf) {
+    throw new Error("Campo _valueOf não especificado");
   }
 
-  const path = valueCondition._field;
+  const path = valueCondition._valueOf;
   const value = accessPathInObject(path, object);
   const expectedValue = valueCondition._isNot;
 
@@ -87,13 +87,13 @@ function checkValueConditionIsIn(
   valueCondition: ValueConditionIsIn,
   object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) {
-    throw new Error("Campo _field não especificado");
+  if (!valueCondition._valueOf) {
+    throw new Error("Campo _valueOf não especificado");
   }
 
-  const path = valueCondition._field;
+  const path = valueCondition._valueOf;
   const value = accessPathInObject(path, object);
-  const expectedValues = valueCondition._isIn;
+  const expectedValues = valueCondition._in;
 
   if (value === undefined)
     fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
@@ -105,17 +105,17 @@ function checkValueConditionIsNotIn(
   valueCondition: ValueConditionIsNotIn,
   object: PlainObject,
 ): boolean {
-  if (!valueCondition._field) {
-    throw new Error("Campo _field não especificado");
+  if (!valueCondition._valueOf) {
+    throw new Error("Campo _valueOf não especificado");
   }
 
-  const path = valueCondition._field;
+  const path = valueCondition._valueOf;
   const value = accessPathInObject(path, object);
 
   if (value === undefined)
     fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
 
-  const expectedValues = valueCondition._isNotIn;
+  const expectedValues = valueCondition._notIn;
 
   return !expectedValues.some((item) => areValuesEquals(value, item));
 }

@@ -62,7 +62,7 @@ const metadataTransform = {
     required: false,
   },
   documentType: {
-    _field: "adress",
+    _valueOf: "adress",
     _isNot: null,
     hidden: true,
     required: false,
@@ -75,19 +75,19 @@ const metadataTransform = {
   // Aplica todas que forem verdadeiras, em ordem
   propertyType: [
     {
-      _field: "taxType",
+      _valueOf: "taxType",
       _is: null,
       hidden: true,
     },
     {
-      _field: "taxType",
-      _isIn: ["iptu", "itbi"],
+      _valueOf: "taxType",
+      _in: ["iptu", "itbi"],
       readonly: true,
     },
   ],
   // Compara dois a dois
   cityIdentification: {
-    _fields: ["propertyType", "documentType"],
+    _valueOfs: ["propertyType", "documentType"],
     _are: ["urban", "cpf"],
     hidden: false,
     required: true,

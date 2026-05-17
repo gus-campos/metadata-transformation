@@ -16,7 +16,7 @@ import {
   schema_valueConditionIsNot,
   schema_valueConditionIsNotIn,
   UnitValueCondition,
-  VALUE_FIELD_KEY,
+  VALUE_valueOf_KEY,
   VALUE_IF_KEY,
   VALUE_MAIN_KEYS,
   VALUE_SECONDARY_KEYS,
@@ -168,7 +168,7 @@ export function assertUnitValueCondition(
 
   if (secondaryKeysFound.length === 0) {
     fail(
-      `Esperada uma das seguintes chaves secundárias junto com a chave ${VALUE_FIELD_KEY} ${formatArray(VALUE_SECONDARY_KEYS)}`,
+      `Esperada uma das seguintes chaves secundárias junto com a chave ${VALUE_valueOf_KEY} ${formatArray(VALUE_SECONDARY_KEYS)}`,
       candidate,
     );
   }
@@ -183,10 +183,10 @@ export function assertUnitValueCondition(
     case "_isNot":
       return assertSchemaType(schema_valueConditionIsNot, candidate, path);
 
-    case "_isIn":
+    case "_in":
       return assertSchemaType(schema_valueConditionIsIn, candidate, path);
 
-    case "_isNotIn":
+    case "_notIn":
       return assertSchemaType(schema_valueConditionIsNotIn, candidate, path);
 
     default:

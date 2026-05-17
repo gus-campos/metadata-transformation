@@ -46,38 +46,38 @@ const validCases: Record<string, FieldMetadataTransform> = {
     size: "md",
   },
 
-  // Condição com _field explícito
-  "condição _is com _field explícito": {
-    _field: "status",
+  // Condição com _valueOf explícito
+  "condição _is com _valueOf explícito": {
+    _valueOf: "status",
     _is: "ativo",
     required: true,
   },
 
-  "condição _isNot com _field explícito": {
-    _field: "status",
+  "condição _isNot com _valueOf explícito": {
+    _valueOf: "status",
     _isNot: "inativo",
     hidden: true,
   },
 
-  "condição _isIn com _field explícito": {
-    _field: "tipo",
-    _isIn: ["A", "B", "C"],
+  "condição _in com _valueOf explícito": {
+    _valueOf: "tipo",
+    _in: ["A", "B", "C"],
     readonly: true,
   },
 
-  "condição _isNotIn com _field explícito": {
-    _field: "tipo",
-    _isNotIn: ["A", "B", "C"],
+  "condição _notIn com _valueOf explícito": {
+    _valueOf: "tipo",
+    _notIn: ["A", "B", "C"],
     readonly: true,
   },
 
-  // Condição com _field implícito (usa o próprio identificador do campo)
-  "condição _isNotIn com _field implícito": {
-    _isNotIn: ["status"],
+  // Condição com _valueOf implícito (usa o próprio identificador do campo)
+  "condição _notIn com _valueOf implícito": {
+    _notIn: ["status"],
     readonly: true,
   },
 
-  "condição _isNot com _field implícito": {
+  "condição _isNot com _valueOf implícito": {
     _isNot: "status",
     readonly: true,
   },
@@ -91,7 +91,7 @@ const validCases: Record<string, FieldMetadataTransform> = {
   // Array de transforms
   "array de transforms válidos": [
     { _isNot: "status", readonly: true },
-    { _field: "tipo", _isNotIn: ["A", "B", "C"], readonly: true },
+    { _valueOf: "tipo", _notIn: ["A", "B", "C"], readonly: true },
   ],
 };
 
@@ -107,37 +107,37 @@ const invalidCases: Record<string, unknown> = {
     foo: "bar",
   },
 
-  "múltiplas chaves inválidas com _field": {
-    _field: "field",
+  "múltiplas chaves inválidas com _valueOf": {
+    _valueOf: "field",
     _isnot: "status",
     teste: "teste",
     readonly: true,
   },
 
-  // Uso indevido de _field
-  "_field sem operador de condição": {
-    _field: "status",
+  // Uso indevido de _valueOf
+  "_valueOf sem operador de condição": {
+    _valueOf: "status",
   },
 
-  "_field com múltiplos operadores de condição": {
-    _field: "status",
+  "_valueOf com múltiplos operadores de condição": {
+    _valueOf: "status",
     _is: "A",
-    _isIn: ["A", "B"],
+    _in: ["A", "B"],
   },
 
   // Tipos errados nos operadores
-  "_isIn com valor escalar em vez de array": {
-    _field: "status",
-    _isIn: "A",
+  "_in com valor escalar em vez de array": {
+    _valueOf: "status",
+    _in: "A",
   },
 
-  "_isNotIn com valor escalar (field explícito)": {
-    _field: "tipo",
-    _isNotIn: "status",
+  "_notIn com valor escalar (field explícito)": {
+    _valueOf: "tipo",
+    _notIn: "status",
     readonly: true,
   },
-  "_isNotIn com valor escalar (field implícito)": {
-    _isNotIn: "status",
+  "_notIn com valor escalar (field implícito)": {
+    _notIn: "status",
     readonly: true,
   },
   "_isNot com array em vez de escalar (field implícito)": {
@@ -150,15 +150,15 @@ const invalidCases: Record<string, unknown> = {
     _if: true,
   },
 
-  "_if combinado com _field": {
+  "_if combinado com _valueOf": {
     _if: () => true,
-    _field: "status",
+    _valueOf: "status",
   },
 
   // Array com item inválido
   "array de transforms com item inválido": [
     { _isNot: "status", readonly: true },
-    { _field: ["status1", "status2"], _is: "ativo", hidden: true },
+    { _valueOf: ["status1", "status2"], _is: "ativo", hidden: true },
   ],
 };
 
@@ -184,7 +184,7 @@ describe("assertMetadataTransform — validação de identificadores de campo", 
   it("não lança erro quando o identificador existe na metadata", () => {
     expect(() =>
       assertMetadataTransform(
-        { taxType: { _field: "taxType", _isIn: ["itbi", "iptu"] } },
+        { taxType: { _valueOf: "taxType", _in: ["itbi", "iptu"] } },
         metadataDefault,
       ),
     ).not.toThrow();
@@ -193,7 +193,7 @@ describe("assertMetadataTransform — validação de identificadores de campo", 
   it("lança erro quando o identificador não existe na metadata", () => {
     expect(() =>
       assertMetadataTransform(
-        { taxTypee: { _field: "taxType", _isIn: ["itbi", "iptu"] } },
+        { taxTypee: { _valueOf: "taxType", _in: ["itbi", "iptu"] } },
         metadataDefault,
       ),
     ).toThrow();

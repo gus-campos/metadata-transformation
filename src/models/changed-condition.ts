@@ -2,6 +2,6 @@
 import { PlainObject } from "./common";
 
 export type UnitChangedCondition =
-  | { _fieldChanged?: string }
-  | { _someFieldChanged?: string[] }
-  | { _if: (oldObj: PlainObject, newObj: PlainObject) => boolean };
+  | { _changed: string }
+  | { _anyChanged: string[] }
+  | { _if: (object: PlainObject, oldObject: PlainObject) => boolean };
