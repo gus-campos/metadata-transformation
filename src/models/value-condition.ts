@@ -2,8 +2,6 @@ import z from "zod";
 import { schema_plainObject, schema_value } from "./common";
 import { _file } from "zod/v4/core";
 
-
-
 // Fields
 export const schema_fieldId = z.object({
   _field: z.string().optional(),

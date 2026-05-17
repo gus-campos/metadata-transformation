@@ -36,6 +36,7 @@ export const schema_value: z.ZodType<Value> = z.lazy(() =>
 
 export const schema_plainObject = z.record(z.string(), schema_value);
 
+// editHelp na raíz { _current, pt }
 export const schema_metadataField = schema_layoutConfig
   .required()
   .and(

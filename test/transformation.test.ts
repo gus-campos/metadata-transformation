@@ -4,21 +4,23 @@ import { UnitValueCondition } from "../src/models/value-condition";
 import { transformMetadata } from "../src/processing/process-metadata";
 import { MetadataConfig } from "../src/models/metadata-config";
 
-const metadataConfigDefault: MetadataField = {
+// ─── Fixtures ────────────────────────────────────────────────────────────────
+
+const metadataFieldDefault: MetadataField = {
   readonly: false,
   required: true,
   hidden: false,
   breakLine: true,
   size: "sm",
-  options: [],
+  valueOptions: [],
   query: {},
 };
 
 const metadataDefault: Metadata = {
   fields: {
-    taxType: { ...metadataConfigDefault },
-    documentType: { ...metadataConfigDefault },
-    implicitField: { ...metadataConfigDefault },
+    taxType:       { ...metadataFieldDefault },
+    documentType:  { ...metadataFieldDefault },
+    implicitField: { ...metadataFieldDefault },
   },
 };
 
@@ -28,7 +30,7 @@ const object: PlainObject = {
   implicitField: "auto",
 };
 
-const defaultChangesToApply: MetadataConfig = {
+const changesWhenConditionMatches: MetadataConfig = {
   readonly: true,
   required: false,
   hidden: true,
@@ -36,53 +38,70 @@ const defaultChangesToApply: MetadataConfig = {
   size: "lg",
 };
 
-const expectedMetadataFieldOnTruthy = {
-  ...metadataConfigDefault,
-  ...defaultChangesToApply
+const metadataFieldWhenConditionMatches: MetadataField = {
+  ...metadataFieldDefault,
+  ...changesWhenConditionMatches,
 };
 
-const truthyFalsyTruthyCase: Record<string, UnitValueCondition> = {
+// ─── Transforms ──────────────────────────────────────────────────────────────
+
+/*
+ * Dado object = { taxType: "iptu", documentType: "cpf", implicitField: "auto" }:
+ *
+ * taxType      → _if: obj.taxType === "iptu"   → true  → aplica mudanças
+ * documentType → _field: taxType, _is: "itbi"  → false → mantém padrão
+ * implicitField → _is: "auto" (field implícito) → true  → aplica mudanças
+ */
+const transformTruthyFalsyTruthy: Record<string, UnitValueCondition> = {
   taxType: {
     _if: (obj) => obj.taxType === "iptu",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
   documentType: {
     _field: "taxType",
     _is: "itbi",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
-  // Uso implícito do _field
   implicitField: {
     _is: "auto",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
 };
 
-const falsyTruthyFalsyCase: Record<string, UnitValueCondition> = {
+/*
+ * taxType      → _if: obj.taxType === "itbi"   → false → mantém padrão
+ * documentType → _field: taxType, _is: "iptu"  → true  → aplica mudanças
+ * implicitField → _is: "none" (field implícito) → false → mantém padrão
+ */
+const transformFalsyTruthyFalsy: Record<string, UnitValueCondition> = {
   taxType: {
     _if: (obj) => obj.taxType === "itbi",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
   documentType: {
     _field: "taxType",
     _is: "iptu",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
-  // Uso implícito do _field
   implicitField: {
     _is: "none",
-    ...defaultChangesToApply,
+    ...changesWhenConditionMatches,
   },
 };
 
-const array_of_conditions = {
+/*
+ * documentType → array de dois transforms aplicados sequencialmente:
+ *   1. _isNot: "cnpj"                  → true  → readonly: true
+ *   2. _field: taxType, _isIn: [...]   → true  → hidden: true, size: "md"
+ */
+const transformArrayOfConditions = {
   documentType: [
     {
       _isNot: "cnpj",
       readonly: true,
     },
     {
-      _field: "taxType", // errado
+      _field: "taxType",
       _isIn: ["iptu", "itbi"],
       hidden: true,
       size: "md",
@@ -90,57 +109,56 @@ const array_of_conditions = {
   ],
 };
 
-const cases = {
-  truthyFalsyTruthyCase: {
-    transform: truthyFalsyTruthyCase,
-    checkTestConditions: (metadata: Metadata) => {
-      expect(metadata.fields.taxType).toEqual(expectedMetadataFieldOnTruthy);
-      expect(metadata.fields.documentType).toEqual(
-        metadataDefault.fields.documentType,
-      );
-      expect(metadata.fields.implicitField).toEqual(expectedMetadataFieldOnTruthy);
+// ─── Casos ───────────────────────────────────────────────────────────────────
+
+type Case = {
+  transform: object;
+  assert: (metadata: Metadata) => void;
+};
+
+const cases: Record<string, Case> = {
+  "condições verdadeira, falsa e verdadeira (via _if, _field/_is e _field implícito)": {
+    transform: transformTruthyFalsyTruthy,
+    assert: (metadata) => {
+      expect(metadata.fields.taxType).toEqual(metadataFieldWhenConditionMatches);
+      expect(metadata.fields.documentType).toEqual(metadataDefault.fields.documentType);
+      expect(metadata.fields.implicitField).toEqual(metadataFieldWhenConditionMatches);
     },
   },
 
-  falsyTruthyFalsyCase: {
-    transform: falsyTruthyFalsyCase,
-    checkTestConditions: (metadata: Metadata) => {
+  "condições falsa, verdadeira e falsa (via _if, _field/_is e _field implícito)": {
+    transform: transformFalsyTruthyFalsy,
+    assert: (metadata) => {
       expect(metadata.fields.taxType).toEqual(metadataDefault.fields.taxType);
-      expect(metadata.fields.documentType).toEqual(expectedMetadataFieldOnTruthy);
-      expect(metadata.fields.implicitField).toEqual(
-        metadataDefault.fields.implicitField,
-      );
+      expect(metadata.fields.documentType).toEqual(metadataFieldWhenConditionMatches);
+      expect(metadata.fields.implicitField).toEqual(metadataDefault.fields.implicitField);
     },
   },
 
-  array_of_conditions: {
-    transform: array_of_conditions,
-    checkTestConditions: (metadata: Metadata) => {
+  "array de transforms aplicados sequencialmente sobre o mesmo campo": {
+    transform: transformArrayOfConditions,
+    assert: (metadata) => {
       expect(metadata.fields.documentType).toEqual({
+        ...metadataFieldDefault,
         readonly: true,
-        required: true,
         hidden: true,
-        breakLine: true,
         size: "md",
-        options: [],
-        query: {},
       });
     },
   },
 };
 
+// ─── Testes ───────────────────────────────────────────────────────────────────
+
 let metadata: Metadata;
 
-describe("Process metadata evaluation", () => {
+describe("transformMetadata — avaliação de condições e aplicação de mudanças", () => {
   beforeEach(() => {
     metadata = structuredClone(metadataDefault);
   });
 
-  it.each(Object.entries(cases))(
-    "%s",
-    (_name, { transform, checkTestConditions }) => {
-      transformMetadata(metadata, object, transform);
-      checkTestConditions(metadata);
-    },
-  );
+  it.each(Object.entries(cases))("%s", (_, { transform, assert }) => {
+    transformMetadata(transform, { metadata, object });
+    assert(metadata);
+  });
 });

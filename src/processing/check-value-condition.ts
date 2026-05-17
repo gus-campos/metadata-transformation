@@ -17,13 +17,20 @@ import { wrappedError } from "./wrap-error";
 export function checkValueCondition(
   valueCondition: UnitValueCondition,
   object: PlainObject,
-  fieldIdentifier: string,
+  fieldIdentifier?: string,
 ): boolean {
   if ("_if" in valueCondition)
     return checkValueConditionIf(valueCondition, object);
 
-  // Explicitar o campos _field que veio implícito
-  if (!("_field" in valueCondition)) valueCondition._field = fieldIdentifier;
+  // Explicitar o campo _field que estava implícito
+  if (!("_field" in valueCondition)) {
+    if (!fieldIdentifier) {
+      throw new Error(
+        "O campo _field está implícito, mas não foi passado um fieldIdentifier",
+      );
+    }
+    valueCondition._field = fieldIdentifier;
+  }
 
   if ("_is" in valueCondition)
     return checkValueConditionIs(valueCondition, object);
@@ -48,8 +55,12 @@ function checkValueConditionIs(
     throw new Error("Condição não especificada");
   }
 
-  const value = accessPathInObject(valueCondition._field, object);
+  const path = valueCondition._field;
+  const value = accessPathInObject(path, object);
   const expectedValue = valueCondition._is;
+
+  if (value === undefined)
+    fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
 
   return areValuesEquals(value, expectedValue);
 }
@@ -62,8 +73,12 @@ function checkValueConditionIsNot(
     throw new Error("Campo _field não especificado");
   }
 
-  const value = accessPathInObject(valueCondition._field, object);
+  const path = valueCondition._field;
+  const value = accessPathInObject(path, object);
   const expectedValue = valueCondition._isNot;
+
+  if (value === undefined)
+    fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
 
   return !areValuesEquals(value, expectedValue);
 }
@@ -76,8 +91,12 @@ function checkValueConditionIsIn(
     throw new Error("Campo _field não especificado");
   }
 
-  const value = accessPathInObject(valueCondition._field, object);
+  const path = valueCondition._field;
+  const value = accessPathInObject(path, object);
   const expectedValues = valueCondition._isIn;
+
+  if (value === undefined)
+    fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
 
   return expectedValues.some((item) => areValuesEquals(value, item));
 }
@@ -90,7 +109,12 @@ function checkValueConditionIsNotIn(
     throw new Error("Campo _field não especificado");
   }
 
-  const value = accessPathInObject(valueCondition._field, object);
+  const path = valueCondition._field;
+  const value = accessPathInObject(path, object);
+
+  if (value === undefined)
+    fail(`Caminho passado "${path}" não foi encontrado no objeto`, object);
+
   const expectedValues = valueCondition._isNotIn;
 
   return !expectedValues.some((item) => areValuesEquals(value, item));
@@ -128,11 +152,13 @@ function wrapIfError(err: unknown) {
   );
 }
 
-function areValuesEquals(a: Value, b: Value): boolean {
+export function areValuesEquals(a: Value, b: Value): boolean {
   if (a instanceof Date && b instanceof Date)
     return a.getTime() === b.getTime();
 
-  if (isPlainObject(a) && isPlainObject(b)) return areObjectsEquals(a, b);
+  if (isPlainObject(a) && isPlainObject(b)) {
+    return areObjectsEquals(a, b);
+  }
 
   // cobre boolean, string e null
   return a === b;

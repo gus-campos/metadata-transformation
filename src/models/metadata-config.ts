@@ -1,5 +1,18 @@
 import z from "zod";
 
+// TODO: Adicionar os campos, validar quando pode
+// TODO: depois adicionar em Metadata, tipos diferentes de metadata??
+// edithelp { _current, pt} (string)
+// name { _current, pt} (string)
+// minMultiplicity
+// maxMultiplicity
+// shiftable
+// mask...??? id???
+// maxLength
+// placeholder { _current, pt} (string)
+// e quando for decimal? tem mais possibilidades?
+// quais outras opções podem causar novos campos no metadata?
+
 export const schema_behavior = z.object({
   behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]),
 });
@@ -21,7 +34,7 @@ export const schema_selectOption = z.object({
 });
 
 export const schema_selectOptions = z.object({
-  options: z.array(schema_selectOption).optional(),
+  valueOptions: z.array(schema_selectOption).optional(),
 });
 
 export const schema_selectQuery = z.object({

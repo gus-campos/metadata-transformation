@@ -1,15 +1,29 @@
 import { PlainObject, Value } from "../models/common";
-import { fail } from "../validation/utils";
 
 
 export function accessPathInObject(path: string, object: PlainObject) {
+
+  /*
+  * Acessa um caminho separado por pontos em um objeto que possui
+  * sucessivos objetos como valor.
+  * 
+  * Ex:
+  * 
+  * accessPathInObject("data.person.name.firstName", {
+  *   data: {
+  *      person: {
+  *         name: {
+  *           firstName: "Pedro"
+  *         } 
+  *      }
+  *   }
+  * })
+  * 
+  * Retorna: "Pedro"
+  */
+
   const pathArray = path.split(".");
-  const value = accessSequenceKeysInObject(pathArray, object);
-
-  if (value === undefined)
-    fail(`O caminho ${path} não foi encontrado no objeto.`, object);
-
-  return value;
+  return accessSequenceKeysInObject(pathArray, object);
 }
 
 function accessSequenceKeysInObject(
@@ -21,8 +35,12 @@ function accessSequenceKeysInObject(
    * usando acessos condicionais.
    *
    * Exemplo:
-   * Para um pathArry `["chave1", "chave2", "chave3"]`
-   * Lê `object?.["chave1"]?.["chave2"]?.["chave3"]`
+   * 
+   * accessSequenceKeysInObject(["chave1", "chave2", "chave3"], object)
+   * 
+   * Retorna : object?.["chave1"]?.["chave2"]?.["chave3"]
+   * 
+   * Ou seja, se o caminho não for encontrado, "undefined" é retornado.
    */
 
   const [firstKey, ...pathRest] = pathArray;

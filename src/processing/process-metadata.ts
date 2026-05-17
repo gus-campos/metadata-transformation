@@ -23,42 +23,43 @@ import { assertMetadataTransform } from "../validation/metadata-transform";
 import { checkValueCondition } from "./check-value-condition";
 import { wrappedError } from "./wrap-error";
 
-let _object: PlainObject;
-let _metadata: Metadata;
+interface MetadataContext {
+  object: PlainObject;
+  metadata: Metadata;
+}
+
+interface FieldMetadataContext extends MetadataContext {
+  fieldIdentifier: string;
+}
 
 export function transformMetadata(
-  metadata: Metadata,
-  object: PlainObject,
   metadataTransform: unknown,
+  metadataContext: MetadataContext,
 ) {
-  _metadata = metadata;
-  _object = object;
-
-  if (assertMetadataTransform(metadataTransform, metadata))
-    transformValidatedMetadata(metadata, object, metadataTransform);
+  if (assertMetadataTransform(metadataTransform, metadataContext.metadata))
+    transformValidatedMetadata(metadataTransform, metadataContext);
 }
 
 export function transformValidatedMetadata(
-  metadata: Metadata,
-  object: PlainObject,
   metadataTransform: MetadataTransform,
+  metadataContext: MetadataContext,
 ) {
-  _metadata = metadata;
-  _object = object;
-
   for (const [fieldIdentifier, fieldTransform] of Object.entries(
     metadataTransform,
   ))
-    processFieldTransform(fieldTransform, fieldIdentifier);
+    processFieldTransform(fieldTransform, {
+      fieldIdentifier,
+      ...metadataContext,
+    });
 }
 
 function processFieldTransform(
   fieldTransform: FieldMetadataTransform,
-  fieldIdentifier: string,
+  fieldContext: FieldMetadataContext,
 ) {
   if (Array.isArray(fieldTransform)) {
     for (const unitMetadataTransform of fieldTransform)
-      processFieldTransform(unitMetadataTransform, fieldIdentifier);
+      processFieldTransform(unitMetadataTransform, fieldContext);
     return;
   }
 
@@ -67,26 +68,24 @@ function processFieldTransform(
   try {
     isConditionTruthy = checkUnitFieldMetadataTransform(
       fieldTransform,
-      fieldIdentifier,
+      fieldContext,
     );
   } catch (err) {
     throw wrappedError(
-      `Erro na verificação da condição na chave ${fieldIdentifier}`,
+      `Erro na verificação da condição na chave ${fieldContext.fieldIdentifier}`,
       err,
     );
   }
 
   if (isConditionTruthy) {
-    applyMetadataConfig(fieldIdentifier, fieldTransform);
+    applyMetadataConfig(fieldTransform, fieldContext);
   }
 }
 
 function checkUnitFieldMetadataTransform(
   unitFieldTransform: UnitFieldMetadataTransform,
-  fieldIdentifier: string,
+  fieldContext: FieldMetadataContext,
 ): boolean {
-  // checar se tem a condição
-
   const conditionKeys = [...VALUE_MAIN_KEYS, ...VALUE_SECONDARY_KEYS];
 
   if (!conditionKeys.some((key) => key in unitFieldTransform)) {
@@ -95,45 +94,46 @@ function checkUnitFieldMetadataTransform(
 
   return checkValueCondition(
     unitFieldTransform as UnitValueCondition,
-    _object,
-    fieldIdentifier,
+    fieldContext.object,
+    fieldContext.fieldIdentifier,
   );
 }
 
 function applyMetadataConfig(
-  fieldIdentifier: string,
   metadataConfig: MetadataConfig,
+  fieldContext: FieldMetadataContext,
 ) {
   if (METADATA_CONFIG_KEYS.behavior.some((key) => key in metadataConfig))
-    applyBehavior(fieldIdentifier, metadataConfig);
+    applyBehavior(metadataConfig, fieldContext);
 
   if (METADATA_CONFIG_KEYS.behaviorProps.some((key) => key in metadataConfig))
-    applyBehaviorProps(fieldIdentifier, metadataConfig);
+    applyBehaviorProps(metadataConfig, fieldContext);
 
   if (METADATA_CONFIG_KEYS.layoutConfig.some((key) => key in metadataConfig))
-    applyLayoutConfig(fieldIdentifier, metadataConfig);
+    applyLayoutConfig(metadataConfig, fieldContext);
 
   if (METADATA_CONFIG_KEYS.selectionConfig.some((key) => key in metadataConfig))
-    applySelectionConfig(fieldIdentifier, metadataConfig);
+    applySelectionConfig(metadataConfig, fieldContext);
 }
 
 function applyBehavior(
-  fieldIdentifier: string,
   behaviorConfig: BehaviorConfig,
+  fieldContext: FieldMetadataContext,
 ) {
   if ("behavior" in behaviorConfig) {
-    applyBehavior(fieldIdentifier, behaviorConfig);
+    applyBehavior(behaviorConfig, fieldContext);
     return;
   }
 
-  applyBehaviorProps(fieldIdentifier, behaviorConfig);
+  applyBehaviorProps(behaviorConfig, fieldContext);
 }
 
 function applyBehaviorProps(
-  fieldIdentifier: string,
   behaviorProps: BehaviorProps,
+  fieldContext: FieldMetadataContext,
 ) {
-  const fieldMetadata = _metadata.fields[fieldIdentifier];
+  const fieldMetadata =
+    fieldContext.metadata.fields[fieldContext.fieldIdentifier];
   const keys = METADATA_CONFIG_KEYS.behaviorProps as (keyof BehaviorProps)[];
 
   for (const behaviorPropKey of keys) {
@@ -144,10 +144,11 @@ function applyBehaviorProps(
 }
 
 function applySelectionConfig(
-  fieldIdentifier: string,
   selectionConfig: SelectionConfig,
+  fieldContext: FieldMetadataContext,
 ) {
-  const fieldMetadata = _metadata.fields[fieldIdentifier];
+  const fieldMetadata =
+    fieldContext.metadata.fields[fieldContext.fieldIdentifier];
 
   if ("query" in selectionConfig && selectionConfig.query) {
     // FIXME: verificar se é referência
@@ -155,21 +156,23 @@ function applySelectionConfig(
   }
 
   // Remove todos itens e adiciona novos, já que este array não pode ser reatribuído
-  if ("options" in selectionConfig && selectionConfig.options) {
+  if ("valueOptions" in selectionConfig && selectionConfig.valueOptions) {
     // FIXME: Verificar se é options
-    fieldMetadata.options.splice(
+    fieldMetadata.valueOptions.splice(
       0,
-      fieldMetadata.options.length,
-      ...selectionConfig.options,
+      fieldMetadata.valueOptions.length,
+      ...selectionConfig.valueOptions,
     );
   }
 }
 
 function applyLayoutConfig(
-  fieldIdentifier: string,
   layoutConfig: LayoutConfig,
+  fieldContext: FieldMetadataContext,
 ) {
-  const fieldMetadata = _metadata.fields[fieldIdentifier];
+  const fieldMetadata =
+    fieldContext.metadata.fields[fieldContext.fieldIdentifier];
+
   const layoutkeys =
     METADATA_CONFIG_KEYS.layoutConfig as (keyof LayoutConfig)[];
 
