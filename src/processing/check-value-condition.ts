@@ -1,7 +1,7 @@
 import z from "zod";
 import { PlainObject, Value } from "../models/common";
 import {
-  schema_if,
+  schema_valueConditionIfPredicate,
   UnitValueCondition,
   ValueConditionIf,
   ValueConditionIs,
@@ -125,7 +125,7 @@ function checkValueConditionIf(
   object: PlainObject,
 ): boolean {
   const predicate = valueCondition._if;
-  const safePredicate = schema_if.implement(predicate);
+  const safePredicate = schema_valueConditionIfPredicate.implement(predicate);
 
   try {
     return safePredicate(object);

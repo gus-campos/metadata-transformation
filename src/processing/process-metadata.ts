@@ -9,7 +9,9 @@ import {
   SelectionConfig,
 } from "../models/metadata-config";
 import {
+  FieldMetadataContext,
   FieldMetadataTransform,
+  MetadataContext,
   MetadataTransform,
   UnitFieldMetadataTransform,
 } from "../models/metadata-transform";
@@ -23,14 +25,7 @@ import { assertMetadataTransform } from "../validation/metadata-transform";
 import { checkValueCondition } from "./check-value-condition";
 import { wrappedError } from "./wrap-error";
 
-interface MetadataContext {
-  object: PlainObject;
-  metadata: Metadata;
-}
 
-interface FieldMetadataContext extends MetadataContext {
-  fieldIdentifier: string;
-}
 
 export function transformMetadata(
   metadataTransform: unknown,

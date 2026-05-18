@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { PlainObject } from "../src/models/common";
-import { accessPathInObject } from "../src/processing/path-access";
+import { PlainObject } from "../../src/models/common";
+import { accessPathInObject } from "../../src/processing/path-access";
 
 const object: PlainObject = {
   name: "Pedro",

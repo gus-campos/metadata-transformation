@@ -1,6 +1,5 @@
 import z from "zod";
 import { schema_plainObject, schema_value } from "./common";
-import { _file } from "zod/v4/core";
 
 // Fields
 export const schema_valueOf = z.object({
@@ -24,19 +23,19 @@ export const schema_valueConditionIsNotIn = schema_valueOf.extend({
   _notIn: z.array(schema_value),
 });
 
-export const schema_if = z.function({
+export const schema_valueConditionIfPredicate = z.function({
   input: z.tuple([schema_plainObject]),
   output: z.boolean(),
 });
 
 export const schema_valueConditionIf = z.object({
-  _if: schema_if,
+  _if: schema_valueConditionIfPredicate,
 });
 
 // Atualizar conforme houverem modificações nas tipagens
 export const VALUE_IF_KEY = "_if";
-export const VALUE_valueOf_KEY = "_valueOf";
-export const VALUE_MAIN_KEYS = [VALUE_valueOf_KEY, VALUE_IF_KEY] as const;
+export const VALUE_VALUE_OF_KEY = "_valueOf";
+export const VALUE_MAIN_KEYS = [VALUE_VALUE_OF_KEY, VALUE_IF_KEY] as const;
 export const VALUE_SECONDARY_KEYS = [
   "_is",
   "_isNot",
@@ -44,15 +43,12 @@ export const VALUE_SECONDARY_KEYS = [
   "_notIn"
 ] as const;
 
-export const ALL_VALID_CONDITION_KEYS = [
+export const ALL_VALID_VALUE_CONDITION_KEYS = [
   VALUE_IF_KEY,
-  VALUE_valueOf_KEY,
-  ...VALUE_valueOf_KEY,
+  VALUE_VALUE_OF_KEY,
+  ...VALUE_VALUE_OF_KEY,
   ...VALUE_SECONDARY_KEYS
 ] as const;
-
-// Fields
-export type FieldId = z.infer<typeof schema_valueOf>;
 
 // Conditions
 export type ValueConditionIs = z.infer<typeof schema_valueConditionIs>;

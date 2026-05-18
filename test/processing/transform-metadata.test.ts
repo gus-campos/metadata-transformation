@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { Metadata, MetadataField, PlainObject } from "../src/models/common";
-import { UnitValueCondition } from "../src/models/value-condition";
-import { transformMetadata } from "../src/processing/process-metadata";
-import { MetadataConfig } from "../src/models/metadata-config";
+import { Metadata, MetadataField, PlainObject } from "../../src/models/common";
+import { UnitValueCondition } from "../../src/models/value-condition";
+import { transformMetadata } from "../../src/processing/process-metadata";
+import { MetadataConfig } from "../../src/models/metadata-config";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

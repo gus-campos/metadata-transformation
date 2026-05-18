@@ -32,20 +32,20 @@ export function isPlainObject(val: unknown): val is Record<string, unknown> {
   );
 }
 
-export function formatList(array: readonly any[]) {
+export function formatArray(array: readonly any[]) {
   return `[${array.map((item) => serialize(item)).join(", ")}]`;
 }
 
 export function assertSchemaType<T>(
   schema: ZodType<T>,
   candidate: unknown,
-  fieldIdentifier?: string,
+  validationPath?: string,
 ): candidate is T {
   const result = schema.safeParse(candidate);
 
   if (!result.success) {
     const zodMessage = result.error.issues[0].message;
-    const additionalMessage = fieldIdentifier ? `Erro na validação no caminho ${fieldIdentifier}:\n` : "";
+    const additionalMessage = validationPath ? `Erro na validação no caminho ${validationPath}:\n` : "";
     fail(
       `${additionalMessage}${zodMessage}`,
       candidate,

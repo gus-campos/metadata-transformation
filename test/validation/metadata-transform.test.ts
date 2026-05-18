@@ -1,11 +1,11 @@
-import { FieldMetadataTransform } from "../src/models/metadata-transform";
+import { FieldMetadataTransform } from "../../src/models/metadata-transform";
 import { describe, expect, it } from "vitest";
-import { printErrorBeforeThrowing } from "./utils";
+import { printErrorBeforeThrowing } from "../utils";
 import {
   assertFieldMetadataTransform,
   assertMetadataTransform,
-} from "../src/validation/metadata-transform";
-import { Metadata } from "../src/models/common";
+} from "../../src/validation/metadata-transform";
+import { Metadata } from "../../src/models/common";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

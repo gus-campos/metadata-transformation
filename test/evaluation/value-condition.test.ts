@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   UnitValueCondition,
-} from "../src/models/value-condition";
-import { PlainObject } from "../src/models/common";
-import { checkValueCondition } from "../src/processing/check-value-condition";
-import { printErrorBeforeThrowing } from "./utils";
+} from "../../src/models/value-condition";
+import { PlainObject } from "../../src/models/common";
+import { checkValueCondition } from "../../src/processing/check-value-condition";
+import { printErrorBeforeThrowing } from "../utils";
 
 const object: PlainObject = {
   taxType: "iptu",

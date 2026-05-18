@@ -1,3 +1,4 @@
+import { PlainObject } from "./common";
 import { UnitDraftCondition } from "./draft-condition";
 import { DraftConfig } from "./draft-config";
 
@@ -12,3 +13,14 @@ export type FieldDraftTransform =
   | UnitFieldDraftTransform[];
 
 export type DraftTransform = Record<string, FieldDraftTransform>;
+
+// Context
+
+export interface DraftContext {
+  object: PlainObject;
+  oldObject: PlainObject;
+}
+
+export interface FieldDraftContext extends DraftContext {
+  fieldIdentifier: string;
+}
