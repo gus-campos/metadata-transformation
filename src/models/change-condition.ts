@@ -11,14 +11,14 @@ export const schema_changeConditionAnyChanged = z.object({
 
 export const schema_changeConditionIfPredicate = z.function({
   input: z.tuple([schema_plainObject, schema_plainObject]),
-  output: z.boolean(),
+  output: z.boolean("O retorno do lambda da chave _if deve ser boolean"),
 });
 
 export const schema_changeConditionIf = z.object({
   _if: schema_changeConditionIfPredicate,
 });
 
-export const ALL_VALID_CHANGE_KEYS = [
+export const ALL_VALID_CHANGE_CONDITION_KEYS = [
   "_changed",
   "_anyChanged",
   "_if",

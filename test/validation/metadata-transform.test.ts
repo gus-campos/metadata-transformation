@@ -1,11 +1,13 @@
 import { FieldMetadataTransform } from "../../src/models/metadata-transform";
 import { describe, expect, it } from "vitest";
-import { printErrorBeforeThrowing } from "../utils";
+import { printErrorBeforeThrowing, toCamelCase } from "../utils";
 import {
   assertFieldMetadataTransform,
   assertMetadataTransform,
 } from "../../src/validation/metadata-transform";
 import { Metadata } from "../../src/models/common";
+
+// TODO: Mover testes de condição de valor para outro módulo
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
@@ -90,8 +92,15 @@ const validCases: Record<string, FieldMetadataTransform> = {
 
   // Array de transforms
   "array de transforms válidos": [
-    { _isNot: "status", readonly: true },
-    { _valueOf: "tipo", _notIn: ["A", "B", "C"], readonly: true },
+    {
+      _isNot: "status",
+      readonly: true,
+    },
+    {
+      _valueOf: "tipo",
+      _notIn: ["A", "B", "C"],
+      readonly: true,
+    },
   ],
 };
 
@@ -99,7 +108,9 @@ const validCases: Record<string, FieldMetadataTransform> = {
 
 const invalidCases: Record<string, unknown> = {
   // Props de metadata inválidas
-  "size com valor fora do enum": { size: "xl" },
+  "size com valor fora do enum": {
+    size: "xl",
+  },
 
   // Chaves desconhecidas
   "chave desconhecida junto de prop válida": {
@@ -155,10 +166,30 @@ const invalidCases: Record<string, unknown> = {
     _valueOf: "status",
   },
 
+  // stdout | test/validation/metadata-transform.test.ts > assertFieldMetadataTransform > casos inválidos > array de transforms com item inválido
+  // Erro na validação no caminho _is:
+  // Invalid input: expected string, received array
+  // Erro observado em:
+  // {
+  //   "_valueOf": [
+  //     "status1",
+  //     "status2"
+  //   ],
+  //   "_is": "ativo",
+  //   "hidden": true
+  // }
+
   // Array com item inválido
   "array de transforms com item inválido": [
-    { _isNot: "status", readonly: true },
-    { _valueOf: ["status1", "status2"], _is: "ativo", hidden: true },
+    {
+      _isNot: "status",
+      readonly: true,
+    },
+    {
+      _valueOf: ["status1", "status2"],
+      _is: "ativo",
+      hidden: true,
+    },
   ],
 };
 
@@ -166,15 +197,15 @@ const invalidCases: Record<string, unknown> = {
 
 describe("assertFieldMetadataTransform", () => {
   describe("casos válidos", () => {
-    it.each(Object.entries(validCases))("%s", (_, data) => {
-      expect(() => assertFieldMetadataTransform(data)).not.toThrow();
+    it.each(Object.entries(validCases))("%s", (name, data) => {
+      expect(() => assertFieldMetadataTransform(data, toCamelCase(name))).not.toThrow();
     });
   });
 
   describe("casos inválidos", () => {
-    it.each(Object.entries(invalidCases))("%s", (_, data) => {
+    it.each(Object.entries(invalidCases))("%s", (name, data) => {
       expect(() =>
-        printErrorBeforeThrowing(() => assertFieldMetadataTransform(data)),
+        printErrorBeforeThrowing(() => assertFieldMetadataTransform(data, toCamelCase(name))),
       ).toThrow();
     });
   });
@@ -184,7 +215,12 @@ describe("assertMetadataTransform — validação de identificadores de campo", 
   it("não lança erro quando o identificador existe na metadata", () => {
     expect(() =>
       assertMetadataTransform(
-        { taxType: { _valueOf: "taxType", _in: ["itbi", "iptu"] } },
+        {
+          taxType: {
+            _valueOf: "taxType",
+            _in: ["itbi", "iptu"],
+          },
+        },
         metadataDefault,
       ),
     ).not.toThrow();
@@ -193,7 +229,12 @@ describe("assertMetadataTransform — validação de identificadores de campo", 
   it("lança erro quando o identificador não existe na metadata", () => {
     expect(() =>
       assertMetadataTransform(
-        { taxTypee: { _valueOf: "taxType", _in: ["itbi", "iptu"] } },
+        {
+          taxTypee: {
+            _valueOf: "taxType",
+            _in: ["itbi", "iptu"],
+          },
+        },
         metadataDefault,
       ),
     ).toThrow();

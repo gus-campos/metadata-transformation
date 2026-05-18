@@ -1,4 +1,4 @@
-import { ALL_VALID_CHANGE_KEYS, UnitChangeCondition } from "./change-condition";
+import { ALL_VALID_CHANGE_CONDITION_KEYS, UnitChangeCondition } from "./change-condition";
 import {
   UnitValueCondition,
   VALUE_MAIN_KEYS,
@@ -14,7 +14,7 @@ import {
 export const DRAFT_CONDITION_VALID_KEYS = [
   ...VALUE_MAIN_KEYS,
   ...VALUE_SECONDARY_KEYS,
-  ...ALL_VALID_CHANGE_KEYS,
+  ...ALL_VALID_CHANGE_CONDITION_KEYS,
 ] as const;
 
 export type UnitDraftCondition = UnitChangeCondition | UnitValueCondition;

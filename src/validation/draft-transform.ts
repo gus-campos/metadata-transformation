@@ -1,5 +1,5 @@
 import {
-  ALL_VALID_CHANGE_KEYS,
+  ALL_VALID_CHANGE_CONDITION_KEYS,
   schema_changeConditionAnyChanged,
   schema_changeConditionChanged,
   schema_changeConditionIf,
@@ -67,7 +67,7 @@ export function assertFieldDraftTransform(
     fail("Era esperado um objeto ou um array.", candidate);
 
   const allValidKeys = [
-    ...ALL_VALID_CHANGE_KEYS,
+    ...ALL_VALID_CHANGE_CONDITION_KEYS,
     ...ALL_VALID_VALUE_CONDITION_KEYS,
     ...ALL_VALID_DRAFT_CONFIG_KEYS,
   ];
@@ -96,7 +96,7 @@ function assertUnitFieldDraftTransform(
 
   // UnitValueCondition
 
-  const hasChangeConditionKeys = ALL_VALID_CHANGE_KEYS.some(
+  const hasChangeConditionKeys = ALL_VALID_CHANGE_CONDITION_KEYS.some(
     (key) => key in candidate,
   );
 
@@ -117,7 +117,9 @@ function assertUnitFieldDraftTransform(
 
   // Verificar se não tem os dois ao mesmo tempo
 
-  if (draftConditionKeyIncluded) return assertUnitDraftCondition(candidate);
+  if (draftConditionKeyIncluded) {
+    return assertUnitDraftCondition(candidate);
+  }
 
   return true;
 }
@@ -126,14 +128,24 @@ function assertUnitDraftCondition(
   candidate: Record<string, unknown>,
   identifier?: string,
 ): candidate is UnitDraftCondition {
+  
+  // Testar primeiro para change condition, para forçar o _if para avaliação do change 
+  
   // UnitChangedCondition
-  if (ALL_VALID_CHANGE_KEYS.some((key) => key in candidate))
+  
+  if (ALL_VALID_CHANGE_CONDITION_KEYS.some((key) => key in candidate))
+  {
+    console.log(`change ${JSON.stringify(candidate)}`);
     return assertUnitChangeCondition(candidate, identifier);
+  }
 
   // UnitValueCondition
 
   if (ALL_VALID_VALUE_CONDITION_KEYS.some((key) => key in candidate))
+  {
+    console.log(`value ${JSON.stringify(candidate)}`);
     return assertUnitValueCondition(candidate, identifier);
+  }
 
   return false;
 }
@@ -142,13 +154,13 @@ export function assertUnitChangeCondition(
   candidate: Record<string, unknown>,
   identifier?: string,
 ): candidate is UnitChangeCondition {
-  const chageKeysFound = ALL_VALID_CHANGE_KEYS.filter(
+  const chageKeysFound = ALL_VALID_CHANGE_CONDITION_KEYS.filter(
     (key) => key in candidate,
   );
 
   if (chageKeysFound.length > 1) {
     fail(
-      `Apenas uma das seguintes chaves principais eram esperadas: ${formatArray(ALL_VALID_CHANGE_KEYS)}`,
+      `Apenas uma das seguintes chaves principais eram esperadas: ${formatArray(ALL_VALID_CHANGE_CONDITION_KEYS)}`,
       candidate,
     );
   }
@@ -158,7 +170,7 @@ export function assertUnitChangeCondition(
     .filter(Boolean)
     .join(".");
 
-    console.log(pathToObjectValidated)
+  console.log(pathToObjectValidated);
 
   switch (chageKeyFound) {
     case "_changed":

@@ -8,7 +8,7 @@ export class ValidationError extends Error {
 }
 
 export function fail(expected: string, received: unknown): never {
-  throw new ValidationError(`${expected}\nRecebido: ${serialize(received)}`);
+  throw new ValidationError(`${expected}\nErro observado em:\n${serialize(received)}`);
 }
 
 export function serialize(val: unknown): string {

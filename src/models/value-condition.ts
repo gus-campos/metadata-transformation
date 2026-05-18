@@ -3,29 +3,36 @@ import { schema_plainObject, schema_value } from "./common";
 
 // Fields
 export const schema_valueOf = z.object({
-  _valueOf: z.string().optional(),
+  _valueOf: z.string("Para o _valueOf deve ser passada uma string").optional(),
 });
 
 // Conditions
 export const schema_valueConditionIs = schema_valueOf.extend({
-  _is: schema_value,
+  _is: schema_value
+  //   .refine(
+  //   (data) => schema_value.safeParse(data._is).success, 
+  //   {
+  //     message: "Para o _is está incorreto neste contexto.",
+  //     path: ['_is'], 
+  //   }
+  // )
 });
 
 export const schema_valueConditionIsNot = schema_valueOf.extend({
-  _isNot: schema_value,
+  _isNot: schema_value
 });
 
 export const schema_valueConditionIsIn = schema_valueOf.extend({
-  _in: z.array(schema_value),
+  _in: z.array(schema_value, "Para o _in deve ser passado um array de valores"),
 });
 
 export const schema_valueConditionIsNotIn = schema_valueOf.extend({
-  _notIn: z.array(schema_value),
+  _notIn: z.array(schema_value, "Para o _notIn deve ser passado um array de valores"),
 });
 
 export const schema_valueConditionIfPredicate = z.function({
   input: z.tuple([schema_plainObject]),
-  output: z.boolean(),
+  output: z.boolean("O retorno do lambda da chave _if deve ser boolean"),
 });
 
 export const schema_valueConditionIf = z.object({

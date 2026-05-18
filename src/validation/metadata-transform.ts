@@ -110,8 +110,9 @@ function assertUnitFieldMetadataTransform(
     (key) => key in candidate,
   );
   const primaryKeysIncluded = VALUE_MAIN_KEYS.some((key) => key in candidate);
+  
   if (secondaryKeyFound || primaryKeysIncluded)
-    return assertUnitValueCondition(candidate);
+    return assertUnitValueCondition(candidate, identifier);
 
   return true;
 }

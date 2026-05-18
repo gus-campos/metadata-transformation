@@ -52,20 +52,20 @@ export function assertUnitValueCondition(
   }
 
   const secondaryKeyFound = secondaryKeysFound[0];
-  const pathObjectValidated = [identifier, secondaryKeyFound].filter(Boolean).join(".");
-  
+
   switch (secondaryKeyFound) {
     case "_is":
-      return assertSchemaType(schema_valueConditionIs, candidate, pathObjectValidated);
+      console.log("teste")
+      return assertSchemaType(schema_valueConditionIs, candidate, identifier);
 
     case "_isNot":
-      return assertSchemaType(schema_valueConditionIsNot, candidate, pathObjectValidated);
+      return assertSchemaType(schema_valueConditionIsNot, candidate, identifier);
 
     case "_in":
-      return assertSchemaType(schema_valueConditionIsIn, candidate, pathObjectValidated);
+      return assertSchemaType(schema_valueConditionIsIn, candidate, identifier);
 
     case "_notIn":
-      return assertSchemaType(schema_valueConditionIsNotIn, candidate, pathObjectValidated);
+      return assertSchemaType(schema_valueConditionIsNotIn, candidate, identifier);
 
     default:
       throw new Error(

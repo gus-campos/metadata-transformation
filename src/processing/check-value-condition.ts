@@ -14,6 +14,8 @@ import { fail, isPlainObject, ValidationError } from "../validation/utils";
 import { accessPathInObject } from "./path-access";
 import { wrappedError } from "./wrap-error";
 
+// FIXME: Mudar tratativa de caminho inexistente?
+
 export function checkValueCondition(
   valueCondition: UnitValueCondition,
   object: PlainObject,
@@ -138,16 +140,14 @@ function wrapIfError(err: unknown) {
   if (err instanceof z.core.$ZodError) {
     const issue = err.issues[0];
 
-    const message =
-      issue.code === "invalid_type" && issue.path.length === 0
-        ? `Função lambda _if retornou um tipo inválido:\n${issue.message}`
-        : issue.message;
-
-    throw new ValidationError(message);
+    if (issue.code === "invalid_type" && issue.path.length === 0) {
+      const message = `Função lambda _if retornou um tipo inválido:\n${issue.message}`;
+      return new ValidationError(message);
+    }
   }
 
   return wrappedError(
-    "Erro inesperado ao executar lambda passada em chave _if:",
+    "Erro inesperado ao executar lambda passada em chave _if",
     err,
   );
 }
