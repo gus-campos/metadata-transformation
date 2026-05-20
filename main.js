@@ -116,6 +116,92 @@ const fieldValue = {
   },
 };
 
+const metadataTransform = {
+
+  // Todas as configurações
+  "campo1": {
+
+    _apply: {
+      readonly: true,
+      required: true,
+      hidden: true,
+      breakLine: true,
+      size: "md",
+      valueOptions: [],
+      query: {},
+    }
+  },
+
+  // Behavior
+  "campo2": {
+
+    _apply: {
+      behavior: "omitted",
+      size: "md",
+      valueOptions: [],
+      query: {},
+    }
+  },
+
+  // matches compostos, dificulmente será necessário tudo
+  // sempre começa com _match? 
+  // Limita a só ter um na raíz?
+  // Fazer exemplos mais práticos e curtos, pra passar a sensação da coisa
+  // match é SEMPRE na raíz, pra dentro ele sempre fica implícito
+  // Sempre é um "all" as múltiplas chaves
+  "campo2": {
+
+    _match: { 
+
+      "campo0": null,
+        
+      _some: {
+        "campo1": "cnpj",
+
+        _not: {
+          "campo4": null,
+        }
+      }
+    },
+
+    _apply: {
+      // ...
+    }
+  },
+
+  // Draft
+  "campo2": {
+    
+    _match: {
+      _changed: "campo0",
+      _anyChanged: ["campo0", "campo3"],
+      "campo1": "cpf",
+    },
+
+    _setValue: "novoValor do campo"
+  },
+
+  // Múltiplos casos
+  "campo2": [
+    {
+      _match: {
+        _changed: "campo0",
+        _anyChanged: ["campo0", "campo3"],
+        "campo1": "cpf",
+      },
+      
+      _setValue: "valor 1"
+    },
+    {
+      _match: {
+        _changed: "campo4",
+      },
+      
+      _setValue: "valor 2"
+    },
+  ],
+};
+
 const fieldChange = {
   _matchAll: {
     _changed: ["campo1, campo2"],
