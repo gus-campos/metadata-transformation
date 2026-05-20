@@ -102,18 +102,52 @@ console.log("\n\n\n");
 console.log(_metadata);
 console.log("\n\n\n");
 
+const fieldValue = {
+  _match: {
+    campo1: "valor1",
+    campo2: "valor2",
+    _not: {
+      campo3: null,
+      campo4: null,
+    },
+  },
+  _apply: {
+    behavior: "omitted",
+  },
+};
 
+const fieldChange = {
+  _matchAll: {
+    _changed: ["campo1, campo2"],
 
+    _matchChange: {
+      campo1: {
+        from: "valor1",
+      },
 
+      campo2: {
+        to: "valor2",
+      },
 
+      // Não dá pra negar valor, mas não precisa
+      campo3: {
+        from: "valor1",
+        to: "valor2",
+      },
 
+      campo2: "valor2",
 
+      _not: {
+        campo3: null,
+        campo4: null,
+      },
+    },
+  },
 
-
-
-
-
-
+  _apply: {
+    behavior: "omitted",
+  },
+};
 
 ///////////////////////////////////////////////////////////////
 

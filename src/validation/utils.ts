@@ -8,7 +8,9 @@ export class ValidationError extends Error {
 }
 
 export function fail(expected: string, received: unknown): never {
-  throw new ValidationError(`${expected}\nErro observado em:\n${serialize(received)}`);
+  throw new ValidationError(
+    `${expected}\nErro observado em:\n${serialize(received)}`,
+  );
 }
 
 export function serialize(val: unknown): string {
@@ -39,17 +41,20 @@ export function formatArray(array: readonly any[]) {
 export function assertSchemaType<T>(
   schema: ZodType<T>,
   candidate: unknown,
-  validationPath?: string,
+  pathToObjValidated?: string,
 ): candidate is T {
   const result = schema.safeParse(candidate);
 
+  const fullPath = [pathToObjValidated, result.error?.issues[0].path]
+    .filter(Boolean)
+    .join(".");
+
   if (!result.success) {
     const zodMessage = result.error.issues[0].message;
-    const additionalMessage = validationPath ? `Erro na validação no caminho ${validationPath}:\n` : "";
-    fail(
-      `${additionalMessage}${zodMessage}`,
-      candidate,
-    );
+    const additionalMessage = pathToObjValidated
+      ? `Erro de validação no caminho ${fullPath}:\n`
+      : "";
+    fail(`${additionalMessage}${zodMessage}`, candidate);
   }
 
   return true;

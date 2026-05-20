@@ -1,10 +1,4 @@
-import {
-  ALL_VALID_CHANGE_CONDITION_KEYS,
-  schema_changeConditionAnyChanged,
-  schema_changeConditionChanged,
-  schema_changeConditionIf,
-  UnitChangeCondition,
-} from "../models/change-condition";
+import { ALL_VALID_CHANGE_CONDITION_KEYS } from "../models/change-condition";
 import {
   DRAFT_CONDITION_VALID_KEYS,
   UnitDraftCondition,
@@ -19,6 +13,7 @@ import {
   UnitFieldDraftTransform,
 } from "../models/draft-transform";
 import { ALL_VALID_VALUE_CONDITION_KEYS } from "../models/value-condition";
+import { assertUnitChangeCondition } from "./change-condition";
 import { assertSchemaType, fail, formatArray, isPlainObject } from "./utils";
 import { assertUnitValueCondition } from "./value-condition";
 
@@ -106,7 +101,7 @@ function assertUnitFieldDraftTransform(
 
   if (hasChangeConditionKeys && hasValueConditionKeys) {
     fail(
-      "Não eram esperadas chaves de condição de valor e de condição mudança ao mesmo tempo",
+      "Não eram esperadas chaves de condição de valor e de condição de mudança ao mesmo tempo",
       candidate,
     );
   }
@@ -118,7 +113,7 @@ function assertUnitFieldDraftTransform(
   // Verificar se não tem os dois ao mesmo tempo
 
   if (draftConditionKeyIncluded) {
-    return assertUnitDraftCondition(candidate);
+    return assertUnitDraftCondition(candidate, identifier);
   }
 
   return true;
@@ -128,75 +123,17 @@ function assertUnitDraftCondition(
   candidate: Record<string, unknown>,
   identifier?: string,
 ): candidate is UnitDraftCondition {
-  
-  // Testar primeiro para change condition, para forçar o _if para avaliação do change 
-  
+  // Testar primeiro para change condition, para forçar o _if para avaliação do change
+
   // UnitChangedCondition
-  
+
   if (ALL_VALID_CHANGE_CONDITION_KEYS.some((key) => key in candidate))
-  {
-    console.log(`change ${JSON.stringify(candidate)}`);
     return assertUnitChangeCondition(candidate, identifier);
-  }
 
   // UnitValueCondition
 
   if (ALL_VALID_VALUE_CONDITION_KEYS.some((key) => key in candidate))
-  {
-    console.log(`value ${JSON.stringify(candidate)}`);
     return assertUnitValueCondition(candidate, identifier);
-  }
 
   return false;
-}
-
-export function assertUnitChangeCondition(
-  candidate: Record<string, unknown>,
-  identifier?: string,
-): candidate is UnitChangeCondition {
-  const chageKeysFound = ALL_VALID_CHANGE_CONDITION_KEYS.filter(
-    (key) => key in candidate,
-  );
-
-  if (chageKeysFound.length > 1) {
-    fail(
-      `Apenas uma das seguintes chaves principais eram esperadas: ${formatArray(ALL_VALID_CHANGE_CONDITION_KEYS)}`,
-      candidate,
-    );
-  }
-
-  const chageKeyFound = chageKeysFound[0];
-  const pathToObjectValidated = [identifier, chageKeyFound]
-    .filter(Boolean)
-    .join(".");
-
-  console.log(pathToObjectValidated);
-
-  switch (chageKeyFound) {
-    case "_changed":
-      return assertSchemaType(
-        schema_changeConditionChanged,
-        candidate,
-        pathToObjectValidated,
-      );
-
-    case "_anyChanged":
-      return assertSchemaType(
-        schema_changeConditionAnyChanged,
-        candidate,
-        pathToObjectValidated,
-      );
-
-    case "_if":
-      return assertSchemaType(
-        schema_changeConditionIf,
-        candidate,
-        pathToObjectValidated,
-      );
-
-    default:
-      throw new Error(
-        `Chave secundária de condição de valor não tratada ${chageKeyFound}`,
-      );
-  }
 }

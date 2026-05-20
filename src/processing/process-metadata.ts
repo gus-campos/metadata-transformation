@@ -1,6 +1,4 @@
-import { PlainObject, Metadata } from "../models/common";
 import {
-  Behavior,
   BehaviorConfig,
   BehaviorProps,
   LayoutConfig,

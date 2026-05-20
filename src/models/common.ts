@@ -15,7 +15,7 @@ export type Value =
   | Date
   | null;
 
-// Se mudar tipagem, lembrar de mudar mensagem de erro também!
+// Se mudar tipagem, lembrar de mudar mensagem de erro também, aqui e no helper abaixo
 export const schema_value: z.ZodType<Value> = z.lazy(() =>
   z.union(
     [
@@ -27,9 +27,14 @@ export const schema_value: z.ZodType<Value> = z.lazy(() =>
       schema_plainObject, // recursão tardia
     ],
     {
-      error: () => ({
-        message: `Únicos valores aceitos são: number, boolean, string, Date, null ou objeto.`,
-      }),
+      error: (ctx) => {
+        if (ctx.input === undefined)
+          return { message: "Campo não informado." };
+
+        return {
+          message: `Únicos valores aceitos são: number, boolean, string, Date, null ou objeto.`,
+        };
+      },
     },
   ),
 );

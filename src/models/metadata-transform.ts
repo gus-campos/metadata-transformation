@@ -1,8 +1,8 @@
 import { Metadata, PlainObject } from "./common";
 import { MetadataConfig } from "./metadata-config";
-import { UnitValueCondition } from "./value-condition";
+import { ComposedValueCondition } from "./value-condition";
 
-export type UnitFieldMetadataTransform = MetadataConfig | (MetadataConfig & UnitValueCondition);
+export type UnitFieldMetadataTransform = MetadataConfig | (MetadataConfig & ComposedValueCondition);
 
 export type FieldMetadataTransform =
   | UnitFieldMetadataTransform

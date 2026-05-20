@@ -3,7 +3,7 @@ import z from "zod";
 // TODO: Adicionar os campos, validar quando pode
 // TODO: depois adicionar em Metadata, tipos diferentes de metadata??
 // edithelp { _current, pt} (string)
-// name { _current, pt} (string)
+// name { _current, pt} (string) --> "fieldName"
 // minMultiplicity
 // maxMultiplicity
 // shiftable
@@ -14,7 +14,7 @@ import z from "zod";
 // quais outras opções podem causar novos campos no metadata?
 
 export const schema_behavior = z.object({
-  behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]),
+  behavior: z.enum(["omitted", "mandatory", "editable", "displayed"]).optional(),
 });
 
 export const schema_behaviorProps = z.object({
@@ -44,9 +44,10 @@ export const schema_selectQuery = z.object({
 export const schema_selectionConfig =
   schema_selectOptions.and(schema_selectQuery);
 
-export const schema_metadataConfig = schema_layoutConfig.and(
-  schema_behaviorProps.and(schema_selectionConfig),
-);
+export const schema_metadataConfig = schema_layoutConfig
+  .and(schema_behaviorProps)
+  .and(schema_behavior)
+  .and(schema_selectionConfig);
 
 export const METADATA_CONFIG_KEYS = {
   behavior: Object.keys(schema_behavior.shape) as (keyof Behavior)[],

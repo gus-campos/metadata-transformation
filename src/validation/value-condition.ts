@@ -3,7 +3,7 @@ import { assertSchemaType, fail, formatArray } from "./utils";
 
 export function assertUnitValueCondition(
   candidate: Record<string, unknown>,
-  identifier?: string,
+  fieldIdentifier?: string,
 ): candidate is UnitValueCondition {
   // Chaves principais
 
@@ -32,7 +32,7 @@ export function assertUnitValueCondition(
       );
     }
 
-    return assertSchemaType(schema_valueConditionIf, candidate, identifier);
+    return assertSchemaType(schema_valueConditionIf, candidate, fieldIdentifier);
   }
 
   // Condição FIELD - aceita implícito
@@ -52,20 +52,22 @@ export function assertUnitValueCondition(
   }
 
   const secondaryKeyFound = secondaryKeysFound[0];
+    const pathToObjectValidated = [fieldIdentifier, secondaryKeyFound]
+    .filter(Boolean)
+    .join(".");
 
   switch (secondaryKeyFound) {
     case "_is":
-      console.log("teste")
-      return assertSchemaType(schema_valueConditionIs, candidate, identifier);
+      return assertSchemaType(schema_valueConditionIs, candidate, pathToObjectValidated);
 
     case "_isNot":
-      return assertSchemaType(schema_valueConditionIsNot, candidate, identifier);
+      return assertSchemaType(schema_valueConditionIsNot, candidate, pathToObjectValidated);
 
     case "_in":
-      return assertSchemaType(schema_valueConditionIsIn, candidate, identifier);
+      return assertSchemaType(schema_valueConditionIsIn, candidate, pathToObjectValidated);
 
     case "_notIn":
-      return assertSchemaType(schema_valueConditionIsNotIn, candidate, identifier);
+      return assertSchemaType(schema_valueConditionIsNotIn, candidate, pathToObjectValidated);
 
     default:
       throw new Error(

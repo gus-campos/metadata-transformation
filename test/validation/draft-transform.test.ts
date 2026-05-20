@@ -174,6 +174,7 @@ const invalidCases: Record<string, unknown> = {
 
   "chave desconhecida no transform": {
     taxType: {
+      setValue: "iptu",
       foo: "bar",
     },
   },
@@ -195,28 +196,42 @@ const invalidCases: Record<string, unknown> = {
 
   // ── Operadores de valor com tipos errados ────────────────────────────────
 
+
+  // Erro de validação no caminho taxType._in._in: ========> DUPLICADO
+  // Para o _in deve ser passado um array de valores
+  // Erro observado em:
+  // {
+  //   "_valueOf": "tipo",
+  //   "_in": "A",
+  //   "setValue": "iptu"
+  // }
+
   "_in com escalar em vez de array": {
     taxType: {
       _valueOf: "tipo",
       _in: "A",
+      setValue: "iptu",
     },
   },
 
   "_notIn com escalar em vez de array": {
     taxType: {
       _notIn: "X",
+      setValue: "iptu",
     },
   },
 
   "_is com array em vez de escalar": {
     taxType: {
       _is: ["ativo", "inativo"],
+      setValue: "iptu",
     },
   },
 
   "_isNot com array em vez de escalar": {
     taxType: {
       _isNot: ["inativo"],
+      setValue: "iptu",
     },
   },
 
@@ -225,18 +240,24 @@ const invalidCases: Record<string, unknown> = {
   "_changed com array em vez de string": {
     taxType: {
       _changed: ["status", "tipo"],
+      setValue: "iptu",
     },
   },
 
   "_anyChanged com string em vez de array": {
     taxType: {
       _anyChanged: "status",
+      setValue: "iptu",
     },
   },
 
+  // Zero no final devia ser notação de array
+  // Eu fiz isso?
+  // Erro de validação no caminho taxType._anyChanged._anyChanged,0:
   "_anyChanged com array de não-strings": {
     taxType: {
-      _anyChanged: [1, 2, 3],
+      _anyChanged: [1, 2, 3], 
+      setValue: "iptu",
     },
   },
 
@@ -245,12 +266,14 @@ const invalidCases: Record<string, unknown> = {
   "_if com valor booleano em vez de função": {
     taxType: {
       _if: true,
+      setValue: "iptu",
     },
   },
 
   "_if com string em vez de função": {
     taxType: {
       _if: "() => true",
+      setValue: "iptu",
     },
   },
 
@@ -259,6 +282,7 @@ const invalidCases: Record<string, unknown> = {
   "_valueOf sem operador de condição": {
     taxType: {
       _valueOf: "status",
+      setValue: "iptu",
     },
   },
 
@@ -266,6 +290,7 @@ const invalidCases: Record<string, unknown> = {
     taxType: {
       _is: "ativo",
       _in: ["ativo", "inativo"],
+      setValue: "iptu",
     },
   },
 
@@ -273,6 +298,7 @@ const invalidCases: Record<string, unknown> = {
     taxType: {
       _if: () => true,
       _valueOf: "status",
+      setValue: "iptu",
     },
   },
 
@@ -280,6 +306,7 @@ const invalidCases: Record<string, unknown> = {
     taxType: {
       _if: () => true,
       _changed: "status",
+      setValue: "iptu",
     },
   },
 
@@ -294,12 +321,14 @@ const invalidCases: Record<string, unknown> = {
       {
         _valueOf: ["errado"],
         _is: "ativo",
+        setValue: "iptu",
       },
     ],
   },
 
   "valor do campo não é objeto nem array": {
     taxType: "string_direto",
+    setValue: "iptu",
   },
 
   // ── Estrutura raiz inválida ──────────────────────────────────────────────

@@ -77,8 +77,13 @@ export type UnitValueCondition =
 
 // Implementação futura
 
-type ComposedValueCondition =
+// Ideia - mudar tudo pra _match, _apply
+// | { _matchAll: ComposedValueCondition[] }
+//   | { _matchAny: ComposedValueCondition[] }
+//   | { _matchNone: ComposedValueCondition }; // ou _not
+
+export type ComposedValueCondition =
   | UnitValueCondition
-  | { _all: UnitValueCondition[] }
-  | { _any: UnitValueCondition[] }
-  | { _not: UnitValueCondition };
+  | { _all: ComposedValueCondition[] }
+  | { _any: ComposedValueCondition[] }
+  | { _not: ComposedValueCondition };
