@@ -1,7 +1,7 @@
 import { InstanceObject, Value } from "./common";
 import { MatchCondition } from "./match-condition";
 
-type Transition = { from?: Value; to?: Value };
+export type Transition = { from?: Value; to?: Value };
 
 export type FieldDraftTransform = {
   _if?: (object: InstanceObject, oldObject: InstanceObject) => boolean;
@@ -10,6 +10,11 @@ export type FieldDraftTransform = {
   _changed?: string[];
   _setValue?: Value | Value[];
 };
+
+export type DraftTransform = Record<
+  string,
+  FieldDraftTransform | FieldDraftTransform[]
+>;
 
 // =============================================================================
 

@@ -1,6 +1,7 @@
 import { InstanceObject, Value } from "../models/common";
 import { MatchCondition } from "../models/match-condition";
 import { accessPathInObject } from "../utils/path-access";
+import { valuesAreEqual } from "../utils/values-are-equal";
 
 export function checkMatchCondition(
   instance: InstanceObject,
@@ -75,9 +76,3 @@ function checkFieldMatch(
   );
 }
 
-function valuesAreEqual(a: Value, b: Value): boolean {
-  if (a instanceof Date && b instanceof Date)
-    return a.getTime() === b.getTime();
-
-  return a === b;
-}

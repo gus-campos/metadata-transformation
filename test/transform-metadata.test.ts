@@ -285,7 +285,7 @@ describe("transformMetadata", () => {
       campo2: { _apply: { required: true } },
     };
 
-    transformMetadata(metadata, metadataTransform, instance);
+    transformMetadata(metadata, instance, metadataTransform);
 
     expect(metadata.fields.campo1!.hidden).toBe(true);
     expect(metadata.fields.campo2!.required).toBe(true);
@@ -298,7 +298,7 @@ describe("transformMetadata", () => {
     };
 
     expect(() =>
-      transformMetadata(metadata, metadataTransform, instance),
+      transformMetadata(metadata, instance, metadataTransform),
     ).toThrow();
   });
 
@@ -308,7 +308,7 @@ describe("transformMetadata", () => {
       campo1: { _apply: { hidden: true } },
     };
 
-    transformMetadata(metadata, metadataTransform, instance);
+    transformMetadata(metadata, instance, metadataTransform);
 
     expect(metadata.fields.campo2!.hidden).toBe(false);
   });
@@ -322,7 +322,7 @@ describe("transformMetadata", () => {
       ],
     };
 
-    transformMetadata(metadata, metadataTransform, instance);
+    transformMetadata(metadata, instance, metadataTransform);
 
     expect(metadata.fields.campo1!.hidden).toBe(true);
     expect(metadata.fields.campo1!.required).toBe(false);
@@ -335,7 +335,7 @@ describe("transformMetadata", () => {
       campo1: { _if, _apply: { hidden: true } },
     };
 
-    transformMetadata(metadata, metadataTransform, instance);
+    transformMetadata(metadata, instance, metadataTransform);
 
     expect(_if).toHaveBeenCalledWith(instance);
   });

@@ -11,8 +11,8 @@ type FieldMetadataContext = {
 
 export function transformMetadata(
   metadata: Metadata,
-  metadataTransform: MetadataTransform,
   instance: InstanceObject,
+  metadataTransform: MetadataTransform,
 ) {
 
   // Para campo e sua transformação
@@ -23,19 +23,19 @@ export function transformMetadata(
 
 export function fieldTransformMetadata(
   context: FieldMetadataContext,
-  metadataTransform: FieldMetadataTransform | FieldMetadataTransform[]
+  fieldTransform: FieldMetadataTransform | FieldMetadataTransform[]
 ) {
 
   // Array: chamar recursivamente para os itens
 
-  if (Array.isArray(metadataTransform)) {
-    for (const transform of metadataTransform)
+  if (Array.isArray(fieldTransform)) {
+    for (const transform of fieldTransform)
       fieldTransformMetadata(context, transform);
 
     return;
   }
 
-  const { _if, _match, _apply } = metadataTransform;
+  const { _if, _match, _apply } = fieldTransform;
 
   // Verificar mesmo que não tenha condição para aplicar
   // pra manter consistência no fluxo de erros e execuções
