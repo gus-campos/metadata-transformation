@@ -1,0 +1,8 @@
+export function isPlainObject(val: unknown): val is Record<string, unknown> {
+  return (
+    typeof val === "object" &&
+    val !== null &&
+    !Array.isArray(val) &&
+    !(val instanceof Date)
+  );
+}
