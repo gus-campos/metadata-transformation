@@ -207,8 +207,9 @@ describe("checkMatchCondition — campo é valor único, busca com array", () =>
     ).toBe(false);
   });
 
-  it("retorna false para array esperado vazio", () => {
-    expect(checkMatchCondition(instanceWithArrays, { status: [] })).toBe(false);
+  // Se não estou exigindo nenhum valor, o teste não tem por que falhar
+  it("retorna true para array esperado vazio", () => {
+    expect(checkMatchCondition(instanceWithArrays, { status: [] })).toBe(true);
   });
 
   it("encontra null no array esperado", () => {
@@ -237,8 +238,9 @@ describe("checkMatchCondition — campo é array, busca em array", () => {
     ).toBe(false);
   });
 
-  it("retorna false quando array esperado é vazio", () => {
-    expect(checkMatchCondition(instanceWithArrays, { tags: [] })).toBe(false);
+  // Se não estou exigindo nenhum valor, o teste não tem por que falhar
+  it("retorna true quando array esperado é vazio", () => {
+    expect(checkMatchCondition(instanceWithArrays, { tags: [] })).toBe(true);
   });
 
   it("retorna false quando o campo é array vazio", () => {

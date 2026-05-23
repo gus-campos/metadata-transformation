@@ -1,8 +1,9 @@
 import { InstanceObject } from "../models/common";
 import { DraftTransform, FieldDraftTransform } from "../models/draft-transform";
+import { safeClone } from "../utils/safe-clone";
 import {
   checkChangedCondition,
-  checkTransitionedCondition,
+  checkSwapCondition,
 } from "./check-change-condition";
 import { checkMatchCondition } from "./check-match-condition";
 
@@ -19,12 +20,12 @@ export function transformDraft(
   draftTransform: DraftTransform,
 ) {
   // Para campo e sua transformação
-  
+
   const context = {
     instance,
     oldInstance,
     // Isso é necessário para não fazer comparações com novos valores
-    lookupInstance: structuredClone(instance),
+    lookupInstance: safeClone(instance),
     fieldIdentifier: "",
   };
 
@@ -49,7 +50,7 @@ export function fieldTransformDraft(
     return;
   }
 
-  const { _if, _changed, _transitioned, _match, _setValue } = fieldTransform;
+  const { _if, _changed, _swapped, _match, _setValue } = fieldTransform;
 
   // Verificar mesmo que não tenha condição para aplicar
   // pra manter consistência no fluxo de erros e execuções
@@ -58,18 +59,25 @@ export function fieldTransformDraft(
     ? true
     : checkMatchCondition(context.lookupInstance, _match);
 
-  const isIfTruthy = !_if ? true : _if(context.lookupInstance, context.oldInstance);
+  const isIfTruthy = !_if
+    ? true
+    : _if(context.lookupInstance, context.oldInstance);
 
+  // TODO: Inserir testes para valor único
   const isChangedTruthy = !_changed
     ? true
-    : checkChangedCondition(context.lookupInstance, context.oldInstance, _changed);
-
-  const isTransitionedTruthy = !_transitioned
-    ? true
-    : checkTransitionedCondition(
+    : checkChangedCondition(
         context.lookupInstance,
         context.oldInstance,
-        _transitioned,
+        Array.isArray(_changed) ? _changed : [_changed],
+      );
+
+  const isTransitionedTruthy = !_swapped
+    ? true
+    : checkSwapCondition(
+        context.lookupInstance,
+        context.oldInstance,
+        _swapped,
       );
 
   if (

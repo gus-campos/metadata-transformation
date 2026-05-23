@@ -3,7 +3,7 @@ import { InstanceObject, Metadata } from "./src/models/common";
 const _metadata: Metadata = {
   fields: {
     campo1: {
-      readonly: true,
+      readOnly: true,
       required: true,
       hidden: true,
       breakline: true,
@@ -12,7 +12,7 @@ const _metadata: Metadata = {
       valueOptions: [],
     },
     campo2: {
-      readonly: true,
+      readOnly: true,
       required: true,
       hidden: true,
       breakline: true,
@@ -21,7 +21,7 @@ const _metadata: Metadata = {
       valueOptions: [],
     },
     campo3: {
-      readonly: true,
+      readOnly: true,
       required: true,
       hidden: true,
       breakline: true,

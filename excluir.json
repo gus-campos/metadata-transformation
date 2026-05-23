@@ -1,0 +1,924 @@
+{
+    "implements": [
+        {
+            "_id": "000000000000000000000087",
+            "_classId": "000000000000000000000000"
+        }
+    ],
+    "_creationUser": {
+        "_id": "69c525d8913e95216f7bfd21",
+        "_classId": "000000000000000000000002"
+    },
+    "dataExtractor": null,
+    "_lastUpdateUser": {
+        "_id": "69c525d8913e95216f7bfd21",
+        "_classId": "000000000000000000000002"
+    },
+    "type": "STANDARD",
+    "modifiers": null,
+    "allowOfflineCreate": false,
+    "purgeConfiguration": null,
+    "objectDetailsView": null,
+    "fieldGrouping": "NONE",
+    "_lastUpdateDate": "2026-05-22T23:58:45.680Z",
+    "_publishedObject": null,
+    "_protected": false,
+    "_unprotectedFields": [],
+    "editHelp": null,
+    "identifier": "transformerTest",
+    "package": {
+        "_id": "6a10ebf642276440c2976b83",
+        "_classId": "000000000000000000000015"
+    },
+    "_revision": "12",
+    "index": true,
+    "_classRevision": "1772492533457",
+    "_creationDate": "2026-05-22T23:51:31.362Z",
+    "sections": [],
+    "objectEditView": null,
+    "allowOfflineEdit": false,
+    "name": {
+        "pt": "Teste Transformer"
+    },
+    "_class": {
+        "_id": "000000000000000000000000",
+        "_classId": "000000000000000000000000"
+    },
+    "_id": "6a10ec0342276440c2977b69",
+    "fields": [
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": null,
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "ID",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_id",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": true,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "ID",
+                "en": "ID",
+                "es": "ID"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "_id",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000001",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b79"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": true,
+            "additionalConfigs": {
+                "onDelete": "BLOCK",
+                "listingOption": "ONLY_ACCESSIBLE",
+                "indexLevel": "IDENTITY",
+                "query": null,
+                "customIndexedFields": [],
+                "_classRevision": "1778799810379",
+                "_class": {
+                    "_id": "000000000000005550000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b7c",
+                "indexedFields": "REFERENCE_ONLY"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "REFERENCE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_publishedObject",
+            "multiple": false,
+            "refClass": {
+                "_id": "6a10ec0342276440c2977b69",
+                "_classId": "000000000000000000000000"
+            },
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": false,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Publicado",
+                "en": "Published",
+                "es": "Publicado"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000170",
+            "exhibitionConfigs": {
+                "exhibition": null,
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "multipleView": false,
+                "_class": {
+                    "_id": "fffff0000000000000000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b7d"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "onDelete": "BLOCK",
+                "listingOption": "ONLY_ACCESSIBLE",
+                "indexLevel": "IDENTITY",
+                "query": null,
+                "customIndexedFields": [],
+                "_classRevision": "1778799810379",
+                "_class": {
+                    "_id": "000000000000005550000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b80",
+                "indexedFields": "FILTER_BY_RELEVANCY"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "REFERENCE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_class",
+            "multiple": false,
+            "refClass": {
+                "_id": "000000000000000000000000",
+                "_classId": "000000000000000000000000"
+            },
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Classe",
+                "en": "Class",
+                "es": "Clase"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000109",
+            "exhibitionConfigs": {
+                "exhibition": null,
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "multipleView": false,
+                "_class": {
+                    "_id": "fffff0000000000000000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b81"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "onDelete": "BLOCK",
+                "listingOption": "ONLY_ACCESSIBLE",
+                "indexLevel": "IDENTITY",
+                "query": null,
+                "customIndexedFields": [],
+                "_classRevision": "1778799810379",
+                "_class": {
+                    "_id": "000000000000005550000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b84",
+                "indexedFields": "REFERENCE_ONLY"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "REFERENCE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_lastUpdateUser",
+            "multiple": false,
+            "refClass": {
+                "_id": "000000000000000000000070",
+                "_classId": "000000000000000000000000"
+            },
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Alterado por",
+                "en": "Changed by",
+                "es": "Modificado por"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000149",
+            "exhibitionConfigs": {
+                "exhibition": null,
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "multipleView": false,
+                "_class": {
+                    "_id": "fffff0000000000000000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b85"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "onDelete": "BLOCK",
+                "listingOption": "ONLY_ACCESSIBLE",
+                "indexLevel": "IDENTITY",
+                "query": null,
+                "customIndexedFields": [],
+                "_classRevision": "1778799810379",
+                "_class": {
+                    "_id": "000000000000005550000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b88",
+                "indexedFields": "REFERENCE_ONLY"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "REFERENCE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_creationUser",
+            "multiple": false,
+            "refClass": {
+                "_id": "000000000000000000000070",
+                "_classId": "000000000000000000000000"
+            },
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Criado por",
+                "en": "Created by",
+                "es": "Creado por"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000150",
+            "exhibitionConfigs": {
+                "exhibition": null,
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "multipleView": false,
+                "_class": {
+                    "_id": "fffff0000000000000000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b89"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "noTime": false,
+                "localGMT": false,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "000000000000005550000000",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b8c"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "DATE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_creationDate",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Data da criação",
+                "en": "Creation date",
+                "es": "Fecha de creación"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000113",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000001",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b8d"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "noTime": false,
+                "localGMT": false,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "000000000000005550000000",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b90"
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "DATE",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_lastUpdateDate",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Data da última alteração",
+                "en": "Date of last change",
+                "es": "Fecha del último cambio"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000148",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000001",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b91"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": true,
+            "additionalConfigs": {
+                "scriptSyntax": "javascript",
+                "display": "MODAL",
+                "_classRevision": "1775775751412",
+                "_class": {
+                    "_id": "000000000000005550000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b94",
+                "placeholder": null,
+                "contentType": "simpleText",
+                "maxLength": null
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "STRING",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_revision",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": false,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Revisão",
+                "en": "Review",
+                "es": "Revisar"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000176",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000004",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b95",
+                "mask": null
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": true,
+            "additionalConfigs": {
+                "scriptSyntax": "javascript",
+                "display": "MODAL",
+                "_classRevision": "1775775751412",
+                "_class": {
+                    "_id": "000000000000005550000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b98",
+                "placeholder": null,
+                "contentType": "simpleText",
+                "maxLength": null
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "STRING",
+            "required": false,
+            "valueOptions": null,
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_classRevision",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": false,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Revisão da classe",
+                "en": "Class revision",
+                "es": "Revisión de clase"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000110",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000004",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b99",
+                "mask": null
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": null,
+            "defaultValue": false,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "BOOLEAN",
+            "required": false,
+            "valueOptions": [
+                {
+                    "identifier": true,
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec0342276440c2977b9b",
+                    "value": {
+                        "pt": "Verdadeiro",
+                        "en": "True",
+                        "es": "Cierto"
+                    }
+                },
+                {
+                    "identifier": false,
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec0342276440c2977b9c",
+                    "value": {
+                        "pt": "Falso",
+                        "en": "False",
+                        "es": "Falso"
+                    }
+                }
+            ],
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_protected",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Protegido",
+                "en": "Protected",
+                "es": "Protegido"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000777",
+            "exhibitionConfigs": {
+                "exhibition": "DEFAULT",
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b9d"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": true,
+            "additionalConfigs": {
+                "scriptSyntax": "javascript",
+                "display": "MODAL",
+                "_classRevision": "1775775751412",
+                "_class": {
+                    "_id": "000000000000005550000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977b9f",
+                "placeholder": null,
+                "contentType": "simpleText",
+                "maxLength": null
+            },
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "STRING",
+            "required": false,
+            "valueOptions": [
+                {
+                    "identifier": "6a10ec3142276440c2996e5e",
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec6342276440c29bb39a",
+                    "value": {
+                        "pt": "Ativo"
+                    }
+                },
+                {
+                    "identifier": "6a10ec4742276440c29a0f9f",
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec6342276440c29bb39b",
+                    "value": {
+                        "pt": "Nome"
+                    }
+                }
+            ],
+            "engine": "DEFAULT",
+            "shiftable": true,
+            "relevancy": "SYSTEM",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "_unprotectedFields",
+            "multiple": true,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": true,
+            "calculationStrategy": null,
+            "searchable": false,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Campos desprotegidos",
+                "en": "Unprotected fields",
+                "es": "Campos no protegidos"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "00ff00000000000000000778",
+            "exhibitionConfigs": {
+                "size": "lg",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000004",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec0342276440c2977ba0",
+                "mask": null
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": null,
+            "defaultValue": null,
+            "section": null,
+            "minMultiplicity": null,
+            "type": "BOOLEAN",
+            "required": false,
+            "valueOptions": [
+                {
+                    "identifier": true,
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec3e42276440c299fc31",
+                    "value": {
+                        "pt": "Verdadeiro",
+                        "en": "True",
+                        "es": "Verdadero"
+                    }
+                },
+                {
+                    "identifier": false,
+                    "_classRevision": "1769641343170",
+                    "_class": {
+                        "_id": "000000000000000000000088",
+                        "_classId": "000000000000000000000000"
+                    },
+                    "_id": "6a10ec3e42276440c299fc34",
+                    "value": {
+                        "pt": "Falso",
+                        "en": "False",
+                        "es": "Falso"
+                    }
+                }
+            ],
+            "engine": "GRAAL",
+            "shiftable": true,
+            "relevancy": "COMMON",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "active",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": false,
+            "calculationStrategy": "ON_WRITE",
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Ativo"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "6a10ec3142276440c2996e5e",
+            "exhibitionConfigs": {
+                "exhibition": "DEFAULT",
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000003",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec3e42276440c299fc36"
+            }
+        },
+        {
+            "valueExpression": null,
+            "hidden": false,
+            "additionalConfigs": {
+                "scriptSyntax": "javascript",
+                "display": "MODAL",
+                "_classRevision": "1775775751412",
+                "_class": {
+                    "_id": "000000000000005550000002",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec5542276440c29b82f5",
+                "placeholder": null,
+                "contentType": "simpleText",
+                "maxLength": null
+            },
+            "defaultValue": "Gustavo",
+            "section": null,
+            "minMultiplicity": null,
+            "type": "STRING",
+            "required": false,
+            "valueOptions": null,
+            "engine": "GRAAL",
+            "shiftable": true,
+            "relevancy": "COMMON",
+            "editHelp": null,
+            "embedded": false,
+            "calculated": false,
+            "identifier": "name",
+            "multiple": false,
+            "refClass": null,
+            "maxMultiplicity": null,
+            "_classRevision": "1778799810379",
+            "readOnly": false,
+            "calculationStrategy": "ON_WRITE",
+            "searchable": true,
+            "i18n": false,
+            "displayOnEditMode": false,
+            "encrypted": false,
+            "unique": false,
+            "encryptionAlgorithmType": null,
+            "name": {
+                "pt": "Nome"
+            },
+            "_class": {
+                "_id": "000000000000000000000001",
+                "_classId": "000000000000000000000000"
+            },
+            "_id": "6a10ec4742276440c29a0f9f",
+            "exhibitionConfigs": {
+                "size": "md",
+                "breakLine": true,
+                "_classRevision": "1769641343170",
+                "_class": {
+                    "_id": "fffff0000000000000000004",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a10ec5542276440c29b82f6",
+                "mask": null
+            }
+        }
+    ],
+    "concreteClasses": null
+}

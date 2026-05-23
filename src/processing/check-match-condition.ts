@@ -69,10 +69,12 @@ function checkFieldMatch(
     ? valueExpected
     : [valueExpected];
 
+  // TODO: Adicionar aos testes
+  if (arrayExpected.length === 0) return true;
+
   return arrayGot.some((valueGot) =>
     arrayExpected.some((valueExpected) =>
       valuesAreEqual(valueGot, valueExpected),
     ),
   );
 }
-

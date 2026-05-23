@@ -12,7 +12,7 @@ function makeMetadata(
       campo1: {
         hidden: false,
         required: false,
-        readonly: false,
+        readOnly: false,
         size: "md",
         breakline: false,
         valueOptions: [],
@@ -22,7 +22,7 @@ function makeMetadata(
       campo2: {
         hidden: false,
         required: false,
-        readonly: false,
+        readOnly: false,
         size: "md",
         breakline: false,
         valueOptions: [],
@@ -36,47 +36,47 @@ function makeMetadata(
 // ---- behavior ---------------------------------------------------------------
 
 describe("ApplyMetadata — behavior", () => {
-  it("omitted: oculta, não obrigatório, não readonly", () => {
+  it("omitted: oculta, não obrigatório, não readOnly", () => {
     const metadata = makeMetadata();
     applyMetadata(metadata, "campo1", { behavior: "omitted" });
 
     expect(metadata.fields.campo1!).toMatchObject({
       hidden: true,
       required: false,
-      readonly: false,
+      readOnly: false,
     });
   });
 
-  it("mandatory: visível, obrigatório, não readonly", () => {
+  it("mandatory: visível, obrigatório, não readOnly", () => {
     const metadata = makeMetadata();
     applyMetadata(metadata, "campo1", { behavior: "mandatory" });
 
     expect(metadata.fields.campo1!).toMatchObject({
       hidden: false,
       required: true,
-      readonly: false,
+      readOnly: false,
     });
   });
 
-  it("editable: visível, não obrigatório, não readonly", () => {
+  it("editable: visível, não obrigatório, não readOnly", () => {
     const metadata = makeMetadata();
     applyMetadata(metadata, "campo1", { behavior: "editable" });
 
     expect(metadata.fields.campo1!).toMatchObject({
       hidden: false,
       required: false,
-      readonly: false,
+      readOnly: false,
     });
   });
 
-  it("displayed: visível, não obrigatório, readonly", () => {
+  it("displayed: visível, não obrigatório, readOnly", () => {
     const metadata = makeMetadata();
     applyMetadata(metadata, "campo1", { behavior: "displayed" });
 
     expect(metadata.fields.campo1!).toMatchObject({
       hidden: false,
       required: false,
-      readonly: true,
+      readOnly: true,
     });
   });
 });
@@ -84,18 +84,18 @@ describe("ApplyMetadata — behavior", () => {
 // ---- behaviorProps ----------------------------------------------------------
 
 describe("ApplyMetadata — BehaviorProps", () => {
-  it("aplica hidden, required e readonly individualmente", () => {
+  it("aplica hidden, required e readOnly individualmente", () => {
     const metadata = makeMetadata();
     applyMetadata(metadata, "campo1", {
       hidden: true,
       required: true,
-      readonly: false,
+      readOnly: false,
     });
 
     expect(metadata.fields.campo1!).toMatchObject({
       hidden: true,
       required: true,
-      readonly: false,
+      readOnly: false,
     });
   });
 
@@ -147,7 +147,7 @@ describe("ApplyMetadata — ExtraMetadataProps", () => {
     });
 
     expect(metadata.fields.campo1!).toMatchObject({
-      readonly: true,
+      readOnly: true,
       breakline: true,
       size: "bg",
     });
@@ -175,7 +175,7 @@ describe("ApplyMetadata — mutação", () => {
     expect(metadata.fields.campo2).toMatchObject({
       hidden: false,
       required: false,
-      readonly: false,
+      readOnly: false,
       size: "md",
       breakline: false,
     });

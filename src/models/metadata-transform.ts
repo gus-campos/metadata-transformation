@@ -7,7 +7,7 @@ export type Behavior = {
 };
 
 export type BahaviorProps = {
-  readonly?: boolean;
+  readOnly?: boolean;
   required?: boolean;
   hidden?: boolean;
 };
@@ -53,7 +53,7 @@ const example: FieldMetadataTransform = {
 
   _apply: {
     // behavior: "displayed",
-    readonly: true,
+    readOnly: true,
     required: true,
     hidden: true,
     breakline: true,

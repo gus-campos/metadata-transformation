@@ -148,13 +148,13 @@ describe("fieldTransformDraft — _changed", () => {
   });
 });
 
-// ---- _transitioned ----------------------------------------------------------
+// ---- _swapped ----------------------------------------------------------
 
-describe("fieldTransformDraft — _transitioned", () => {
+describe("fieldTransformDraft — _swapped", () => {
   it("aplica quando from e to batem", () => {
     const context = makeContext({ status: "inativo" }, { status: "ativo" });
     fieldTransformDraft(context, {
-      _transitioned: { status: { from: "ativo", to: "inativo" } },
+      _swapped: { status: { from: "ativo", to: "inativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
@@ -163,7 +163,7 @@ describe("fieldTransformDraft — _transitioned", () => {
   it("não aplica quando from não bate", () => {
     const context = makeContext({ status: "inativo" }, { status: "bloqueado" });
     fieldTransformDraft(context, {
-      _transitioned: { status: { from: "ativo", to: "inativo" } },
+      _swapped: { status: { from: "ativo", to: "inativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("original");
@@ -172,7 +172,7 @@ describe("fieldTransformDraft — _transitioned", () => {
   it("não aplica quando to não bate", () => {
     const context = makeContext({ status: "bloqueado" }, { status: "ativo" });
     fieldTransformDraft(context, {
-      _transitioned: { status: { from: "ativo", to: "inativo" } },
+      _swapped: { status: { from: "ativo", to: "inativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("original");
@@ -181,7 +181,7 @@ describe("fieldTransformDraft — _transitioned", () => {
   it("aplica com apenas from definido", () => {
     const context = makeContext({ status: "qualquer" }, { status: "ativo" });
     fieldTransformDraft(context, {
-      _transitioned: { status: { from: "ativo" } },
+      _swapped: { status: { from: "ativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
@@ -190,7 +190,7 @@ describe("fieldTransformDraft — _transitioned", () => {
   it("aplica com apenas to definido", () => {
     const context = makeContext({ status: "inativo" }, { status: "qualquer" });
     fieldTransformDraft(context, {
-      _transitioned: { status: { to: "inativo" } },
+      _swapped: { status: { to: "inativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
@@ -202,7 +202,7 @@ describe("fieldTransformDraft — _transitioned", () => {
       { status: "ativo", tipo: "admin" },
     );
     fieldTransformDraft(context, {
-      _transitioned: {
+      _swapped: {
         status: { from: "ativo", to: "inativo" },
         tipo: { from: "admin", to: "user" },
       },
@@ -217,7 +217,7 @@ describe("fieldTransformDraft — _transitioned", () => {
       { status: "ativo", tipo: "admin" },
     );
     fieldTransformDraft(context, {
-      _transitioned: {
+      _swapped: {
         status: { from: "ativo", to: "inativo" },
         tipo: { from: "admin", to: "user" },
       },
@@ -236,7 +236,7 @@ describe("fieldTransformDraft — combinações de condições", () => {
       _if: () => true,
       _match: { tipo: "admin" },
       _changed: ["status"],
-      _transitioned: { status: { from: "ativo", to: "inativo" } },
+      _swapped: { status: { from: "ativo", to: "inativo" } },
       _setValue: "novo",
     });
     expect(context.instance.campo1).toBe("novo");

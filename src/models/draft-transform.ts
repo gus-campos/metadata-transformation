@@ -1,13 +1,13 @@
 import { InstanceObject, Value } from "./common";
 import { MatchCondition } from "./match-condition";
 
-export type Transition = { from?: Value; to?: Value };
+export type Swap = { from?: Value; to?: Value };
 
 export type FieldDraftTransform = {
   _if?: (object: InstanceObject, oldObject: InstanceObject) => boolean;
   _match?: MatchCondition;
-  _transitioned?: Record<string, Transition>;
-  _changed?: string[];
+  _swapped?: Record<string, Swap>;
+  _changed?: string | string[];
   _setValue?: Value | Value[];
 };
 
@@ -36,7 +36,7 @@ const example: FieldDraftTransform = {
 
   _changed: ["campo1", "campo2", "campo3"],
 
-  _transitioned: {
+  _swapped: {
     campo1: {
       from: 0,
     },

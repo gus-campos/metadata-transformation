@@ -2,12 +2,12 @@ import { Metadata, MetadataProps } from "../models/common";
 import { MetadataApply } from "../models/metadata-transform";
 import { getTypedEntries } from "../utils/get-typed-entries";
 
-// TODO: Verificar se readonly pode ter efeitos colaterais
+// TODO: Verificar se readOnly pode ter efeitos colaterais
 const BEHAVIOR_DEFINITION = {
-  omitted: { hidden: true, required: false, readonly: false },
-  mandatory: { hidden: false, required: true, readonly: false },
-  editable: { hidden: false, required: false, readonly: false },
-  displayed: { hidden: false, required: false, readonly: true },
+  omitted: { hidden: true, required: false, readOnly: false },
+  mandatory: { hidden: false, required: true, readOnly: false },
+  editable: { hidden: false, required: false, readOnly: false },
+  displayed: { hidden: false, required: false, readOnly: true },
 };
 
 export function applyMetadata(
@@ -42,7 +42,8 @@ export function applyMetadata(
       const current = fieldMetadata.valueOptions;
       const incoming = value as MetadataProps["valueOptions"];
       current.splice(0, current.length, ...incoming);
-    } else {
+      
+    } else if (propKey !== "behavior") {
       field[propKey] = value;
     }
   }

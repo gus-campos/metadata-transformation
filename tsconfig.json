@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "target": "es2017",
+    "module": "CommonJS", // gera module.exports
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
     "noUncheckedIndexedAccess": true
-  }
+  },
+  "include": ["src/**/*", "src/.ts", "src/.ts"]
 }

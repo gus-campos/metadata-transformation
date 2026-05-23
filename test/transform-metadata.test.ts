@@ -19,7 +19,7 @@ function makeMetadata(
       campo1: {
         hidden: false,
         required: false,
-        readonly: false,
+        readOnly: false,
         size: "md",
         breakline: false,
         valueOptions: [],
@@ -29,7 +29,7 @@ function makeMetadata(
       campo2: {
         hidden: false,
         required: false,
-        readonly: false,
+        readOnly: false,
         size: "md",
         breakline: false,
         valueOptions: [],
@@ -133,7 +133,7 @@ describe("fieldTransformMetadata — _match", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _match: { status: "ativo" },
-      _apply: { readonly: true },
+      _apply: { readOnly: true },
     };
 
     fieldTransformMetadata(
@@ -141,14 +141,14 @@ describe("fieldTransformMetadata — _match", () => {
       transform,
     );
 
-    expect(metadata.fields.campo1!.readonly).toBe(true);
+    expect(metadata.fields.campo1!.readOnly).toBe(true);
   });
 
   it("não aplica quando _match não satisfeito", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _match: { status: "inativo" },
-      _apply: { readonly: true },
+      _apply: { readOnly: true },
     };
 
     fieldTransformMetadata(
@@ -156,7 +156,7 @@ describe("fieldTransformMetadata — _match", () => {
       transform,
     );
 
-    expect(metadata.fields.campo1!.readonly).toBe(false);
+    expect(metadata.fields.campo1!.readOnly).toBe(false);
   });
 });
 
