@@ -5,8 +5,8 @@
   },
   "scripts": {
     "test": "vitest",
-    "build": "esbuild src/factory.ts --bundle --platform=node --format=cjs --outfile=dist/transformers.js",
-    "dev": "esbuild src/factory.ts --bundle --platform=node --format=cjs --outfile=dist/transformers.js --watch"
+    "build": "esbuild src/factory.ts --bundle --platform=node --format=cjs --outfile=dist/form-transform.js",
+    "dev": "esbuild src/factory.ts --bundle --platform=node --format=cjs --outfile=dist/form-transform.js --watch"
   },
   "devDependencies": {
     "esbuild": "^0.28.0",
