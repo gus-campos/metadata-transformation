@@ -1,5 +1,26 @@
 "use strict";
 
+// src/utils/is-plain-object.ts
+function isPlainObject(val) {
+  return typeof val === "object" && val !== null && !Array.isArray(val) && !(val instanceof Date);
+}
+
+// src/utils/path-access.ts
+function accessPathInObject(object, path) {
+  const pathArray = path.split(".");
+  return accessSequenceKeysInObject(object, pathArray);
+}
+function accessSequenceKeysInObject(object, pathArray) {
+  const [firstKey, ...pathRest] = pathArray;
+  if (!firstKey) return void 0;
+  const result = object[firstKey];
+  if (result === void 0) return void 0;
+  if (pathRest.length === 0) return result;
+  if (!isPlainObject(result))
+    return void 0;
+  return accessSequenceKeysInObject(result, pathRest);
+}
+
 // src/utils/get-typed-entries.ts
 function getTypedEntries(obj) {
   return Object.entries(obj);
@@ -36,27 +57,6 @@ function applyMetadata(metadata, fieldIdentifier, metadataApply) {
       field[propKey] = value;
     }
   }
-}
-
-// src/utils/is-plain-object.ts
-function isPlainObject(val) {
-  return typeof val === "object" && val !== null && !Array.isArray(val) && !(val instanceof Date);
-}
-
-// src/utils/path-access.ts
-function accessPathInObject(object, path) {
-  const pathArray = path.split(".");
-  return accessSequenceKeysInObject(object, pathArray);
-}
-function accessSequenceKeysInObject(object, pathArray) {
-  const [firstKey, ...pathRest] = pathArray;
-  if (!firstKey) return void 0;
-  const result = object[firstKey];
-  if (result === void 0) return void 0;
-  if (pathRest.length === 0) return result;
-  if (!isPlainObject(result))
-    return void 0;
-  return accessSequenceKeysInObject(result, pathRest);
 }
 
 // src/utils/values-are-equal.ts
@@ -116,8 +116,13 @@ function checkFieldMatch(instance, pathToField, valueExpected) {
 
 // src/processing/transform-metadata.ts
 function transformMetadata(metadata, instance, metadataTransform) {
-  for (const [fieldIdentifier, fieldTransform] of Object.entries(metadataTransform))
-    fieldTransformMetadata({ metadata, instance, fieldIdentifier }, fieldTransform);
+  for (const [fieldIdentifier, fieldTransform] of Object.entries(
+    metadataTransform
+  ))
+    fieldTransformMetadata(
+      { metadata, instance, fieldIdentifier },
+      fieldTransform
+    );
 }
 function fieldTransformMetadata(context, fieldTransform) {
   if (Array.isArray(fieldTransform)) {
@@ -127,7 +132,11 @@ function fieldTransformMetadata(context, fieldTransform) {
   }
   const { _if, _match, _apply } = fieldTransform;
   const isMatchTruthy = !_match ? true : checkMatchCondition(context.instance, _match);
-  const isIfTruthy = !_if ? true : _if(context.instance);
+  const fieldValue = accessPathInObject(
+    context.instance,
+    context.fieldIdentifier
+  );
+  const isIfTruthy = !_if ? true : _if(fieldValue, context.instance);
   if (_apply && isMatchTruthy && isIfTruthy)
     applyMetadata(context.metadata, context.fieldIdentifier, _apply);
 }
@@ -224,17 +233,17 @@ function fieldTransformDraft(context, fieldTransform) {
   }
   const { _if, _changed, _swapped, _match, _setValue } = fieldTransform;
   const isMatchTruthy = !_match ? true : checkMatchCondition(context.lookupInstance, _match);
-  const isIfTruthy = !_if ? true : _if(context.lookupInstance, context.oldInstance);
+  const fieldValue = accessPathInObject(
+    context.lookupInstance,
+    context.fieldIdentifier
+  );
+  const isIfTruthy = !_if ? true : _if(fieldValue, context.lookupInstance, context.oldInstance);
   const isChangedTruthy = !_changed ? true : checkChangedCondition(
     context.lookupInstance,
     context.oldInstance,
     Array.isArray(_changed) ? _changed : [_changed]
   );
-  const isTransitionedTruthy = !_swapped ? true : checkSwapCondition(
-    context.lookupInstance,
-    context.oldInstance,
-    _swapped
-  );
+  const isTransitionedTruthy = !_swapped ? true : checkSwapCondition(context.lookupInstance, context.oldInstance, _swapped);
   if (_setValue !== void 0 && isMatchTruthy && isIfTruthy && isChangedTruthy && isTransitionedTruthy) {
     context.instance[context.fieldIdentifier] = _setValue;
   }

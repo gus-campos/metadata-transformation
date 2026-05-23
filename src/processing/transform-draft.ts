@@ -1,5 +1,6 @@
 import { InstanceObject } from "../models/common";
 import { DraftTransform, FieldDraftTransform } from "../models/draft-transform";
+import { accessPathInObject } from "../utils/path-access";
 import { safeClone } from "../utils/safe-clone";
 import {
   checkChangedCondition,
@@ -59,9 +60,14 @@ export function fieldTransformDraft(
     ? true
     : checkMatchCondition(context.lookupInstance, _match);
 
+  const fieldValue = accessPathInObject(
+    context.lookupInstance,
+    context.fieldIdentifier,
+  );
+
   const isIfTruthy = !_if
     ? true
-    : _if(context.lookupInstance, context.oldInstance);
+    : _if(fieldValue, context.lookupInstance, context.oldInstance);
 
   // TODO: Inserir testes para valor único
   const isChangedTruthy = !_changed
@@ -74,11 +80,7 @@ export function fieldTransformDraft(
 
   const isTransitionedTruthy = !_swapped
     ? true
-    : checkSwapCondition(
-        context.lookupInstance,
-        context.oldInstance,
-        _swapped,
-      );
+    : checkSwapCondition(context.lookupInstance, context.oldInstance, _swapped);
 
   if (
     _setValue !== undefined &&

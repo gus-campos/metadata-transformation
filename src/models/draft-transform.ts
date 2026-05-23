@@ -4,7 +4,8 @@ import { MatchCondition } from "./match-condition";
 export type Swap = { from?: Value; to?: Value };
 
 export type FieldDraftTransform = {
-  _if?: (object: InstanceObject, oldObject: InstanceObject) => boolean;
+  // TODO: Mudar argumentos para campo, objeto, oldObject
+  _if?: (fieldValue: Value | Value[] | undefined, object: InstanceObject, oldObject: InstanceObject) => boolean;
   _match?: MatchCondition;
   _swapped?: Record<string, Swap>;
   _changed?: string | string[];

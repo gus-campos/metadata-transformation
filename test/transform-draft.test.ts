@@ -19,7 +19,7 @@ function makeInstance(overrides: Partial<InstanceObject> = {}): InstanceObject {
 function makeContext(
   instanceOverrides: Partial<InstanceObject> = {},
   oldOverrides: Partial<InstanceObject> = {},
-  fieldIdentifier = "campo1",
+  fieldIdentifier: string = "campo1",
 ) {
   const instance = makeInstance(instanceOverrides);
   const oldInstance = makeInstance(oldOverrides);
@@ -109,7 +109,7 @@ describe("fieldTransformDraft — _if", () => {
     const context = makeContext();
     const _if = vi.fn(() => true);
     fieldTransformDraft(context, { _if, _setValue: "novo" });
-    expect(_if).toHaveBeenCalledWith(context.lookupInstance, context.oldInstance);
+    expect(_if).toHaveBeenCalledWith(context.lookupInstance.campo1, context.lookupInstance, context.oldInstance);
   });
 });
 

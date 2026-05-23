@@ -16,7 +16,7 @@ function makeMetadata(
 ): Metadata {
   return {
     fields: {
-      campo1: {
+      status: {
         hidden: false,
         required: false,
         readOnly: false,
@@ -24,9 +24,9 @@ function makeMetadata(
         breakline: false,
         valueOptions: [],
         query: {},
-        ...overrides.campo1,
+        ...overrides.status,
       },
-      campo2: {
+      tipo: {
         hidden: false,
         required: false,
         readOnly: false,
@@ -34,7 +34,7 @@ function makeMetadata(
         breakline: false,
         valueOptions: [],
         query: {},
-        ...overrides.campo2,
+        ...overrides.tipo,
       },
     },
   };
@@ -56,26 +56,26 @@ describe("fieldTransformMetadata — _apply", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
+    expect(metadata.fields.status!.hidden).toBe(true);
   });
 
   it("não faz nada quando não há _apply", () => {
     const metadata = makeMetadata();
-    const original = { ...metadata.fields.campo1! };
+    const original = { ...metadata.fields.status! };
     const transform: FieldMetadataTransform = {
       _match: { status: "ativo" },
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!).toMatchObject(original);
+    expect(metadata.fields.status!).toMatchObject(original);
   });
 });
 
@@ -90,11 +90,11 @@ describe("fieldTransformMetadata — _if", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.required).toBe(true);
+    expect(metadata.fields.status!.required).toBe(true);
   });
 
   it("não aplica quando _if retorna false", () => {
@@ -105,11 +105,11 @@ describe("fieldTransformMetadata — _if", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.required).toBe(false);
+    expect(metadata.fields.status!.required).toBe(false);
   });
 
   it("passa a instância correta pro _if", () => {
@@ -118,11 +118,11 @@ describe("fieldTransformMetadata — _if", () => {
     const transform: FieldMetadataTransform = { _if, _apply: { hidden: true } };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(_if).toHaveBeenCalledWith(instance);
+    expect(_if).toHaveBeenCalledWith(instance.status, instance);
   });
 });
 
@@ -137,11 +137,11 @@ describe("fieldTransformMetadata — _match", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.readOnly).toBe(true);
+    expect(metadata.fields.status!.readOnly).toBe(true);
   });
 
   it("não aplica quando _match não satisfeito", () => {
@@ -152,11 +152,11 @@ describe("fieldTransformMetadata — _match", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.readOnly).toBe(false);
+    expect(metadata.fields.status!.readOnly).toBe(false);
   });
 });
 
@@ -166,17 +166,17 @@ describe("fieldTransformMetadata — _if + _match", () => {
   it("aplica quando ambos são verdadeiros", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _if: (obj) => obj.tipo === "admin",
+      _if: (_, obj) => obj.tipo === "admin",
       _match: { status: "ativo" },
       _apply: { hidden: true },
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
+    expect(metadata.fields.status!.hidden).toBe(true);
   });
 
   it("não aplica quando _if false e _match true", () => {
@@ -188,11 +188,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(false);
+    expect(metadata.fields.status!.hidden).toBe(false);
   });
 
   it("não aplica quando _if true e _match false", () => {
@@ -204,11 +204,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(false);
+    expect(metadata.fields.status!.hidden).toBe(false);
   });
 });
 
@@ -223,12 +223,12 @@ describe("fieldTransformMetadata — array de transforms", () => {
     ];
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transforms,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
-    expect(metadata.fields.campo1!.required).toBe(true);
+    expect(metadata.fields.status!.hidden).toBe(true);
+    expect(metadata.fields.status!.required).toBe(true);
   });
 
   it("aplica apenas os transforms com condição satisfeita", () => {
@@ -239,12 +239,12 @@ describe("fieldTransformMetadata — array de transforms", () => {
     ];
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transforms,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
-    expect(metadata.fields.campo1!.required).toBe(false);
+    expect(metadata.fields.status!.hidden).toBe(true);
+    expect(metadata.fields.status!.required).toBe(false);
   });
 
   it("o segundo transform pode sobrescrever o primeiro", () => {
@@ -255,23 +255,23 @@ describe("fieldTransformMetadata — array de transforms", () => {
     ];
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       transforms,
     );
 
-    expect(metadata.fields.campo1!.hidden).toBe(false);
+    expect(metadata.fields.status!.hidden).toBe(false);
   });
 
   it("array vazio não altera o metadata", () => {
     const metadata = makeMetadata();
-    const original = { ...metadata.fields.campo1! };
+    const original = { ...metadata.fields.status! };
 
     fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "campo1" },
+      { metadata, instance, fieldIdentifier: "status" },
       [],
     );
 
-    expect(metadata.fields.campo1!).toMatchObject(original);
+    expect(metadata.fields.status!).toMatchObject(original);
   });
 });
 
@@ -281,14 +281,14 @@ describe("transformMetadata", () => {
   it("aplica transform para cada campo", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      campo1: { _apply: { hidden: true } },
-      campo2: { _apply: { required: true } },
+      status: { _apply: { hidden: true } },
+      tipo: { _apply: { required: true } },
     };
 
     transformMetadata(metadata, instance, metadataTransform);
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
-    expect(metadata.fields.campo2!.required).toBe(true);
+    expect(metadata.fields.status!.hidden).toBe(true);
+    expect(metadata.fields.tipo!.required).toBe(true);
   });
 
   it("lança erro para os campos do transform que não existem no metadata", () => {
@@ -305,18 +305,18 @@ describe("transformMetadata", () => {
   it("não afeta campos sem entrada no metadataTransform", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      campo1: { _apply: { hidden: true } },
+      status: { _apply: { hidden: true } },
     };
 
     transformMetadata(metadata, instance, metadataTransform);
 
-    expect(metadata.fields.campo2!.hidden).toBe(false);
+    expect(metadata.fields.tipo!.hidden).toBe(false);
   });
 
   it("aceita array de transforms por campo", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      campo1: [
+      status: [
         { _apply: { hidden: true } },
         { _if: () => false, _apply: { required: true } },
       ],
@@ -324,19 +324,19 @@ describe("transformMetadata", () => {
 
     transformMetadata(metadata, instance, metadataTransform);
 
-    expect(metadata.fields.campo1!.hidden).toBe(true);
-    expect(metadata.fields.campo1!.required).toBe(false);
+    expect(metadata.fields.status!.hidden).toBe(true);
+    expect(metadata.fields.status!.required).toBe(false);
   });
 
   it("passa a instância correta para as condições", () => {
     const metadata = makeMetadata();
     const _if = vi.fn(() => true);
     const metadataTransform: MetadataTransform = {
-      campo1: { _if, _apply: { hidden: true } },
+      status: { _if, _apply: { hidden: true } },
     };
 
     transformMetadata(metadata, instance, metadataTransform);
 
-    expect(_if).toHaveBeenCalledWith(instance);
+    expect(_if).toHaveBeenCalledWith(instance.status, instance);
   });
 });

@@ -1,4 +1,4 @@
-import { InstanceObject, PlainObject } from "./common";
+import { InstanceObject, PlainObject, Value } from "./common";
 import { MatchCondition } from "./match-condition";
 import { XOR } from "./util";
 
@@ -24,7 +24,8 @@ export type ExtraMetatadaProps = {
 export type MetadataApply = XOR<Behavior, BahaviorProps> & ExtraMetatadaProps;
 
 export type FieldMetadataTransform = {
-  _if?: (obj: InstanceObject) => boolean;
+  // TODO: Mudar argumentos para campo, objeto
+  _if?: (fieldValue: Value | Value[] | undefined, obj: InstanceObject) => boolean;
   _match?: MatchCondition;
   _apply?: MetadataApply;
 };
