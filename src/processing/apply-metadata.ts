@@ -2,7 +2,6 @@ import { Metadata, MetadataProps } from "../models/common";
 import { MetadataApply } from "../models/metadata-transform";
 import { getTypedEntries } from "../utils/get-typed-entries";
 
-// TODO: Verificar se readOnly pode ter efeitos colaterais
 const BEHAVIOR_DEFINITION = {
   omitted: { hidden: true, required: false, readOnly: false },
   mandatory: { hidden: false, required: true, readOnly: false },
@@ -23,8 +22,6 @@ export function applyMetadata(
   }
 
   const fieldMetadata = metadata.fields[fieldIdentifier]!;
-
-  // FIXME: Verificar em runtime se os tipos batem!?
 
   const { behavior } = metadataApply;
 

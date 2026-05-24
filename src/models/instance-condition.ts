@@ -13,20 +13,20 @@ export type ValueIfCondition = {
  * feita validação manual para recusar valores de tais tipos
  */
 
-type BaseMatchCondition = {
-  _not?: BaseMatchCondition;
-  _some?: BaseMatchCondition;
+export type MatchConditionNode = {
+  _not?: MatchConditionNode;
+  _some?: MatchConditionNode;
 
   [identifier: string]:
     | Value
     | Value[]
     // Na prática não deve ser aceito:
     | undefined
-    | BaseMatchCondition;
+    | MatchConditionNode;
 };
 
 export type MatchCondition = {
-  _match?: BaseMatchCondition;
+  _match?: MatchConditionNode;
 };
 
 export const MATCH_CONDITION_KEYS = ["_not", "_some"] as const;

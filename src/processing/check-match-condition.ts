@@ -1,29 +1,29 @@
 import { InstanceObject, Value } from "../models/common";
-import { BaseMatchCondition } from "../models/instance-condition";
+import { MatchConditionNode } from "../models/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
 export function checkMatchCondition(
   instance: InstanceObject,
-  matchCondition: BaseMatchCondition,
+  matchCondition: MatchConditionNode,
 ): boolean {
   return checkMatchConditionHelper(instance, matchCondition, "every");
 }
 
 function checkMatchConditionHelper(
   instance: InstanceObject,
-  matchCondition: BaseMatchCondition,
+  matchCondition: MatchConditionNode,
   mode: "every" | "some",
 ): boolean {
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
       if (key === "_not") {
-        const notCondition = content as BaseMatchCondition;
+        const notCondition = content as MatchConditionNode;
         return !checkMatchConditionHelper(instance, notCondition, "every");
       }
 
       if (key === "_some") {
-        const someCondition = content as BaseMatchCondition;
+        const someCondition = content as MatchConditionNode;
         return checkMatchConditionHelper(instance, someCondition, "some");
       }
 
@@ -53,8 +53,6 @@ function checkMatchConditionHelper(
   return evaluationOfAllConditions.some(Boolean);
 }
 
-// TODO: Decidir se deve lançar erro caso não encontre o caminho
-
 function checkFieldMatch(
   instance: InstanceObject,
   pathToField: string,
@@ -68,8 +66,7 @@ function checkFieldMatch(
   const arrayExpected = Array.isArray(valueExpected)
     ? valueExpected
     : [valueExpected];
-
-  // TODO: Adicionar aos testes
+    
   if (arrayExpected.length === 0) return true;
 
   return arrayGot.some((valueGot) =>

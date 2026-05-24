@@ -9,8 +9,6 @@ export function checkSwapCondition(
   transitions: Record<string, Swap>,
 ): boolean {
   return Object.entries(transitions).every(([path, { from, to }]) => {
-    // FIXME: Decidir abordagem: Se não tiver o valor, da erro silencioso
-
     const oldValue = accessPathInObject(oldInstance, path);
     const value = accessPathInObject(instance, path);
 
