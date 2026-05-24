@@ -35,7 +35,6 @@ describe("checkMatchCondition — campo simples", () => {
   });
 
   it("retorna false para campo inexistente", () => {
-    // FIXME: É isso mesmo? Sem aviso?
     expect(checkMatchCondition(instance, { inexistente: "valor" })).toBe(false);
   });
 });

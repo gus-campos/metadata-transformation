@@ -1,29 +1,29 @@
 import { InstanceObject, Value } from "../models/common";
-import { MatchCondition } from "../models/match-condition";
+import { BaseMatchCondition } from "../models/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
 export function checkMatchCondition(
   instance: InstanceObject,
-  matchCondition: MatchCondition,
+  matchCondition: BaseMatchCondition,
 ): boolean {
   return checkMatchConditionHelper(instance, matchCondition, "every");
 }
 
 function checkMatchConditionHelper(
   instance: InstanceObject,
-  matchCondition: MatchCondition,
+  matchCondition: BaseMatchCondition,
   mode: "every" | "some",
 ): boolean {
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
       if (key === "_not") {
-        const notCondition = content as MatchCondition;
+        const notCondition = content as BaseMatchCondition;
         return !checkMatchConditionHelper(instance, notCondition, "every");
       }
 
       if (key === "_some") {
-        const someCondition = content as MatchCondition;
+        const someCondition = content as BaseMatchCondition;
         return checkMatchConditionHelper(instance, someCondition, "some");
       }
 

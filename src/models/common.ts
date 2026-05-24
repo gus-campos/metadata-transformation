@@ -15,3 +15,8 @@ export type MetadataProps = Required<BahaviorProps & ExtraMetatadaProps>;
 export type Metadata = {
   fields: Record<string, MetadataProps>;
 };
+
+export type ExeptionHandling = {
+  _fail?: string | string[];
+  _warn?: string | string[];
+}

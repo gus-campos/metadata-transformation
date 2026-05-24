@@ -1,47 +1,33 @@
-import { InstanceObject, Value } from "./common";
-import { MatchCondition } from "./match-condition";
+import { ExeptionHandling, InstanceObject, Value } from "./common";
+import { MatchCondition } from "./instance-condition";
+
+export type ChangeIfCondition = {
+  _if?: (
+    fieldValue: Value | Value[] | undefined,
+    object: InstanceObject,
+    oldObject: InstanceObject,
+  ) => boolean;
+};
 
 export type Swap = { from?: Value; to?: Value };
 
-export type FieldDraftTransform = {
-  // TODO: Mudar argumentos para campo, objeto, oldObject
-  _if?: (fieldValue: Value | Value[] | undefined, object: InstanceObject, oldObject: InstanceObject) => boolean;
-  _match?: MatchCondition;
-  _swapped?: Record<string, Swap>;
-  _changed?: string | string[];
-  _setValue?: Value | Value[];
-};
+export type FieldDraftTransform = ExeptionHandling &
+  MatchCondition &
+  ChangeIfCondition & {
+    _swapped?: Record<string, Swap>;
+    _changed?: string | string[];
+    _setValue?: Value | Value[];
+  };
 
 export type DraftTransform = Record<
   string,
   FieldDraftTransform | FieldDraftTransform[]
 >;
 
-/*
-* Criar o seguinte atalho simples para definir 
-* o valor de um campo:
-*
-* {
-*   "campo1": "valor1"
-* }
-* 
-* Criar uma chave que recebe uma string, e dada a condição definida, 
-* emite um alerta ou erro:
-* 
-* {
-*   _error: "Combinação inválida"
-* }
-* 
-* {
-*   _warning: "Combinação não recomendada"
-* }
-* 
-*/
-
 // =============================================================================
 
 const example: FieldDraftTransform = {
-  _if: () => true,
+  _if: (value, obj, old) => true,
 
   _match: {
     campo1: "valor1",
