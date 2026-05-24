@@ -51,7 +51,7 @@ export function fieldTransformDraft(
     return;
   }
 
-  const { _if, _changed, _swapped, _match, _setValue } = fieldTransform;
+  const { _if, _changed, _swapped, _match, _set } = fieldTransform;
 
   // Verificar mesmo que não tenha condição para aplicar
   // pra manter consistência no fluxo de erros e execuções
@@ -83,12 +83,12 @@ export function fieldTransformDraft(
     : checkSwapCondition(context.lookupInstance, context.oldInstance, _swapped);
 
   if (
-    _setValue !== undefined &&
+    _set !== undefined &&
     isMatchTruthy &&
     isIfTruthy &&
     isChangedTruthy &&
     isTransitionedTruthy
   ) {
-    context.instance[context.fieldIdentifier] = _setValue;
+    context.instance[context.fieldIdentifier] = _set;
   }
 }

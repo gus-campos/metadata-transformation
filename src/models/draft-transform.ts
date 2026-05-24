@@ -16,7 +16,7 @@ export type FieldDraftTransform = ExeptionHandling &
   ChangeIfCondition & {
     _swapped?: Record<string, Swap>;
     _changed?: string | string[];
-    _setValue?: Value | Value[];
+    _set?: Value | Value[];
   };
 
 export type DraftTransform = Record<
@@ -57,5 +57,5 @@ const example: FieldDraftTransform = {
     },
   },
 
-  _setValue: 101,
+  _set: 101,
 };

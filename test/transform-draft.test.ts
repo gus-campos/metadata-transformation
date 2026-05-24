@@ -32,34 +32,34 @@ function makeContext(
   };
 }
 
-// ---- _setValue --------------------------------------------------------------
+// ---- _set --------------------------------------------------------------
 
-describe("fieldTransformDraft — _setValue", () => {
+describe("fieldTransformDraft — _set", () => {
   it("aplica valor quando não há condição", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _setValue: "novo" });
+    fieldTransformDraft(context, { _set: "novo" });
     expect(context.instance.campo1).toBe("novo");
   });
 
   it("aplica null", () => {
     const context = makeContext({ campo1: "valor" });
-    fieldTransformDraft(context, { _setValue: null });
+    fieldTransformDraft(context, { _set: null });
     expect(context.instance.campo1).toBeNull();
   });
 
   it("aplica número", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _setValue: 99 });
+    fieldTransformDraft(context, { _set: 99 });
     expect(context.instance.campo1).toBe(99);
   });
 
   it("aplica array de valores", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _setValue: ["a", "b"] });
+    fieldTransformDraft(context, { _set: ["a", "b"] });
     expect(context.instance.campo1).toEqual(["a", "b"]);
   });
 
-  it("não altera quando _setValue é undefined", () => {
+  it("não altera quando _set é undefined", () => {
     const context = makeContext();
     fieldTransformDraft(context, {});
     expect(context.instance.campo1).toBe("original");
@@ -71,13 +71,13 @@ describe("fieldTransformDraft — _setValue", () => {
 describe("fieldTransformDraft — _match", () => {
   it("aplica quando _match satisfeito", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _match: { status: "ativo" }, _setValue: "novo" });
+    fieldTransformDraft(context, { _match: { status: "ativo" }, _set: "novo" });
     expect(context.instance.campo1).toBe("novo");
   });
 
   it("não aplica quando _match não satisfeito", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _match: { status: "inativo" }, _setValue: "novo" });
+    fieldTransformDraft(context, { _match: { status: "inativo" }, _set: "novo" });
     expect(context.instance.campo1).toBe("original");
   });
 
@@ -85,7 +85,7 @@ describe("fieldTransformDraft — _match", () => {
     const context = makeContext();
     // Modifica instance diretamente — lookupInstance não deve refletir
     context.instance.status = "inativo";
-    fieldTransformDraft(context, { _match: { status: "ativo" }, _setValue: "novo" });
+    fieldTransformDraft(context, { _match: { status: "ativo" }, _set: "novo" });
     expect(context.instance.campo1).toBe("novo"); // lookup ainda é "ativo"
   });
 });
@@ -95,20 +95,20 @@ describe("fieldTransformDraft — _match", () => {
 describe("fieldTransformDraft — _if", () => {
   it("aplica quando _if retorna true", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _if: () => true, _setValue: "novo" });
+    fieldTransformDraft(context, { _if: () => true, _set: "novo" });
     expect(context.instance.campo1).toBe("novo");
   });
 
   it("não aplica quando _if retorna false", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _if: () => false, _setValue: "novo" });
+    fieldTransformDraft(context, { _if: () => false, _set: "novo" });
     expect(context.instance.campo1).toBe("original");
   });
 
   it("passa lookupInstance e oldInstance pro _if", () => {
     const context = makeContext();
     const _if = vi.fn(() => true);
-    fieldTransformDraft(context, { _if, _setValue: "novo" });
+    fieldTransformDraft(context, { _if, _set: "novo" });
     expect(_if).toHaveBeenCalledWith(context.lookupInstance.campo1, context.lookupInstance, context.oldInstance);
   });
 });
@@ -118,32 +118,32 @@ describe("fieldTransformDraft — _if", () => {
 describe("fieldTransformDraft — _changed", () => {
   it("aplica quando campo mudou", () => {
     const context = makeContext({ status: "inativo" }, { status: "ativo" });
-    fieldTransformDraft(context, { _changed: ["status"], _setValue: "novo" });
+    fieldTransformDraft(context, { _changed: ["status"], _set: "novo" });
     expect(context.instance.campo1).toBe("novo");
   });
 
   it("não aplica quando campo não mudou", () => {
     const context = makeContext({ status: "ativo" }, { status: "ativo" });
-    fieldTransformDraft(context, { _changed: ["status"], _setValue: "novo" });
+    fieldTransformDraft(context, { _changed: ["status"], _set: "novo" });
     expect(context.instance.campo1).toBe("original");
   });
 
   it("aplica quando ao menos um dos campos mudou", () => {
     const context = makeContext({ status: "inativo" }, { status: "ativo" });
-    fieldTransformDraft(context, { _changed: ["status", "tipo"], _setValue: "novo" });
+    fieldTransformDraft(context, { _changed: ["status", "tipo"], _set: "novo" });
     expect(context.instance.campo1).toBe("novo");
   });
 
   it("não aplica quando nenhum dos campos mudou", () => {
     const context = makeContext();
-    fieldTransformDraft(context, { _changed: ["status", "tipo"], _setValue: "novo" });
+    fieldTransformDraft(context, { _changed: ["status", "tipo"], _set: "novo" });
     expect(context.instance.campo1).toBe("original");
   });
 
   it("usa lookupInstance para _changed, não instance", () => {
     const context = makeContext();
     context.instance.status = "inativo"; // muda instance mas não lookup
-    fieldTransformDraft(context, { _changed: ["status"], _setValue: "novo" });
+    fieldTransformDraft(context, { _changed: ["status"], _set: "novo" });
     expect(context.instance.campo1).toBe("original"); // lookup === old
   });
 });
@@ -155,7 +155,7 @@ describe("fieldTransformDraft — _swapped", () => {
     const context = makeContext({ status: "inativo" }, { status: "ativo" });
     fieldTransformDraft(context, {
       _swapped: { status: { from: "ativo", to: "inativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
   });
@@ -164,7 +164,7 @@ describe("fieldTransformDraft — _swapped", () => {
     const context = makeContext({ status: "inativo" }, { status: "bloqueado" });
     fieldTransformDraft(context, {
       _swapped: { status: { from: "ativo", to: "inativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("original");
   });
@@ -173,7 +173,7 @@ describe("fieldTransformDraft — _swapped", () => {
     const context = makeContext({ status: "bloqueado" }, { status: "ativo" });
     fieldTransformDraft(context, {
       _swapped: { status: { from: "ativo", to: "inativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("original");
   });
@@ -182,7 +182,7 @@ describe("fieldTransformDraft — _swapped", () => {
     const context = makeContext({ status: "qualquer" }, { status: "ativo" });
     fieldTransformDraft(context, {
       _swapped: { status: { from: "ativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
   });
@@ -191,7 +191,7 @@ describe("fieldTransformDraft — _swapped", () => {
     const context = makeContext({ status: "inativo" }, { status: "qualquer" });
     fieldTransformDraft(context, {
       _swapped: { status: { to: "inativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
   });
@@ -206,7 +206,7 @@ describe("fieldTransformDraft — _swapped", () => {
         status: { from: "ativo", to: "inativo" },
         tipo: { from: "admin", to: "user" },
       },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
   });
@@ -221,7 +221,7 @@ describe("fieldTransformDraft — _swapped", () => {
         status: { from: "ativo", to: "inativo" },
         tipo: { from: "admin", to: "user" },
       },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("original");
   });
@@ -237,7 +237,7 @@ describe("fieldTransformDraft — combinações de condições", () => {
       _match: { tipo: "admin" },
       _changed: ["status"],
       _swapped: { status: { from: "ativo", to: "inativo" } },
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("novo");
   });
@@ -248,7 +248,7 @@ describe("fieldTransformDraft — combinações de condições", () => {
       _if: () => false, // ← falso
       _match: { tipo: "admin" },
       _changed: ["status"],
-      _setValue: "novo",
+      _set: "novo",
     });
     expect(context.instance.campo1).toBe("original");
   });
@@ -260,8 +260,8 @@ describe("fieldTransformDraft — array", () => {
   it("aplica todos em ordem", () => {
     const context = makeContext();
     fieldTransformDraft(context, [
-      { _setValue: "primeiro" },
-      { _setValue: "segundo" },
+      { _set: "primeiro" },
+      { _set: "segundo" },
     ]);
     expect(context.instance.campo1).toBe("segundo");
   });
@@ -270,8 +270,8 @@ describe("fieldTransformDraft — array", () => {
     const context = makeContext();
     // lookupInstance é clonado antes — segundo transform não vê mudança do primeiro
     fieldTransformDraft(context, [
-      { _setValue: "primeiro" },
-      { _match: { campo1: "primeiro" }, _setValue: "segundo" },
+      { _set: "primeiro" },
+      { _match: { campo1: "primeiro" }, _set: "segundo" },
     ]);
     // lookup ainda tem "original", então _match falha
     expect(context.instance.campo1).toBe("primeiro");
@@ -280,8 +280,8 @@ describe("fieldTransformDraft — array", () => {
   it("aplica apenas os com condição satisfeita", () => {
     const context = makeContext();
     fieldTransformDraft(context, [
-      { _if: () => true,  _setValue: "aplicado" },
-      { _if: () => false, _setValue: "ignorado" },
+      { _if: () => true,  _set: "aplicado" },
+      { _if: () => false, _set: "ignorado" },
     ]);
     expect(context.instance.campo1).toBe("aplicado");
   });
@@ -300,8 +300,8 @@ describe("transformDraft", () => {
     const instance = makeInstance();
     const old = makeInstance();
     const draftTransform: DraftTransform = {
-      campo1: { _setValue: "novo1" },
-      campo2: { _setValue: 99 },
+      campo1: { _set: "novo1" },
+      campo2: { _set: 99 },
     };
 
     transformDraft(instance, old, draftTransform);
@@ -314,9 +314,9 @@ describe("transformDraft", () => {
     const instance = makeInstance();
     const old = makeInstance();
     const draftTransform: DraftTransform = {
-      campo1: { _setValue: "novo" },
+      campo1: { _set: "novo" },
       // campo2 depende do valor original de campo1, não do novo
-      campo2: { _match: { campo1: "original" }, _setValue: 99 },
+      campo2: { _match: { campo1: "original" }, _set: 99 },
     };
 
     transformDraft(instance, old, draftTransform);
@@ -329,7 +329,7 @@ describe("transformDraft", () => {
     const instance = makeInstance();
     const old = makeInstance();
 
-    transformDraft(instance, old, { campo1: { _setValue: "novo" } });
+    transformDraft(instance, old, { campo1: { _set: "novo" } });
 
     expect(instance.campo2).toBe(42);
   });
@@ -339,7 +339,7 @@ describe("transformDraft", () => {
     const old = makeInstance();
 
     expect(() =>
-      transformDraft(instance, old, { campoInexistente: { _setValue: "novo" } }),
+      transformDraft(instance, old, { campoInexistente: { _set: "novo" } }),
     ).not.toThrow();
   });
 });
@@ -347,13 +347,13 @@ describe("transformDraft", () => {
 // ---- isolamento do lookupInstance -------------------------------------------
 
 describe("transformDraft — isolamento do lookupInstance", () => {
-  it("múltiplos campos com _setValue não se interferem via lookup", () => {
+  it("múltiplos campos com _set não se interferem via lookup", () => {
     const instance = makeInstance({ campo1: "a", campo2: 1 });
     const old = makeInstance({ campo1: "a", campo2: 1 });
 
     transformDraft(instance, old, {
-      campo1: { _setValue: "b" },
-      campo2: { _match: { campo1: "a" }, _setValue: 2 }, // lookup ainda é "a"
+      campo1: { _set: "b" },
+      campo2: { _match: { campo1: "a" }, _set: 2 }, // lookup ainda é "a"
     });
 
     expect(instance.campo1).toBe("b");
