@@ -1,6 +1,24 @@
 import { Value } from "./common";
 
 
+/*
+* Match poderia permitir passar apenas o valor esperado 
+* para o pŕoprio campo, invés de um objeto. Ainda, poderia
+* aceitar isso recursivamente, como:
+* 
+* {
+*   _match: {
+*     _not: "valor1"
+*   }
+* }
+*
+* {
+*   _match: "valor1"
+* }
+* 
+* Será que é exagero? Será que é útil?
+*/
+
 export type MatchCondition = {
   _not?: MatchCondition;
   _some?: MatchCondition;

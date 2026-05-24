@@ -30,6 +30,33 @@ export type FieldMetadataTransform = {
   _apply?: MetadataApply;
 };
 
+/*
+* Derramar conteúdo do match na raíz pode ser problemático
+* O mesmo vale pro apply.
+* Mas _apply pode aceitar que se passe shorthands para props de 
+* booleans e de enums, como:
+* 
+* _apply: {
+*   behavior: "mandatory"
+* }
+* 
+* _apply: "displayed"
+* 
+* Ou:
+* 
+* _apply: ["readOnly"]
+* 
+* Não sendo possível passar valores "false" assim.
+* Seria possível criar formas disso, mas criaria complexidade
+* e "gambiarras".
+* 
+* Ainda seria possível usar o meio tradicional quando fosse necessário:
+* 
+* _apply: {
+*   valueOptions: [{ value: "a", idenfifier: "A" }]
+* }
+*/
+
 export type MetadataTransform = {
   [fieldIdentifier: string]: FieldMetadataTransform | FieldMetadataTransform[];
 }

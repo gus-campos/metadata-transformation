@@ -17,6 +17,27 @@ export type DraftTransform = Record<
   FieldDraftTransform | FieldDraftTransform[]
 >;
 
+/*
+* Criar o seguinte atalho simples para definir 
+* o valor de um campo:
+*
+* {
+*   "campo1": "valor1"
+* }
+* 
+* Criar uma chave que recebe uma string, e dada a condição definida, 
+* emite um alerta ou erro:
+* 
+* {
+*   _error: "Combinação inválida"
+* }
+* 
+* {
+*   _warning: "Combinação não recomendada"
+* }
+* 
+*/
+
 // =============================================================================
 
 const example: FieldDraftTransform = {
