@@ -16,6 +16,7 @@ export type Metadata = {
   fields: Record<string, MetadataProps>;
 };
 
+// TODO: Implementar
 export type ExeptionHandling = {
   _fail?: string | string[];
   _warn?: string | string[];
