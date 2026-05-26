@@ -1,19 +1,14 @@
-import { Metadata, MetadataProps } from "../models/common";
-import { MetadataApply } from "../models/metadata-transform";
+import { Metadata } from "../models/pure/common";
+import { MetadataProps, Option } from "../models/pure/metadata-transform";
 import { getTypedEntries } from "../utils/get-typed-entries";
-
-const BEHAVIOR_DEFINITION = {
-  omitted: { hidden: true, required: false, readOnly: false },
-  mandatory: { hidden: false, required: true, readOnly: false },
-  editable: { hidden: false, required: false, readOnly: false },
-  displayed: { hidden: false, required: false, readOnly: true },
-};
 
 export function applyMetadata(
   metadata: Metadata,
   fieldIdentifier: string,
-  metadataApply: MetadataApply,
+  metadataApply: MetadataProps,
 ) {
+
+  // FIXME: Passar isso pro validador
   if (!(fieldIdentifier in metadata.fields)) {
     throw new Error(
       `O identificador ${fieldIdentifier} não existe no metadata. ` +
@@ -23,24 +18,16 @@ export function applyMetadata(
 
   const fieldMetadata = metadata.fields[fieldIdentifier]!;
 
-  const { behavior } = metadataApply;
-
-  if (behavior) {
-    const behaviorPropsToApply = BEHAVIOR_DEFINITION[behavior];
-    for (const [prop, value] of getTypedEntries(behaviorPropsToApply))
-      (fieldMetadata as any)[prop] = value;
-  }
-
   const entries = getTypedEntries(metadataApply);
   for (const [propKey, value] of entries) {
     const field = fieldMetadata as any;
 
     if (propKey === "valueOptions") {
       const current = fieldMetadata.valueOptions;
-      const incoming = value as MetadataProps["valueOptions"];
+      const incoming = value as Option[];
       current.splice(0, current.length, ...incoming);
       
-    } else if (propKey !== "behavior") {
+    } else {
       field[propKey] = value;
     }
   }

@@ -1,8 +1,8 @@
-import { InstanceObject, Value } from "./common";
+import { InstanceId, InstanceObject, Value } from "./common";
 
 export type ValueIfCondition = {
   _if?: (
-    fieldValue: Value | Value[] | undefined,
+    fieldValue: Value | Value[] | InstanceObject | undefined,
     obj: InstanceObject,
   ) => boolean;
 };
@@ -13,12 +13,16 @@ export type ValueIfCondition = {
  * feita validação manual para recusar valores de tais tipos
  */
 
+// Na implementação olhar tanto _classId quanto _class._id
+
+export type ReferenceMatch = Required<InstanceId>
+
 export type MatchConditionNode = {
   _not?: MatchConditionNode;
   _some?: MatchConditionNode;
 
   [identifier: string]:
-    | Value
+    | ReferenceMatch[]
     | Value[]
     // Na prática não deve ser aceito:
     | undefined

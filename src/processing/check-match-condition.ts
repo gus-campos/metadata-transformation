@@ -1,5 +1,5 @@
-import { InstanceObject, Value } from "../models/common";
-import { MatchConditionNode } from "../models/instance-condition";
+import { InstanceObject, Value } from "../models/pure/common";
+import { MatchConditionNode, ReferenceMatch } from "../models/pure/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
@@ -15,6 +15,7 @@ function checkMatchConditionHelper(
   matchCondition: MatchConditionNode,
   mode: "every" | "some",
 ): boolean {
+  
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
       if (key === "_not") {
@@ -28,19 +29,10 @@ function checkMatchConditionHelper(
       }
 
       const path = key as string;
-      const valueExpected = content as Value;
+      const valueExpected = content as Value[] | ReferenceMatch[];
 
-      // Verificação de uso de chaves de condição de valor dentro do valor de um campo
-      // if (
-      //   typeof valueExpected === "object" &&
-      //   Object.keys(valueExpected).some((key) =>
-      //     MATCH_CONDITION_KEYS.includes(key),
-      //   )
-      // ) {
-      //   throw new Error(
-      //     `Não é permitido o das chaves ${MATCH_CONDITION_KEYS.join(", ")} dentro da chave de um campo.`,
-      //   );
-      // }
+      // FIXME: Validar que não tem chaves _not e _some dentro
+      // da chave do campo, para compensar limitação da tipagem
 
       return checkFieldMatch(instance, path, valueExpected);
     },
@@ -56,22 +48,23 @@ function checkMatchConditionHelper(
 function checkFieldMatch(
   instance: InstanceObject,
   pathToField: string,
-  valueExpected: Value | Value[],
+  valuesExpected: Value[] | ReferenceMatch[],
 ): boolean {
+
   const valueGot = accessPathInObject(instance, pathToField);
-
   if (valueGot === undefined) return false;
-
   const arrayGot = Array.isArray(valueGot) ? valueGot : [valueGot];
-  const arrayExpected = Array.isArray(valueExpected)
-    ? valueExpected
-    : [valueExpected];
     
-  if (arrayExpected.length === 0) return true;
+  if (valuesExpected.length === 0) return true;
 
   return arrayGot.some((valueGot) =>
-    arrayExpected.some((valueExpected) =>
+    valuesExpected.some((valueExpected) =>
       valuesAreEqual(valueGot, valueExpected),
     ),
   );
+}
+
+
+function isReferenceObject(obj: InstanceObject) {
+  return "_id" in obj;
 }

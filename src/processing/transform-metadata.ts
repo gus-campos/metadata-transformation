@@ -1,8 +1,8 @@
-import { InstanceObject, Metadata } from "../models/common";
+import { InstanceObject, Metadata } from "../models/pure/common";
 import {
   FieldMetadataTransform,
   MetadataTransform,
-} from "../models/metadata-transform";
+} from "../models/pure/metadata-transform";
 import { accessPathInObject } from "../utils/path-access";
 import { applyMetadata } from "./apply-metadata";
 import { checkMatchCondition } from "./check-match-condition";
@@ -20,28 +20,22 @@ export function transformMetadata(
 ) {
   // Para campo e sua transformação
 
-  for (const [fieldIdentifier, fieldTransform] of Object.entries(
+  for (const [fieldIdentifier, fieldTransforms] of Object.entries(
     metadataTransform,
-  ))
+  )) {
+
+    for (const fieldTransform of fieldTransforms)
     fieldTransformMetadata(
       { metadata, instance, fieldIdentifier },
       fieldTransform,
     );
+  }
 }
 
 export function fieldTransformMetadata(
   context: FieldMetadataContext,
-  fieldTransform: FieldMetadataTransform | FieldMetadataTransform[],
+  fieldTransform: FieldMetadataTransform,
 ) {
-  // Array: chamar recursivamente para os itens
-
-  if (Array.isArray(fieldTransform)) {
-    for (const transform of fieldTransform)
-      fieldTransformMetadata(context, transform);
-
-    return;
-  }
-
   const { _if, _match, _apply } = fieldTransform;
 
   // Verificar mesmo que não tenha condição para aplicar

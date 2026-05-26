@@ -1,4 +1,5 @@
-import { InstanceObject, Value } from "../models/common";
+
+import { InstanceObject, Value } from "../models/pure/common";
 import { isPlainObject } from "./is-plain-object";
 
 export function accessPathInObject(object: InstanceObject, path: string) {
@@ -29,7 +30,7 @@ export function accessPathInObject(object: InstanceObject, path: string) {
 function accessSequenceKeysInObject(
   object: InstanceObject,
   pathArray: string[],
-): Value | Value[] | undefined {
+): Value | Value[] | InstanceObject | undefined {
   /*
    * Lê recursivamente, uma sequência de chaves de um objeto,
    * usando acessos condicionais.

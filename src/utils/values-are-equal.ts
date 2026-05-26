@@ -1,26 +1,12 @@
-import { Value } from "../models/common";
+import { InstanceObject, Value } from "../models/pure/common";
 import { isPlainObject } from "./is-plain-object";
 
 export function valuesAreEqual(
-  a: Value | Value[] | undefined,
-  b: Value | Value[] | undefined,
+  a: Value | InstanceObject | undefined,
+  b: Value | InstanceObject | undefined,
 ): boolean {
+  if (a === undefined || b === undefined) return a === b;
 
-  if (a === undefined || b === undefined) 
-    return a === b;
-
-  if (Array.isArray(a) && Array.isArray(b))
-    return (
-      a.length === b.length &&
-      a.every((value, index) => valuesAreEqual(value, b[index]!))
-    );
-
-  if (!Array.isArray(a) && !Array.isArray(b)) return valuesAreEqualHelper(a, b);
-
-  return false;
-}
-
-function valuesAreEqualHelper(a: Value, b: Value): boolean {
   if (a instanceof Date && b instanceof Date)
     return a.getTime() === b.getTime();
 
@@ -29,3 +15,5 @@ function valuesAreEqualHelper(a: Value, b: Value): boolean {
 
   return a === b;
 }
+
+// quando o objeto é obtido?

@@ -1,5 +1,5 @@
-import { InstanceObject, Metadata } from "./models/common";
-import { MetadataTransform } from "./models/metadata-transform";
+import { InstanceObject, Metadata } from "./models/pure/common";
+import { MetadataTransform } from "./models/pure/metadata-transform";
 import { transformMetadata as realTransformMetadata } from "./processing/transform-metadata";
 // import { transformDraft as realTransformDraft } from "./processing/transform-draft";
 
