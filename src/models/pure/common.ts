@@ -9,9 +9,7 @@ export type PlainObject = {
 export type InstanceId = {
   _id?: string;
   _classId?: string;
-  // _class?: {
-  //   _id?: string;
-  // }
+  // _class?: { _id?: string; }
 };
 
 export type InstanceObject = InstanceId & {

@@ -1,4 +1,4 @@
-import { ExeptionHandling, PlainObject } from "./common";
+import { ExeptionHandling, InstanceId, PlainObject } from "./common";
 import { ValueIfCondition, MatchCondition } from "./instance-condition";
 
 export type Option = { value: string; identifier: string };
@@ -10,13 +10,16 @@ export type MetadataProps = {
   required?: boolean;
   hidden?: boolean;
 
-  size?: "sm" | "md" | "bg";
   breakLine?: boolean;
+  size?: "sm" | "md" | "bg";
 
   valueOptions?: Option[];
   query?: PlainObject;
 
-  mask?: { _id: string };
+  minMultiplicity?: number;
+  maxMultiplicity?: number;
+
+  mask?: InstanceId;
   name?: NameProp;
   editHelp?: NameProp;
   placeholder?: NameProp;
