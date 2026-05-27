@@ -6,13 +6,13 @@ export type PlainObject = {
   [key: string]: any;
 };
 
-export type InstanceId = {
+export type InstanceIdSet = {
   _id?: string;
   _classId?: string;
   // _class?: { _id?: string; }
 };
 
-export type InstanceObject = InstanceId & {
+export type InstanceObject = InstanceIdSet & {
   [key: string]: Value | Value[] | InstanceObject;
 };
 

@@ -1,37 +1,5 @@
 import { Apply, MetadataProps } from "../pure/metadata-transform";
-
-// =================================================================================================
-
-const BEHAVIOR_PROPS = {
-  omitted: { hidden: true, required: false, readOnly: false },
-  mandatory: { hidden: false, required: true, readOnly: false },
-  editable: { hidden: false, required: false, readOnly: false },
-  displayed: { hidden: false, required: false, readOnly: true },
-} as const;
-
-type BehaviorKey = keyof typeof BEHAVIOR_PROPS;
-
-type ApplyBehavior = {
-  _apply: {
-    behavior?: BehaviorKey;
-  };
-};
-
-// =================================================================================================
-
-type MultiplicityRange = [number | null, number | null];
-
-type MultiplicityApply = {
-  _apply: {
-    multiplicity?: MultiplicityRange;
-  };
-};
-
-type ExpandedApplyObject = Apply["_apply"] &
-  ApplyBehavior["_apply"] &
-  MultiplicityApply["_apply"];
-
-// =================================================================================================
+import { BehaviorProp, ExpandedMetadataProps } from "./expanded-metadata-props";
 
 const KEY_VALUE_FROM_STRING = {
   omitted: { behavior: "omitted" },
@@ -44,42 +12,23 @@ const KEY_VALUE_FROM_STRING = {
   breakLine: { breakLine: true },
 } as const satisfies Record<
   string,
-  Partial<Apply["_apply"] & ApplyBehavior["_apply"]>
+  Partial<MetadataProps & BehaviorProp>
 >;
 
 type MetadataTerm = keyof typeof KEY_VALUE_FROM_STRING;
 
-type ApplyTerm = {
+type ApplyTerms = {
   _apply?: MetadataTerm | MetadataTerm[];
 };
 
-type ApplyShorthand = ApplyTerm | (Apply & ApplyBehavior & MultiplicityApply);
+type ApplyShorthand = ApplyTerms | Apply;
 
-// =================================================================================================
-
-export function toPureApply(shorthandApply: ApplyShorthand): Apply {
-  let applyObject = toApplyObject(shorthandApply);
-
-  if ("behavior" in applyObject) {
-    const { behavior, ...rest } = applyObject;
-    applyObject = { ...rest, ...BEHAVIOR_PROPS[behavior!] };
-  }
-
-  if ("multiplicity" in applyObject) {
-    const { multiplicity, ...rest } = applyObject;
-    const [min, max] = multiplicity!;
-
-    applyObject = {
-      ...rest,
-      ...(min != null && { minMultiplicity: min }),
-      ...(max != null && { maxMultiplicity: max }),
-    };
-  }
-
-  return applyObject as Apply;
+export type ExpandedApplyObject = Apply & {
+    _apply?: ExpandedMetadataProps
 }
 
-function toApplyObject(shorthandApply: ApplyShorthand): ExpandedApplyObject {
+// TODO: Mapear esses tipos num diagrama de classes ou parecido
+export function toExpandedApplyObject(shorthandApply: ApplyShorthand): ExpandedApplyObject {
   const _apply = shorthandApply._apply;
 
   if (typeof _apply !== "string" && !Array.isArray(_apply))

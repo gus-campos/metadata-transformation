@@ -1,4 +1,4 @@
-import { InstanceId, InstanceObject, Value } from "./common";
+import { InstanceIdSet, InstanceObject, Value } from "./common";
 
 export type ValueIfCondition = {
   _if?: (
@@ -15,7 +15,7 @@ export type ValueIfCondition = {
 
 // Na implementação olhar tanto _classId quanto _class._id
 
-export type ReferenceMatch = Required<InstanceId>
+export type ReferenceMatch = Required<InstanceIdSet>
 
 export type MatchConditionNode = {
   _not?: MatchConditionNode;

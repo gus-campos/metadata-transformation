@@ -1,4 +1,4 @@
-import { ExeptionHandling, InstanceId, PlainObject } from "./common";
+import { ExeptionHandling, InstanceIdSet, PlainObject } from "./common";
 import { ValueIfCondition, MatchCondition } from "./instance-condition";
 
 export type Option = { value: string; identifier: string };
@@ -19,7 +19,7 @@ export type MetadataProps = {
   minMultiplicity?: number;
   maxMultiplicity?: number;
 
-  mask?: InstanceId;
+  mask?: InstanceIdSet;
   name?: NameProp;
   editHelp?: NameProp;
   placeholder?: NameProp;
@@ -37,5 +37,3 @@ export type FieldMetadataTransform = ValueIfCondition &
 export type MetadataTransform = {
   [fieldIdentifier: string]: FieldMetadataTransform[];
 };
-
-// =============================================================================
