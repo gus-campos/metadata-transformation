@@ -6,7 +6,7 @@ const BEHAVIOR_PROPS = {
   mandatory: { hidden: false, required: true, readOnly: false },
   editable: { hidden: false, required: false, readOnly: false },
   displayed: { hidden: false, required: false, readOnly: true },
-} as const;
+} as const satisfies Record<string, Partial<MetadataProps>>;
 
 type BehaviorKey = keyof typeof BEHAVIOR_PROPS;
 
@@ -16,44 +16,42 @@ export type BehaviorProp = {
 
 // =============================================================================
 
-type MultiplicityRange = [number | null, number | null];
-
-type MultiplicityRangeProp = {
-  multiplicity?: MultiplicityRange;
+type ShortcuttedMultiplicityProp = {
+  multiplicity?: [number | null, number | null];
 };
 
 // =============================================================================
 
-type ExpandedNameProp = string | NameProp;
+type ShortcuttedNameProp = string | NameProp;
 
-type SimplyNamedProps = {
-  name?: ExpandedNameProp;
-  editHelp?: ExpandedNameProp;
-  placeholder?: ExpandedNameProp;
+type ShortcuttedNamesProps = {
+  name?: ShortcuttedNameProp;
+  editHelp?: ShortcuttedNameProp;
+  placeholder?: ShortcuttedNameProp;
 };
 
 const SIMPLY_NAMED_PROPS_KEYS = [
   "name",
   "editHelp",
   "placeholder",
-] as const satisfies (keyof ExpandedMetadataProps)[];
+] as const satisfies (keyof ShortcuttedNamesProps)[];
 
 // =============================================================================
 
-type ExpandedOptionsProps = {
+type ShortcuttedValueOptionsProp = {
   valueOptions?: (string | Option)[];
 };
 
 // =============================================================================
 
-export type ExpandedMetadataProps = MetadataProps &
+export type ShortcuttedMetadataProps = MetadataProps &
   BehaviorProp &
-  MultiplicityRangeProp &
-  ExpandedOptionsProps &
-  SimplyNamedProps;
+  ShortcuttedMultiplicityProp &
+  ShortcuttedValueOptionsProp &
+  ShortcuttedNamesProps;
 
 export function toMetadataProps(
-  expandedProps: ExpandedMetadataProps,
+  expandedProps: ShortcuttedMetadataProps,
 ): MetadataProps {
   let metadataProps = { ...expandedProps };
 
@@ -64,12 +62,10 @@ export function toMetadataProps(
 
   if ("multiplicity" in metadataProps) {
     const { multiplicity, ...rest } = metadataProps;
-    const [min, max] = multiplicity!;
 
     metadataProps = {
       ...rest,
-      ...(min != null && { minMultiplicity: min }),
-      ...(max != null && { maxMultiplicity: max }),
+      ...toMinMaxMultiplicityProps(multiplicity!)
     };
   }
 
@@ -78,7 +74,7 @@ export function toMetadataProps(
     if (key in metadataProps)
       metadataProps = {
         ...metadataProps,
-        [key]: toNameProp(metadataProps[key] as ExpandedNameProp),
+        [key]: toNameProp(metadataProps[key] as ShortcuttedNameProp),
       };
   }
 
@@ -91,9 +87,20 @@ export function toMetadataProps(
   return metadataProps;
 }
 
-function toNameProp(expandedNameProp: ExpandedNameProp): NameProp {
+function toNameProp(expandedNameProp: ShortcuttedNameProp): NameProp {
   if (isPlainObject(expandedNameProp)) return expandedNameProp;
   return { pt: expandedNameProp, _current: expandedNameProp };
+}
+
+function toMinMaxMultiplicityProps(
+  multiplicity: ShortcuttedMultiplicityProp["multiplicity"],
+) {
+  const [min, max] = multiplicity!;
+
+  return {
+    ...(min != null && { minMultiplicity: min }),
+    ...(max != null && { maxMultiplicity: max }),
+  } as MetadataProps;
 }
 
 function toOptionsProps(extendedOptions: (string | Option)[]): Option[] {

@@ -25,14 +25,14 @@ export function transformMetadata(
   )) {
 
     for (const fieldTransform of fieldTransforms)
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier },
       fieldTransform,
     );
   }
 }
 
-export function fieldTransformMetadata(
+export function transformMetadataField(
   context: FieldMetadataContext,
   fieldTransform: FieldMetadataTransform,
 ) {

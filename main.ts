@@ -1,39 +1,7 @@
-import { InstanceObject, Metadata } from "./src/models/common";
+import { MetadataTransform } from "./src/models/pure/metadata-transform";
 
-const _metadata: Metadata = {
-  fields: {
-    campo1: {
-      readOnly: true,
-      required: true,
-      hidden: true,
-      breakline: true,
-      size: "bg",
-      query: {},
-      valueOptions: [],
-    },
-    campo2: {
-      readOnly: true,
-      required: true,
-      hidden: true,
-      breakline: true,
-      size: "bg",
-      query: {},
-      valueOptions: [],
-    },
-    campo3: {
-      readOnly: true,
-      required: true,
-      hidden: true,
-      breakline: true,
-      size: "bg",
-      query: {},
-      valueOptions: [],
-    },
-  },
-};
 
-const _object: InstanceObject = {
-  campo1: "valor1",
-  campo2: "valor2",
-  campo3: "valor3",
-};
+const metadataTransform: MetadataTransform = {
+  fields: [],
+}
+

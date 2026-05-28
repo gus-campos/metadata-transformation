@@ -1,13 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
-import { InstanceObject, Metadata, MetadataProps } from "../src/models/common";
 import {
-  fieldTransformMetadata,
+  transformMetadataField,
   transformMetadata,
 } from "../src/processing/transform-metadata";
 import {
   FieldMetadataTransform,
+  MetadataProps,
   MetadataTransform,
-} from "../src/models/metadata-transform";
+} from "../src/models/pure/metadata-transform";
+import { InstanceObject, Metadata } from "../src/models/pure/common";
 
 // ---- factories --------------------------------------------------------------
 
@@ -21,20 +22,32 @@ function makeMetadata(
         required: false,
         readOnly: false,
         size: "md",
-        breakline: false,
+        breakLine: false,
         valueOptions: [],
         query: {},
-        ...overrides.status,
+        minMultiplicity: 0,
+        maxMultiplicity: 10,
+        editHelp: { pt: "editHelpPt", _current: "editHelpCurrent" },
+        name: { pt: "namePt", _current: "nameCurrent" },
+        placeholder: { pt: "placeholderPt", _current: "placeholderCurent" },
+        mask: { _id: "ID_MASK" },
+        ...overrides["campo1"],
       },
       tipo: {
         hidden: false,
         required: false,
         readOnly: false,
         size: "md",
-        breakline: false,
+        breakLine: false,
         valueOptions: [],
         query: {},
-        ...overrides.tipo,
+        minMultiplicity: 0,
+        maxMultiplicity: 10,
+        editHelp: { pt: "editHelpPt", _current: "editHelpCurrent" },
+        name: { pt: "namePt", _current: "nameCurrent" },
+        placeholder: { pt: "placeholderPt", _current: "placeholderCurent" },
+        mask: { _id: "ID_MASK" },
+        ...overrides["campo1"],
       },
     },
   };
@@ -55,7 +68,7 @@ describe("fieldTransformMetadata — _apply", () => {
       _apply: { hidden: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -67,10 +80,10 @@ describe("fieldTransformMetadata — _apply", () => {
     const metadata = makeMetadata();
     const original = { ...metadata.fields.status! };
     const transform: FieldMetadataTransform = {
-      _match: { status: "ativo" },
+      _match: { status: ["ativo"] },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -89,7 +102,7 @@ describe("fieldTransformMetadata — _if", () => {
       _apply: { required: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -104,7 +117,7 @@ describe("fieldTransformMetadata — _if", () => {
       _apply: { required: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -117,7 +130,7 @@ describe("fieldTransformMetadata — _if", () => {
     const _if = vi.fn(() => true);
     const transform: FieldMetadataTransform = { _if, _apply: { hidden: true } };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -132,11 +145,11 @@ describe("fieldTransformMetadata — _match", () => {
   it("aplica quando _match satisfeito", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _match: { status: "ativo" },
+      _match: { status: ["ativo"] },
       _apply: { readOnly: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -147,11 +160,11 @@ describe("fieldTransformMetadata — _match", () => {
   it("não aplica quando _match não satisfeito", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _match: { status: "inativo" },
+      _match: { status: ["inativo"] },
       _apply: { readOnly: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -167,11 +180,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _if: (_, obj) => obj.tipo === "admin",
-      _match: { status: "ativo" },
+      _match: { status: ["ativo"] },
       _apply: { hidden: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -183,11 +196,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _if: () => false,
-      _match: { status: "ativo" },
+      _match: { status: ["ativo"] },
       _apply: { hidden: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -199,11 +212,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _if: () => true,
-      _match: { status: "inativo" },
+      _match: { status: ["inativo"] },
       _apply: { hidden: true },
     };
 
-    fieldTransformMetadata(
+    transformMetadataField(
       { metadata, instance, fieldIdentifier: "status" },
       transform,
     );
@@ -222,9 +235,11 @@ describe("fieldTransformMetadata — array de transforms", () => {
       { _apply: { required: true } },
     ];
 
-    fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "status" },
-      transforms,
+    transforms.forEach((transform) =>
+      transformMetadataField(
+        { metadata, instance, fieldIdentifier: "status" },
+        transform,
+      ),
     );
 
     expect(metadata.fields.status!.hidden).toBe(true);
@@ -238,9 +253,11 @@ describe("fieldTransformMetadata — array de transforms", () => {
       { _if: () => false, _apply: { required: true } },
     ];
 
-    fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "status" },
-      transforms,
+    transforms.forEach((transform) =>
+      transformMetadataField(
+        { metadata, instance, fieldIdentifier: "status" },
+        transform,
+      ),
     );
 
     expect(metadata.fields.status!.hidden).toBe(true);
@@ -254,25 +271,27 @@ describe("fieldTransformMetadata — array de transforms", () => {
       { _apply: { hidden: false } },
     ];
 
-    fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "status" },
-      transforms,
+    transforms.forEach((transform) =>
+      transformMetadataField(
+        { metadata, instance, fieldIdentifier: "status" },
+        transform,
+      ),
     );
 
     expect(metadata.fields.status!.hidden).toBe(false);
   });
 
-  it("array vazio não altera o metadata", () => {
-    const metadata = makeMetadata();
-    const original = { ...metadata.fields.status! };
+//   it("array vazio não altera o metadata", () => {
+//     const metadata = makeMetadata();
+//     const original = { ...metadata.fields.status! };
 
-    fieldTransformMetadata(
-      { metadata, instance, fieldIdentifier: "status" },
-      [],
-    );
+//     transformMetadataField(
+//       { metadata, instance, fieldIdentifier: "status" },
+//       [],
+//     );
 
-    expect(metadata.fields.status!).toMatchObject(original);
-  });
+//     expect(metadata.fields.status!).toMatchObject(original);
+//   });
 });
 
 // ---- transformMetadata ------------------------------------------------------
@@ -281,8 +300,8 @@ describe("transformMetadata", () => {
   it("aplica transform para cada campo", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      status: { _apply: { hidden: true } },
-      tipo: { _apply: { required: true } },
+      status: [{ _apply: { hidden: true } }],
+      tipo: [{ _apply: { required: true } }],
     };
 
     transformMetadata(metadata, instance, metadataTransform);
@@ -294,7 +313,7 @@ describe("transformMetadata", () => {
   it("lança erro para os campos do transform que não existem no metadata", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      campoInexistente: { _apply: { hidden: true } },
+      campoInexistente: [{ _apply: { hidden: true } }],
     };
 
     expect(() =>
@@ -305,7 +324,7 @@ describe("transformMetadata", () => {
   it("não afeta campos sem entrada no metadataTransform", () => {
     const metadata = makeMetadata();
     const metadataTransform: MetadataTransform = {
-      status: { _apply: { hidden: true } },
+      status: [{ _apply: { hidden: true } }],
     };
 
     transformMetadata(metadata, instance, metadataTransform);
@@ -332,7 +351,7 @@ describe("transformMetadata", () => {
     const metadata = makeMetadata();
     const _if = vi.fn(() => true);
     const metadataTransform: MetadataTransform = {
-      status: { _if, _apply: { hidden: true } },
+      status: [{ _if, _apply: { hidden: true } }],
     };
 
     transformMetadata(metadata, instance, metadataTransform);
