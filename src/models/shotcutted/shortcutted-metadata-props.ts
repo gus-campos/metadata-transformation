@@ -53,56 +53,55 @@ type ShortcuttedValueOptionsProp = {
 
 // =============================================================================
 
-export type ShortcuttedMetadataProps = MetadataProps &
+export type ShortcuttedMetadataProps = Omit<MetadataProps, "valueOptions"> &
   BehaviorProp &
   ShortcuttedMultiplicityProp &
   ShortcuttedValueOptionsProp &
   ShortcuttedNamesProps &
   ShortcuttedMask;
 
-export function toMetadataProps(
-  shortcuttedProps: ShortcuttedMetadataProps,
-): MetadataProps {
-  let metadataProps = { ...shortcuttedProps };
+export function toMetadataProps({
+  behavior,
+  multiplicity,
+  mask,
+  name,
+  editHelp,
+  placeholder,
+  valueOptions,
+  ...rest
+}: ShortcuttedMetadataProps): MetadataProps {
+  const behaviorProps = behavior ? BEHAVIOR_PROPS[behavior] : null;
 
-  if ("behavior" in metadataProps) {
-    const { behavior, ...rest } = metadataProps;
-    metadataProps = { ...rest, ...BEHAVIOR_PROPS[behavior!] };
-  }
+  const multiplicityProps = toMinMaxMultiplicityProps(multiplicity);
 
-  // TODO: Decidir se vai rejeitar array de 1 ou 3... posições
-  if ("multiplicity" in metadataProps) {
-    const { multiplicity, ...rest } = metadataProps;
+  const maskProp =
+    mask !== undefined
+      ? { mask: typeof mask === "string" ? toIdSet(mask) : mask }
+      : null;
 
-    metadataProps = {
-      ...rest,
-      ...toMinMaxMultiplicityProps(multiplicity!),
-    };
-  }
+  const nameProp = name !== undefined ? { name: toNameProp(name) } : null;
 
-  // Substituindo passagem de id (string simples) por um objeto com id
-  if ("mask" in metadataProps) {
-    const { mask, ...rest } = metadataProps;
-    if (typeof mask !== "string") return { ...rest, mask: mask! };
-    return { ...rest, mask: toIdSet(mask!) };
-  }
+  const editHelpProp =
+    editHelp !== undefined ? { editHelp: toNameProp(editHelp) } : null;
 
-  // Substitundo passagem de string por objeto de nome com "pt" e "_current"
-  for (const key of SIMPLY_NAMED_PROPS_KEYS) {
-    if (key in metadataProps)
-      metadataProps = {
-        ...metadataProps,
-        [key]: toNameProp(metadataProps[key] as ShortcuttedNameProp),
-      };
-  }
+  const placeholderProp =
+    placeholder !== undefined ? { placeholder: toNameProp(placeholder) } : null;
 
-  // Substituindo value options de strings por options
-  if ("valueOptions" in metadataProps) {
-    const { valueOptions, ...rest } = metadataProps;
-    metadataProps = { ...rest, valueOptions: toOptionsProps(valueOptions!) };
-  }
+  const valueOptionsProp =
+    valueOptions !== undefined
+      ? { valueOptions: toOptionsProps(valueOptions) }
+      : null;
 
-  return metadataProps;
+  return {
+    ...rest,
+    ...behaviorProps,
+    ...multiplicityProps,
+    ...maskProp,
+    ...nameProp,
+    ...editHelpProp,
+    ...placeholderProp,
+    ...valueOptionsProp,
+  };
 }
 
 function toIdSet(id: string, classId?: string): InstanceIdSet {
@@ -138,7 +137,10 @@ function toMinMaxMultiplicityProps(
 function toOptionsProps(extendedOptions: (string | Option)[]): Option[] {
   return extendedOptions.map((option) => {
     if (typeof option === "string")
-      return { identifier: option, value: option };
+      return {
+        identifier: option,
+        value: option.toLowerCase().replace(/\s+/g, "_"),
+      };
     return option;
   });
 }

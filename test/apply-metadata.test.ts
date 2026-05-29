@@ -150,21 +150,21 @@ describe("ApplyMetadata — ExtraMetadataProps", () => {
     expect(metadata.fields.campo1!.query).toEqual(query);
   });
 
-//   it("aplica ExtraMetadataProps junto com behavior", () => {
-//     const metadata = makeMetadata();
+  //   it("aplica ExtraMetadataProps junto com behavior", () => {
+  //     const metadata = makeMetadata();
 
-//     applyMetadata(metadata, "campo1", {
-//       behavior: "displayed",
-//       breakLine: true,
-//       size: "bg",
-//     });
+  //     applyMetadata(metadata, "campo1", {
+  //       behavior: "displayed",
+  //       breakLine: true,
+  //       size: "bg",
+  //     });
 
-//     expect(metadata.fields.campo1!).toMatchObject({
-//       readOnly: true,
-//       breakLine: true,
-//       size: "bg",
-//     });
-//   });
+  //     expect(metadata.fields.campo1!).toMatchObject({
+  //       readOnly: true,
+  //       breakLine: true,
+  //       size: "bg",
+  //     });
+  //   });
 });
 
 // ---- mutação ----------------------------------------------------------------
