@@ -1,4 +1,5 @@
 import {
+  Apply,
   FieldMetadataTransform,
   MetadataTransform,
 } from "../pure/metadata-transform";
@@ -22,6 +23,7 @@ export function toMetadataTransform(
     const fieldTransformArray = Array.isArray(fieldTransform)
       ? fieldTransform
       : [fieldTransform];
+
     simpleTransform[key] = fieldTransformArray.map(toFieldTransform);
   }
 
@@ -31,5 +33,9 @@ export function toMetadataTransform(
 function toFieldTransform(
   fieldTransform: ShortcuttedFieldMetadataTransform,
 ): FieldMetadataTransform {
-  return { ...fieldTransform, ...toApply(fieldTransform) };
+    
+  return {
+    ...fieldTransform,
+    ...toApply(fieldTransform),
+  };
 }

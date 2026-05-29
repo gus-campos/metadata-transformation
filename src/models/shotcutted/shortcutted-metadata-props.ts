@@ -1,4 +1,5 @@
 import { isPlainObject } from "../../utils/is-plain-object";
+import { InstanceIdSet } from "../pure/common";
 import { MetadataProps, NameProp, Option } from "../pure/metadata-transform";
 
 const BEHAVIOR_PROPS = {
@@ -16,8 +17,16 @@ export type BehaviorProp = {
 
 // =============================================================================
 
+type MultiplicityRange = [number | null, number | null];
+
 type ShortcuttedMultiplicityProp = {
-  multiplicity?: [number | null, number | null];
+  multiplicity?: number | MultiplicityRange;
+};
+
+// =============================================================================
+
+type ShortcuttedMask = {
+  mask?: string | MetadataProps["mask"];
 };
 
 // =============================================================================
@@ -48,18 +57,20 @@ export type ShortcuttedMetadataProps = MetadataProps &
   BehaviorProp &
   ShortcuttedMultiplicityProp &
   ShortcuttedValueOptionsProp &
-  ShortcuttedNamesProps;
+  ShortcuttedNamesProps &
+  ShortcuttedMask;
 
 export function toMetadataProps(
-  expandedProps: ShortcuttedMetadataProps,
+  shortcuttedProps: ShortcuttedMetadataProps,
 ): MetadataProps {
-  let metadataProps = { ...expandedProps };
+  let metadataProps = { ...shortcuttedProps };
 
   if ("behavior" in metadataProps) {
     const { behavior, ...rest } = metadataProps;
     metadataProps = { ...rest, ...BEHAVIOR_PROPS[behavior!] };
   }
 
+  // TODO: Decidir se vai rejeitar array de 1 ou 3... posições
   if ("multiplicity" in metadataProps) {
     const { multiplicity, ...rest } = metadataProps;
 
@@ -70,6 +81,13 @@ export function toMetadataProps(
   }
 
   // Substituindo passagem de id (string simples) por um objeto com id
+  if ("mask" in metadataProps) {
+    const { mask, ...rest } = metadataProps;
+    if (typeof mask !== "string") return { ...rest, mask: mask! };
+    return { ...rest, mask: toIdSet(mask!) };
+  }
+
+  // Substitundo passagem de string por objeto de nome com "pt" e "_current"
   for (const key of SIMPLY_NAMED_PROPS_KEYS) {
     if (key in metadataProps)
       metadataProps = {
@@ -81,10 +99,14 @@ export function toMetadataProps(
   // Substituindo value options de strings por options
   if ("valueOptions" in metadataProps) {
     const { valueOptions, ...rest } = metadataProps;
-    metadataProps = { ...rest, ...toOptionsProps(valueOptions!) };
+    metadataProps = { ...rest, valueOptions: toOptionsProps(valueOptions!) };
   }
 
   return metadataProps;
+}
+
+function toIdSet(id: string, classId?: string): InstanceIdSet {
+  return { _id: id, _classId: classId };
 }
 
 function toNameProp(expandedNameProp: ShortcuttedNameProp): NameProp {
@@ -95,7 +117,17 @@ function toNameProp(expandedNameProp: ShortcuttedNameProp): NameProp {
 function toMinMaxMultiplicityProps(
   multiplicity: ShortcuttedMultiplicityProp["multiplicity"],
 ) {
-  const [min, max] = multiplicity!;
+  if (!multiplicity) return {};
+
+  let min: number | null;
+  let max: number | null;
+
+  if (Array.isArray(multiplicity)) {
+    [min, max] = multiplicity;
+  } else {
+    min = multiplicity;
+    max = multiplicity;
+  }
 
   return {
     ...(min != null && { minMultiplicity: min }),

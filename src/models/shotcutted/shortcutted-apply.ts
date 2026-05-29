@@ -2,6 +2,7 @@ import { Apply, MetadataProps } from "../pure/metadata-transform";
 import {
   BehaviorProp,
   ShortcuttedMetadataProps,
+  toMetadataProps,
 } from "./shortcutted-metadata-props";
 
 const KEY_VALUE_FROM_STRING = {
@@ -17,32 +18,41 @@ const KEY_VALUE_FROM_STRING = {
 
 type MetadataPropTerm = keyof typeof KEY_VALUE_FROM_STRING;
 
-type PropTermsApply = {
+type ApplyTermProps = {
   _apply?: MetadataPropTerm | MetadataPropTerm[];
 };
 
+type ShortcuttedApplyObject = Apply & {
+  _apply?: ShortcuttedMetadataProps;
+};
+
 // Apply que compreende as props encurtadas, e os termos de props
-export type ShortcuttedApply =
-  | PropTermsApply
-  | (Apply & {
-      _apply?: ShortcuttedMetadataProps;
-    });
+export type ShortcuttedApply = ApplyTermProps | ShortcuttedApplyObject;
 
-// TODO: Mapear esses tipos num diagrama de classes ou parecido
-export function toApply(shorthandApply: ShortcuttedApply): Apply {
-  const _apply = shorthandApply._apply;
+export function toApply(shortcuttedApply: ShortcuttedApply): Apply {
+  // Apenas props nativas em formatos nativos
 
-  if (typeof _apply !== "string" && !Array.isArray(_apply))
-    return { ..._apply } as Apply;
+  const applyObj = toShotcuttedApplyObject(shortcuttedApply);
+  if (!applyObj._apply) return {};
+  return { _apply: toMetadataProps(applyObj._apply) };
+}
 
-  const termsArray: MetadataPropTerm[] = Array.isArray(_apply)
-    ? _apply
-    : [_apply];
+function toShotcuttedApplyObject(
+  shortcuttedApply: ShortcuttedApply,
+): ShortcuttedApplyObject {
+  const apply = shortcuttedApply._apply;
+
+  if (!apply) return {};
+
+  if (typeof apply !== "string" && !Array.isArray(apply))
+    return { _apply: { ...apply } };
+
+  const termsArray: MetadataPropTerm[] = Array.isArray(apply) ? apply : [apply];
 
   const propsTranslatedFromEntries = termsArray.reduce((acc, current) => {
     const props = KEY_VALUE_FROM_STRING[current];
     return { ...acc, ...props };
-  }, {} as Partial<Apply>);
+  }, {} as MetadataProps);
 
-  return { ...propsTranslatedFromEntries };
+  return { _apply: { ...propsTranslatedFromEntries } };
 }
