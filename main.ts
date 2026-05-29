@@ -1,7 +1,12 @@
-import { MetadataTransform } from "./src/models/pure/metadata-transform";
+import { toMetadataTransform } from "./src/models/shotcutted/shortcutted-metadata-transform";
+
+const result = toMetadataTransform({
+    "teste": {
+        _apply: {
+            readOnly: true
+        }
+    }
+});
 
 
-const metadataTransform: MetadataTransform = {
-  fields: [],
-}
-
+console.log(JSON.stringify(result));

@@ -22,9 +22,11 @@ type PropTermsApply = {
 };
 
 // Apply que compreende as props encurtadas, e os termos de props
-export type ShortcuttedApply = PropTermsApply | (Apply & {
-  _apply?: ShortcuttedMetadataProps;
-});
+export type ShortcuttedApply =
+  | PropTermsApply
+  | (Apply & {
+      _apply?: ShortcuttedMetadataProps;
+    });
 
 // TODO: Mapear esses tipos num diagrama de classes ou parecido
 export function toApply(shorthandApply: ShortcuttedApply): Apply {
@@ -33,8 +35,9 @@ export function toApply(shorthandApply: ShortcuttedApply): Apply {
   if (typeof _apply !== "string" && !Array.isArray(_apply))
     return { ..._apply } as Apply;
 
-  const termsArray: MetadataPropTerm[] =
-    Array.isArray(_apply) ? _apply : [_apply];
+  const termsArray: MetadataPropTerm[] = Array.isArray(_apply)
+    ? _apply
+    : [_apply];
 
   const propsTranslatedFromEntries = termsArray.reduce((acc, current) => {
     const props = KEY_VALUE_FROM_STRING[current];

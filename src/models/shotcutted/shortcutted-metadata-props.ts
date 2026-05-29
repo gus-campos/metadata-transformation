@@ -65,7 +65,7 @@ export function toMetadataProps(
 
     metadataProps = {
       ...rest,
-      ...toMinMaxMultiplicityProps(multiplicity!)
+      ...toMinMaxMultiplicityProps(multiplicity!),
     };
   }
 
