@@ -19,46 +19,46 @@ export type BehaviorProp = {
 
 type MultiplicityRange = [number | null, number | null];
 
-type ShortcuttedMultiplicityProp = {
+type SlimMultiplicityProp = {
   multiplicity?: number | MultiplicityRange;
 };
 
 // =============================================================================
 
-type ShortcuttedMask = {
+type SlimMask = {
   mask?: string | MetadataProps["mask"];
 };
 
 // =============================================================================
 
-type ShortcuttedNameProp = string | NameProp;
+type SlimNameProp = string | NameProp;
 
-type ShortcuttedNamesProps = {
-  name?: ShortcuttedNameProp;
-  editHelp?: ShortcuttedNameProp;
-  placeholder?: ShortcuttedNameProp;
+type SlimNamesProps = {
+  name?: SlimNameProp;
+  editHelp?: SlimNameProp;
+  placeholder?: SlimNameProp;
 };
 
 const SIMPLY_NAMED_PROPS_KEYS = [
   "name",
   "editHelp",
   "placeholder",
-] as const satisfies (keyof ShortcuttedNamesProps)[];
+] as const satisfies (keyof SlimNamesProps)[];
 
 // =============================================================================
 
-type ShortcuttedValueOptionsProp = {
+type SlimValueOptionsProp = {
   valueOptions?: (string | Option)[];
 };
 
 // =============================================================================
 
-export type ShortcuttedMetadataProps = Omit<MetadataProps, "valueOptions"> &
+export type SlimMetadataProps = Omit<MetadataProps, "valueOptions"> &
   BehaviorProp &
-  ShortcuttedMultiplicityProp &
-  ShortcuttedValueOptionsProp &
-  ShortcuttedNamesProps &
-  ShortcuttedMask;
+  SlimMultiplicityProp &
+  SlimValueOptionsProp &
+  SlimNamesProps &
+  SlimMask;
 
 export function toMetadataProps({
   behavior,
@@ -69,7 +69,7 @@ export function toMetadataProps({
   placeholder,
   valueOptions,
   ...rest
-}: ShortcuttedMetadataProps): MetadataProps {
+}: SlimMetadataProps): MetadataProps {
   const behaviorProps = behavior ? BEHAVIOR_PROPS[behavior] : null;
 
   const multiplicityProps = toMinMaxMultiplicityProps(multiplicity);
@@ -106,13 +106,13 @@ function toIdSet(id: string, classId?: string): InstanceIdSet {
   return { _id: id, _classId: classId };
 }
 
-function toNameProp(expandedNameProp: ShortcuttedNameProp): NameProp {
+function toNameProp(expandedNameProp: SlimNameProp): NameProp {
   if (isPlainObject(expandedNameProp)) return expandedNameProp;
   return { pt: expandedNameProp, _current: expandedNameProp };
 }
 
 function toMinMaxMultiplicityProps(
-  multiplicity: ShortcuttedMultiplicityProp["multiplicity"],
+  multiplicity: SlimMultiplicityProp["multiplicity"],
 ) {
   if (!multiplicity) return {};
 

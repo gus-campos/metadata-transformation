@@ -1,42 +1,43 @@
-import { number } from "zod";
 import { InstanceObject } from "../models/pure/common";
 import {
-  MatchConditionNode,
-  FieldMatchExpect,
-  AnyOfMatch,
-  AllOfMatch,
+  MatchNode,
+  MultExpected,
+  AnyOf,
+  AllOf,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  NOT_KEY,
+  SOME_KEY,
 } from "../models/pure/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
 export function checkMatchCondition(
   instance: InstanceObject,
-  matchCondition: MatchConditionNode,
+  matchCondition: MatchNode,
 ): boolean {
   return checkMatchConditionHelper(instance, matchCondition, "every");
 }
 
 function checkMatchConditionHelper(
   instance: InstanceObject,
-  matchCondition: MatchConditionNode,
+  matchCondition: MatchNode,
   mode: "every" | "some",
 ): boolean {
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
-      if (key === "_not") {
-        const notCondition = content as MatchConditionNode;
+      if (key === NOT_KEY) {
+        const notCondition = content as MatchNode;
         return !checkMatchConditionHelper(instance, notCondition, "every");
       }
 
-      if (key === "_some") {
-        const someCondition = content as MatchConditionNode;
+      if (key === SOME_KEY) {
+        const someCondition = content as MatchNode;
         return checkMatchConditionHelper(instance, someCondition, "some");
       }
 
       const path = key as string;
-      const valueExpected = content as FieldMatchExpect;
+      const valueExpected = content as MultExpected;
 
       // FIXME: Validar que não tem chaves _not e _some dentro
       // da chave do campo, para compensar limitação da tipagem
@@ -55,7 +56,7 @@ function checkMatchConditionHelper(
 function checkFieldMatch(
   instance: InstanceObject,
   pathToField: string,
-  fieldMatchExpect: FieldMatchExpect,
+  fieldMatchExpect: MultExpected,
 ): boolean {
   // TODO: Decidir se mantém erro silencioso
 
@@ -66,7 +67,7 @@ function checkFieldMatch(
   const arrayGot = Array.isArray(valueGot) ? valueGot : [valueGot];
 
   if (ANY_OF_KEY in fieldMatchExpect) {
-    const { _anyOf } = fieldMatchExpect as AnyOfMatch;
+    const { _anyOf } = fieldMatchExpect as AnyOf;
 
     // Sem condição, é sempre verdadeiro
     if (_anyOf.length === 0) return true;
@@ -77,7 +78,7 @@ function checkFieldMatch(
   }
 
   if (ALL_OF_KEY in fieldMatchExpect) {
-    const { _allOf } = fieldMatchExpect as AllOfMatch;
+    const { _allOf } = fieldMatchExpect as AllOf;
 
     // Sem condição, é sempre verdadeiro
     if (_allOf.length === 0) return true;

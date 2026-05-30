@@ -6,10 +6,6 @@ export function valuesAreEqual(
   got: Value | InstanceObject | undefined,
   expected: Value | InstanceObject | undefined,
 ): boolean {
-    
-    console.log(got, expected);
-
-  if (got === undefined || expected === undefined) return got === expected;
 
   if (got instanceof Date && expected instanceof Date)
     return got.getTime() === expected.getTime();
@@ -18,7 +14,7 @@ export function valuesAreEqual(
   if (isPlainObject(got) && isPlainObject(expected))
     return isMatch(got, expected);
 
-  return got === expected;
+  // Não faz diferenciação entre null e undefines, para facilitar declaração
+  // TODO: Verificar se pode ser importante checar um específico 
+  return (got ?? null) === (expected ?? null);
 }
-
-// quando o objeto é obtido?

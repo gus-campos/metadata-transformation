@@ -1,7 +1,6 @@
 
-
 import { describe, expect, it } from "vitest";
-import { toApply } from "../src/models/shotcutted/shortcutted-apply";
+import { toApply } from "../src/models/slim/slim-apply";
 
 
 describe("toApply", () => {

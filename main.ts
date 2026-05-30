@@ -1,4 +1,4 @@
-import { toMetadataTransform } from "./src/models/shotcutted/shortcutted-metadata-transform";
+import { toMetadataTransform } from "./src/models/shotcutted/slim-metadata-transform";
 
 const result = toMetadataTransform({
   teste: {

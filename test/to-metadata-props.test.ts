@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toMetadataProps } from "../src/models/shotcutted/shortcutted-metadata-props";
+import { toMetadataProps } from "../src/models/slim/slim-metadata-props";
 
 describe("toMetadataProps", () => {
   it("should expand behavior shortcut", () => {

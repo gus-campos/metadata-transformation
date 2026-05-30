@@ -1,9 +1,9 @@
 import { Apply, MetadataProps } from "../pure/metadata-transform";
 import {
   BehaviorProp,
-  ShortcuttedMetadataProps,
+  SlimMetadataProps,
   toMetadataProps,
-} from "./shortcutted-metadata-props";
+} from "./slim-metadata-props";
 
 const KEY_VALUE_FROM_STRING = {
   omitted: { behavior: "omitted" },
@@ -22,25 +22,25 @@ type ApplyTermProps = {
   _apply?: MetadataPropTerm | MetadataPropTerm[];
 };
 
-type ShortcuttedApplyObject = Apply & {
-  _apply?: ShortcuttedMetadataProps;
+type SlimApplyObject = Apply & {
+  _apply?: SlimMetadataProps;
 };
 
 // Apply que compreende as props encurtadas, e os termos de props
-export type ShortcuttedApply = ApplyTermProps | ShortcuttedApplyObject;
+export type SlimApply = ApplyTermProps | SlimApplyObject;
 
-export function toApply(shortcuttedApply: ShortcuttedApply): Apply {
+export function toApply(slimApply: SlimApply): Apply {
   // Apenas props nativas em formatos nativos
 
-  const applyObj = toShotcuttedApplyObject(shortcuttedApply);
+  const applyObj = toShotcuttedApplyObject(slimApply);
   if (!applyObj._apply) return {};
   return { _apply: toMetadataProps(applyObj._apply) };
 }
 
 function toShotcuttedApplyObject(
-  shortcuttedApply: ShortcuttedApply,
-): ShortcuttedApplyObject {
-  const apply = shortcuttedApply._apply;
+  slimApply: SlimApply,
+): SlimApplyObject {
+  const apply = slimApply._apply;
 
   if (!apply) return {};
 

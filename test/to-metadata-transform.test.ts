@@ -1,7 +1,7 @@
 // to-metadata-transform.spec.ts
 
 import { describe, expect, it } from "vitest";
-import { toMetadataTransform } from "../src/models/shotcutted/shortcutted-metadata-transform";
+import { toMetadataTransform } from "../src/models/slim/slim-metadata-transform";
 
 describe("toMetadataTransform", () => {
   it("should normalize single transform into array", () => {
@@ -83,7 +83,7 @@ describe("toMetadataTransform", () => {
     const result = toMetadataTransform({
       status: {
         _match: {
-          field: ["ACTIVE"],
+          field: { _anyOf: ["ACTIVE"] },
         },
         _apply: "editable",
       },
@@ -93,7 +93,7 @@ describe("toMetadataTransform", () => {
       status: [
         {
           _match: {
-            field: ["ACTIVE"],
+            field: { _anyOf: ["ACTIVE"] },
           },
           _apply: {
             hidden: false,
