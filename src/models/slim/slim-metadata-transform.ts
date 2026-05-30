@@ -13,6 +13,11 @@ export type SlimMetadataTransform = {
     | SlimFieldMetadataTransform[];
 };
 
+// TODO: Falta implementar campos múltiplos
+// TODO: Falta implementar agrupamento por regras
+// criar um novo argumento opcional no transformMetada?
+// sempre executar depois
+
 export function toMetadataTransform(
   transform: SlimMetadataTransform,
 ): MetadataTransform {

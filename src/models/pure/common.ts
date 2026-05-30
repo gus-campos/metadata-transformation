@@ -9,7 +9,7 @@ export type PlainObject = {
 export type InstanceIdSet = {
   _id?: string;
   _classId?: string;
-  // _class?: { _id?: string; }
+  _class?: { _id?: string; }
 };
 
 export type InstanceObject = InstanceIdSet & {
@@ -20,8 +20,8 @@ export type Metadata = {
   fields: Record<string, Required<MetadataProps>>;
 };
 
-// TODO: Implementar
-export type ExeptionHandling = {
-  _fail?: string | string[];
-  _warn?: string | string[];
-};
+// // Implementar só no atualizar rascunho
+// export type ExeptionHandling = {
+//   _fail?: string | string[];
+//   _warn?: string | string[];
+// };

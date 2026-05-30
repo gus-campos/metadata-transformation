@@ -8,7 +8,7 @@ export function applyMetadata(
   metadataApply: MetadataProps,
 ) {
 
-  // FIXME: Passar isso pro validador
+  // TODO: Passar isso pro validador?
   if (!(fieldIdentifier in metadata.fields)) {
     throw new Error(
       `O identificador ${fieldIdentifier} não existe no metadata. ` +

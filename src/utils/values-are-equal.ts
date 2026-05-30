@@ -11,16 +11,31 @@ export function valuesAreEqual(
 
   // Compara objetos profundamente, mas só procura no got oq vem no expected
   if (isPlainObject(got) && isPlainObject(expected)) {
-    
-    // TODO: Decidir se deve forçar comparação de class id com class.id tbm 
-    // return isMatch(
-    //   { ...got, _class: { _id: got._classId } },
-    //   { ...expected, _class: { _id: expected._classId } },
-    // );
-    return isMatch(got, expected);
+    // TODO: verificar se deve realmente normalizar os ids
+    return isMatch(
+      normalizeInstanceClassIds(got),
+      normalizeInstanceClassIds(expected),
+    );
   }
 
-  // Não faz diferenciação entre null e undefined, para facilitar declaração
+  // Não faz diferenciação entre null e undefined
   // TODO: Verificar se pode ser importante checar null e undefined em específico
   return (got ?? null) === (expected ?? null);
+}
+
+function normalizeInstanceClassIds(instance: InstanceObject): InstanceObject {
+  const classId = instance._classId ?? instance._class?._id;
+
+  return {
+    ...instance,
+
+    // Só cria chaves se tiver o valor para ela
+    ...(classId && {
+      _classId: classId,
+      _class: {
+        ...instance._class,
+        _id: classId,
+      },
+    }),
+  };
 }

@@ -21,6 +21,8 @@ export function accessPathInObject(object: InstanceObject, path: string) {
   * })
   * 
   * Retorna: "Pedro"
+  * 
+  * Se não encontrar o caminho, retorna undefined.
   */
 
   const pathArray = path.split(".");
