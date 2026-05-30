@@ -1,6 +1,6 @@
 import { MetadataProps } from "./metadata-transform";
 
-export type Value = string | number | Date | null;
+export type Value = string | number | Date | boolean | null;
 
 export type PlainObject = {
   [key: string]: any;

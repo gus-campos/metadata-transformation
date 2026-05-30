@@ -6,6 +6,9 @@ export function valuesAreEqual(
   got: Value | InstanceObject | undefined,
   expected: Value | InstanceObject | undefined,
 ): boolean {
+    
+    console.log(got, expected);
+
   if (got === undefined || expected === undefined) return got === expected;
 
   if (got instanceof Date && expected instanceof Date)

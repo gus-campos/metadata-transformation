@@ -2,13 +2,13 @@ import { InstanceIdSet, InstanceObject, Value } from "./common";
 import { KeysOfUnion } from "./util";
 
 export type ValueIfCondition = {
-  _if?: (
-    fieldValue: Value | Value[] | InstanceObject | undefined,
-    obj: InstanceObject,
-  ) => boolean;
+  _if?: (args: {
+    value: Value | Value[] | InstanceObject | undefined;
+    obj: InstanceObject;
+  }) => boolean;
 };
 
-// Na implementação olhar tanto _classId quanto _class._id
+// TODO: Decidir se na implementação deve olhar tanto _classId quanto _class._id?
 
 /*
  * Simple: Se buscar igualdade entre dois elemetos, ou um elemento em um array
@@ -16,20 +16,19 @@ export type ValueIfCondition = {
  * All of: Se for múltiplo (todos devem estar inclusos)
  */
 
+// Se passado _allOf com mais de um item para campo não múltiplo, vai falhar sempre
 export type MatchSimpleExpect = InstanceObject | Value;
-export type AnyOfMatch = { anyOf: MatchSimpleExpect[] };
-export type AllOfMatch = { allOf: MatchSimpleExpect[] };
+export type AnyOfMatch = { _anyOf: MatchSimpleExpect[] };
+export type AllOfMatch = { _allOf: MatchSimpleExpect[] };
+export type FieldMatchExpect = AnyOfMatch | AllOfMatch;
 
-export type CompoundMatch =
-  | AnyOfMatch
-  | AllOfMatch
+export const ANY_OF_KEY = "_anyOf";
+export const ALL_OF_KEY = "_allOf";
 
-export type FieldMatchExpect = MatchSimpleExpect | CompoundMatch;
-
-export const COMPAUND_MATCH_KEYS = [
-  "anyOf",
-  "allOf",
-] as const satisfies KeysOfUnion<CompoundMatch>[];
+export const MATCH_EXPECT_KEYS = [
+  ANY_OF_KEY,
+  ALL_OF_KEY,
+] as const satisfies KeysOfUnion<FieldMatchExpect>[];
 
 export type MatchConditionNode = {
   _not?: MatchConditionNode;
@@ -46,4 +45,7 @@ export type MatchCondition = {
   _match?: MatchConditionNode;
 };
 
-export const MATCH_CONDITION_KEYS = ["_not", "_some"] as const;
+export const MATCH_CONDITION_KEYS = [
+  "_not",
+  "_some",
+] as const satisfies KeysOfUnion<MatchConditionNode>[];

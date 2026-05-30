@@ -1,14 +1,13 @@
-import { InstanceIdSet, InstanceObject, Value } from "../models/pure/common";
+import { number } from "zod";
+import { InstanceObject } from "../models/pure/common";
 import {
   MatchConditionNode,
   FieldMatchExpect,
-  COMPAUND_MATCH_KEYS,
-  CompoundMatch,
   AnyOfMatch,
   AllOfMatch,
-  MatchSimpleExpect,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
 } from "../models/pure/instance-condition";
-import { isPlainObject } from "../utils/is-plain-object";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
@@ -58,48 +57,35 @@ function checkFieldMatch(
   pathToField: string,
   fieldMatchExpect: FieldMatchExpect,
 ): boolean {
-  // TODO: Decidir se mant´em comportamento silencioso
+  // TODO: Decidir se mantém erro silencioso
 
   const valueGot = accessPathInObject(instance, pathToField);
   if (valueGot === undefined) return false;
 
-  // Isso permite tratar da mesma forma tanto quando vem valor único e quando vem múltiplo
+  // Isso permite tratar da mesma forma para valor único e para valor múltiplo
   const arrayGot = Array.isArray(valueGot) ? valueGot : [valueGot];
 
-  // Comparação com valor
-  if (!isPlainObject(fieldMatchExpect)) {
-    const valueExpected = fieldMatchExpect;
-    return arrayGot.some((got) => valuesAreEqual(got, valueExpected));
+  if (ANY_OF_KEY in fieldMatchExpect) {
+    const { _anyOf } = fieldMatchExpect as AnyOfMatch;
+
+    // Sem condição, é sempre verdadeiro
+    if (_anyOf.length === 0) return true;
+
+    return _anyOf.some((expected) =>
+      arrayGot.some((got) => valuesAreEqual(got, expected)),
+    );
   }
 
-  // Comparação com matches compostos
-  if (COMPAUND_MATCH_KEYS.some((key) => key in fieldMatchExpect)) {
-    if ("anyOf" in fieldMatchExpect) {
-      const { anyOf } = fieldMatchExpect as AnyOfMatch;
-      return anyOf.some((expected) =>
-        arrayGot.some((got) => valuesAreEqual(got, expected)),
-      );
-    }
+  if (ALL_OF_KEY in fieldMatchExpect) {
+    const { _allOf } = fieldMatchExpect as AllOfMatch;
 
-    if ("allOf" in fieldMatchExpect) {
-      const { allOf } = fieldMatchExpect as AllOfMatch;
-      return allOf.every((expected) =>
-        arrayGot.some((got) => valuesAreEqual(got, expected)),
-      );
-    }
+    // Sem condição, é sempre verdadeiro
+    if (_allOf.length === 0) return true;
 
-    return false;
+    return _allOf.every((expected) =>
+      arrayGot.some((got) => valuesAreEqual(got, expected)),
+    );
   }
 
-  // TESTAR ISSO
-  // ESTA CERTO?
-  // TESTAR COMPARAÇÂO ENTRE OBJETOS
-
-  // Comparação com valores/objeto
-  const partialInstance = fieldMatchExpect as InstanceObject;
-  return arrayGot.some((got) => valuesAreEqual(got, partialInstance));
-}
-
-function isReferenceObject(obj: InstanceObject) {
-  return "_id" in obj;
+  throw new Error("Tipo de chave não tratada");
 }

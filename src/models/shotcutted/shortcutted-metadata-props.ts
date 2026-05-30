@@ -80,10 +80,8 @@ export function toMetadataProps({
       : null;
 
   const nameProp = name !== undefined ? { name: toNameProp(name) } : null;
-
   const editHelpProp =
     editHelp !== undefined ? { editHelp: toNameProp(editHelp) } : null;
-
   const placeholderProp =
     placeholder !== undefined ? { placeholder: toNameProp(placeholder) } : null;
 

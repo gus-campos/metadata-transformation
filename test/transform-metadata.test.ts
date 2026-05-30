@@ -80,7 +80,7 @@ describe("fieldTransformMetadata — _apply", () => {
     const metadata = makeMetadata();
     const original = { ...metadata.fields.status! };
     const transform: FieldMetadataTransform = {
-      _match: { status: ["ativo"] },
+      _match: { status: { _anyOf: ["ativo"] } },
     };
 
     transformMetadataField(
@@ -135,17 +135,20 @@ describe("fieldTransformMetadata — _if", () => {
       transform,
     );
 
-    expect(_if).toHaveBeenCalledWith(instance.status, instance);
+    expect(_if).toHaveBeenCalledWith({
+      obj: instance,
+      value: instance.status,
+    });
   });
 });
 
-// ---- fieldTransformMetadata — _match ----------------------------------------
+// ---- fieldTransformMetadata — _match _anyOf ----------------------------------
 
-describe("fieldTransformMetadata — _match", () => {
-  it("aplica quando _match satisfeito", () => {
+describe("fieldTransformMetadata — _match _anyOf", () => {
+  it("aplica quando _match _anyOf satisfeito", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _match: { status: ["ativo"] },
+      _match: { status: { _anyOf: ["ativo"] } },
       _apply: { readOnly: true },
     };
 
@@ -157,10 +160,10 @@ describe("fieldTransformMetadata — _match", () => {
     expect(metadata.fields.status!.readOnly).toBe(true);
   });
 
-  it("não aplica quando _match não satisfeito", () => {
+  it("não aplica quando _match _anyOf não satisfeito", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _match: { status: ["inativo"] },
+      _match: { status: { _anyOf: ["inativo"] } },
       _apply: { readOnly: true },
     };
 
@@ -173,14 +176,63 @@ describe("fieldTransformMetadata — _match", () => {
   });
 });
 
-// ---- fieldTransformMetadata — _if + _match ----------------------------------
+// ---- fieldTransformMetadata — _match _allOf ----------------------------------
 
-describe("fieldTransformMetadata — _if + _match", () => {
+describe("fieldTransformMetadata — _match _allOf", () => {
+  it("aplica quando _match _allOf satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _match: { status: { _allOf: ["ativo"] } },
+      _apply: { readOnly: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.readOnly).toBe(true);
+  });
+
+  it("não aplica quando algum critério do _allOf não é satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _match: { status: { _allOf: ["ativo", "inativo"] } },
+      _apply: { readOnly: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.readOnly).toBe(false);
+  });
+
+  it("não aplica quando nenhum critério do _allOf é satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _match: { status: { _allOf: ["inativo", "pendente"] } },
+      _apply: { readOnly: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.readOnly).toBe(false);
+  });
+});
+
+// ---- fieldTransformMetadata — _if + _match _anyOf ----------------------------
+
+describe("fieldTransformMetadata — _if + _match _anyOf", () => {
   it("aplica quando ambos são verdadeiros", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
-      _if: (_, obj) => obj.tipo === "admin",
-      _match: { status: ["ativo"] },
+      _if: ({ obj }) => obj.tipo === "admin",
+      _match: { status: { _anyOf: ["ativo"] } },
       _apply: { hidden: true },
     };
 
@@ -192,11 +244,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     expect(metadata.fields.status!.hidden).toBe(true);
   });
 
-  it("não aplica quando _if false e _match true", () => {
+  it("não aplica quando _if false e _match _anyOf true", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _if: () => false,
-      _match: { status: ["ativo"] },
+      _match: { status: { _anyOf: ["ativo"] } },
       _apply: { hidden: true },
     };
 
@@ -208,11 +260,11 @@ describe("fieldTransformMetadata — _if + _match", () => {
     expect(metadata.fields.status!.hidden).toBe(false);
   });
 
-  it("não aplica quando _if true e _match false", () => {
+  it("não aplica quando _if true e _match _anyOf false", () => {
     const metadata = makeMetadata();
     const transform: FieldMetadataTransform = {
       _if: () => true,
-      _match: { status: ["inativo"] },
+      _match: { status: { _anyOf: ["inativo"] } },
       _apply: { hidden: true },
     };
 
@@ -225,7 +277,59 @@ describe("fieldTransformMetadata — _if + _match", () => {
   });
 });
 
-// ---- fieldTransformMetadata — array -----------------------------------------
+// ---- fieldTransformMetadata — _if + _match _allOf ----------------------------
+
+describe("fieldTransformMetadata — _if + _match _allOf", () => {
+  it("aplica quando _if true e _match _allOf satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _if: () => true,
+      _match: { status: { _allOf: ["ativo"] } },
+      _apply: { hidden: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.hidden).toBe(true);
+  });
+
+  it("não aplica quando _if false e _match _allOf satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _if: () => false,
+      _match: { status: { _allOf: ["ativo"] } },
+      _apply: { hidden: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.hidden).toBe(false);
+  });
+
+  it("não aplica quando _if true e _match _allOf não satisfeito", () => {
+    const metadata = makeMetadata();
+    const transform: FieldMetadataTransform = {
+      _if: () => true,
+      _match: { status: { _allOf: ["inativo"] } },
+      _apply: { hidden: true },
+    };
+
+    transformMetadataField(
+      { metadata, instance, fieldIdentifier: "status" },
+      transform,
+    );
+
+    expect(metadata.fields.status!.hidden).toBe(false);
+  });
+});
+
+// ---- fieldTransformMetadata — array de transforms ---------------------------
 
 describe("fieldTransformMetadata — array de transforms", () => {
   it("aplica todos os transforms em ordem", () => {
@@ -281,17 +385,17 @@ describe("fieldTransformMetadata — array de transforms", () => {
     expect(metadata.fields.status!.hidden).toBe(false);
   });
 
-//   it("array vazio não altera o metadata", () => {
-//     const metadata = makeMetadata();
-//     const original = { ...metadata.fields.status! };
+  //   it("array vazio não altera o metadata", () => {
+  //     const metadata = makeMetadata();
+  //     const original = { ...metadata.fields.status! };
 
-//     transformMetadataField(
-//       { metadata, instance, fieldIdentifier: "status" },
-//       [],
-//     );
+  //     transformMetadataField(
+  //       { metadata, instance, fieldIdentifier: "status" },
+  //       [],
+  //     );
 
-//     expect(metadata.fields.status!).toMatchObject(original);
-//   });
+  //     expect(metadata.fields.status!).toMatchObject(original);
+  //   });
 });
 
 // ---- transformMetadata ------------------------------------------------------
@@ -356,6 +460,9 @@ describe("transformMetadata", () => {
 
     transformMetadata(metadata, instance, metadataTransform);
 
-    expect(_if).toHaveBeenCalledWith(instance.status, instance);
+    expect(_if).toHaveBeenCalledWith({
+      obj: instance,
+      value: instance.status,
+    });
   });
 });

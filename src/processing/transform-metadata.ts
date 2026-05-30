@@ -50,7 +50,7 @@ export function transformMetadataField(
     context.fieldIdentifier,
   );
 
-  const isIfTruthy = !_if ? true : _if(fieldValue, context.instance);
+  const isIfTruthy = !_if ? true : _if({ value: fieldValue, obj: context.instance });
 
   if (_apply && isMatchTruthy && isIfTruthy)
     applyMetadata(context.metadata, context.fieldIdentifier, _apply);
