@@ -157,16 +157,6 @@ describe("toMetadataProps", () => {
     });
   });
 
-  // TODO: Seria uma boa!
-  //   it("should prioritize explicit props over behavior shortcut", () => {
-  //     const result = toMetadataProps({
-  //       behavior: "mandatory",
-  //       required: false,
-  //     });
-
-  //     expect(result.required).toBe(false);
-  //   });
-
   it("should keep empty valueOptions", () => {
     const result = toMetadataProps({
       valueOptions: [],

@@ -1,6 +1,5 @@
 // import { MatchCondition, ValueIfCondition } from "./instance-condition";
 
-// // TODO: Implementar lógica
 // type AclTransform = ValueIfCondition &
 //   MatchCondition & {
 //     _addUser?: string | string[];

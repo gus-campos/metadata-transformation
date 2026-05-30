@@ -8,12 +8,10 @@ export type ValueIfCondition = {
   }) => boolean;
 };
 
-// TODO: Decidir se na implementação deve olhar tanto _classId quanto _class._id?
-
 /*
- * Simple: Se buscar igualdade entre dois elemetos, ou um elemento em um array
- * Any of: Se for único ou múltiplo (um deve estar incluso)
- * All of: Se for múltiplo (todos devem estar inclusos)
+ * Any of: Se for único ou múltiplo um deve estar incluso
+ * All of: Se for múltiplo, todos devem estar inclusos, se for único, mesma coisa
+ * ou seja, vai falhar se passar mais de um valor diferente.
  */
 
 // Se passado _allOf com mais de um item para campo não múltiplo, vai falhar sempre
@@ -36,7 +34,7 @@ export type MatchNode = {
 
   [identifier: string]:
     | MultExpected
-    // FIXME: Na prática não devem ser aceitos:
+    // Na prática não devem ser aceitos:
     | undefined
     | MatchNode;
 };

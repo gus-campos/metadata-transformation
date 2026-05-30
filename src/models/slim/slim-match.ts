@@ -20,7 +20,7 @@ export type SlimMatchNode = {
 
   [identifier: string]:
     | SlimMultExpected
-    // FIXME: Na prática não devem ser aceitos:
+    // Na prática não devem ser aceitos:
     | undefined
     | SlimMatchNode;
 };

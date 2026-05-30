@@ -8,6 +8,7 @@ import {
   ANY_OF_KEY,
   NOT_KEY,
   SOME_KEY,
+  MATCH_CONDITION_KEYS,
 } from "../models/pure/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
@@ -39,8 +40,9 @@ function checkMatchConditionHelper(
       const path = key as string;
       const valueExpected = content as MultExpected;
 
-      // FIXME: Validar que não tem chaves _not e _some dentro
-      // da chave do campo, para compensar limitação da tipagem
+      // TODO: Passar para o validador?
+      if (MATCH_CONDITION_KEYS.some(key => key in valueExpected))
+        throw new Error("Chaves not e some só podem ser usadas dentro de 'match', ou outros not's e some's");
 
       return checkFieldMatch(instance, path, valueExpected);
     },
