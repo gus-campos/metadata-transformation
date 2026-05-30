@@ -1,5 +1,14 @@
-import { InstanceObject, Value } from "../models/pure/common";
-import { MatchConditionNode, ReferenceMatch } from "../models/pure/instance-condition";
+import { InstanceIdSet, InstanceObject, Value } from "../models/pure/common";
+import {
+  MatchConditionNode,
+  FieldMatchExpect,
+  COMPAUND_MATCH_KEYS,
+  CompoundMatch,
+  AnyOfMatch,
+  AllOfMatch,
+  MatchSimpleExpect,
+} from "../models/pure/instance-condition";
+import { isPlainObject } from "../utils/is-plain-object";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
@@ -15,7 +24,6 @@ function checkMatchConditionHelper(
   matchCondition: MatchConditionNode,
   mode: "every" | "some",
 ): boolean {
-  
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
       if (key === "_not") {
@@ -29,7 +37,7 @@ function checkMatchConditionHelper(
       }
 
       const path = key as string;
-      const valueExpected = content as Value[] | ReferenceMatch[];
+      const valueExpected = content as FieldMatchExpect;
 
       // FIXME: Validar que não tem chaves _not e _some dentro
       // da chave do campo, para compensar limitação da tipagem
@@ -48,22 +56,49 @@ function checkMatchConditionHelper(
 function checkFieldMatch(
   instance: InstanceObject,
   pathToField: string,
-  valuesExpected: Value[] | ReferenceMatch[],
+  fieldMatchExpect: FieldMatchExpect,
 ): boolean {
+  // TODO: Decidir se mant´em comportamento silencioso
 
   const valueGot = accessPathInObject(instance, pathToField);
   if (valueGot === undefined) return false;
+
+  // Isso permite tratar da mesma forma tanto quando vem valor único e quando vem múltiplo
   const arrayGot = Array.isArray(valueGot) ? valueGot : [valueGot];
-    
-  if (valuesExpected.length === 0) return true;
 
-  return arrayGot.some((valueGot) =>
-    valuesExpected.some((valueExpected) =>
-      valuesAreEqual(valueGot, valueExpected),
-    ),
-  );
+  // Comparação com valor
+  if (!isPlainObject(fieldMatchExpect)) {
+    const valueExpected = fieldMatchExpect;
+    return arrayGot.some((got) => valuesAreEqual(got, valueExpected));
+  }
+
+  // Comparação com matches compostos
+  if (COMPAUND_MATCH_KEYS.some((key) => key in fieldMatchExpect)) {
+    if ("anyOf" in fieldMatchExpect) {
+      const { anyOf } = fieldMatchExpect as AnyOfMatch;
+      return anyOf.some((expected) =>
+        arrayGot.some((got) => valuesAreEqual(got, expected)),
+      );
+    }
+
+    if ("allOf" in fieldMatchExpect) {
+      const { allOf } = fieldMatchExpect as AllOfMatch;
+      return allOf.every((expected) =>
+        arrayGot.some((got) => valuesAreEqual(got, expected)),
+      );
+    }
+
+    return false;
+  }
+
+  // TESTAR ISSO
+  // ESTA CERTO?
+  // TESTAR COMPARAÇÂO ENTRE OBJETOS
+
+  // Comparação com valores/objeto
+  const partialInstance = fieldMatchExpect as InstanceObject;
+  return arrayGot.some((got) => valuesAreEqual(got, partialInstance));
 }
-
 
 function isReferenceObject(obj: InstanceObject) {
   return "_id" in obj;

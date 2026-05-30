@@ -1,19 +1,21 @@
 import { InstanceObject, Value } from "../models/pure/common";
 import { isPlainObject } from "./is-plain-object";
+import isMatch from "lodash/isMatch";
 
 export function valuesAreEqual(
-  a: Value | InstanceObject | undefined,
-  b: Value | InstanceObject | undefined,
+  got: Value | InstanceObject | undefined,
+  expected: Value | InstanceObject | undefined,
 ): boolean {
-  if (a === undefined || b === undefined) return a === b;
+  if (got === undefined || expected === undefined) return got === expected;
 
-  if (a instanceof Date && b instanceof Date)
-    return a.getTime() === b.getTime();
+  if (got instanceof Date && expected instanceof Date)
+    return got.getTime() === expected.getTime();
 
-  if (isPlainObject(a) && isPlainObject(b))
-    return JSON.stringify(a) === JSON.stringify(b);
+  // Compara objetos profundamente, mas só procura no got oq vem no expected
+  if (isPlainObject(got) && isPlainObject(expected))
+    return isMatch(got, expected);
 
-  return a === b;
+  return got === expected;
 }
 
 // quando o objeto é obtido?
