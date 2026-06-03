@@ -60,8 +60,7 @@ function checkFieldMatch(
   pathToField: string,
   fieldMatchExpect: MultExpected,
 ): boolean {
-    
-  // TODO: Decidir se mantém erro silencioso
+
   const valueGot = accessPathInObject(instance, pathToField);
   if (valueGot === undefined) return false;
 

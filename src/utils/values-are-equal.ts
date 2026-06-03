@@ -11,7 +11,6 @@ export function valuesAreEqual(
 
   // Compara objetos profundamente, mas só procura no got oq vem no expected
   if (isPlainObject(got) && isPlainObject(expected)) {
-    // TODO: verificar se deve realmente normalizar os ids
     return isMatch(
       normalizeInstanceClassIds(got),
       normalizeInstanceClassIds(expected),
@@ -19,7 +18,6 @@ export function valuesAreEqual(
   }
 
   // Não faz diferenciação entre null e undefined
-  // TODO: Verificar se pode ser importante checar null e undefined em específico
   return (got ?? null) === (expected ?? null);
 }
 
