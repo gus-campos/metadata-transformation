@@ -12,8 +12,10 @@ export type InstanceIdSet = {
   _class?: { _id?: string; }
 };
 
+export type InstanceValue = Value | Value[] | InstanceObject | InstanceObject[];
+
 export type InstanceObject = InstanceIdSet & {
-  [key: string]: Value | Value[] | InstanceObject;
+  [key: string]: InstanceValue;
 };
 
 export type Metadata = {
@@ -21,7 +23,7 @@ export type Metadata = {
 };
 
 // // Implementar só no atualizar rascunho
-// export type ExeptionHandling = {
+// export type ExceptionHandling = {
 //   _fail?: string | string[];
 //   _warn?: string | string[];
 // };

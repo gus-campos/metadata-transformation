@@ -1,4 +1,4 @@
-import { ExeptionHandling, InstanceIdSet, PlainObject } from "./common";
+import { InstanceIdSet, PlainObject } from "./common";
 import { ValueIfCondition, MatchCondition } from "./instance-condition";
 
 export type Option = { value: string; identifier: string };
@@ -30,7 +30,7 @@ export type Apply = {
 };
 
 export type FieldMetadataTransform = ValueIfCondition &
-  ExeptionHandling &
+  // ExceptionHandling &
   MatchCondition &
   Apply;
 

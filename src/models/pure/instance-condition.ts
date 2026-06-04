@@ -1,9 +1,9 @@
-import { InstanceObject, Value } from "./common";
+import { InstanceObject, InstanceValue, Value } from "./common";
 import { KeysOfUnion } from "./util";
 
 export type ValueIfCondition = {
   _if?: (args: {
-    value: Value | Value[] | InstanceObject | undefined;
+    value: InstanceValue | undefined;
     obj: InstanceObject;
   }) => boolean;
 };
