@@ -67,7 +67,6 @@ function accessSequenceKeysInObject(
   // Se ainda tem chave pra ler, tem que ser um objeto
   // Se não for, o path foi inválido
 
-  console.log(object, pathArray, result);
   if (
     isPlainObject(result) ||
     (Array.isArray(result) && result.every((item) => isPlainObject(item)))
