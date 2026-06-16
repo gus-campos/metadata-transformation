@@ -18,11 +18,11 @@ const KEY_VALUE_FROM_STRING = {
 
 type MetadataPropTerm = keyof typeof KEY_VALUE_FROM_STRING;
 
-type ApplyTermProps = {
+export type ApplyTermProps = {
   _apply?: MetadataPropTerm | MetadataPropTerm[];
 };
 
-type SlimApplyObject = Apply & {
+export type SlimApplyObject = Apply & {
   _apply?: SlimMetadataProps;
 };
 
