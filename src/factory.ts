@@ -1,5 +1,5 @@
 import { InstanceObject, Metadata } from "./models/pure/common";
-import { MetadataTransform } from "./models/pure/metadata-transform";
+import { FieldsMetadataTransform } from "./models/pure/metadata-transform";
 import { transformMetadata as realTransformMetadata } from "./processing/transform-metadata";
 // import { transformDraft as realTransformDraft } from "./processing/transform-draft";
 
@@ -10,7 +10,7 @@ type Context = {
 };
 
 const factory = (ctx: Context) => ({
-  transformMetadata: (metadataTransform: MetadataTransform) => {
+  transformMetadata: (metadataTransform: FieldsMetadataTransform) => {
     if (ctx._metadata === undefined)
       throw new Error("_metadata não está definido");
 

@@ -3,6 +3,7 @@ import { KeysOfUnion } from "./util";
 
 export type ValueIfCondition = {
   _if?: (args: {
+    // O valor pode ser encontrado ou não, para ser passado pro predicato
     value: InstanceValue | undefined;
     obj: InstanceObject;
   }) => boolean;
