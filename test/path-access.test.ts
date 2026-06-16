@@ -188,9 +188,9 @@ describe("accessPathInObject", () => {
     });
   });
 
-  //   // -------------------------------------------------------------------------
-  //   // Array de arrays (flatten)
-  //   // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Array de arrays (flatten)
+  // -------------------------------------------------------------------------
 
   describe("flatten de array de objetos que contêm arrays", () => {
     it("achata os resultados quando cada elemento contém um sub-array de objetos", () => {

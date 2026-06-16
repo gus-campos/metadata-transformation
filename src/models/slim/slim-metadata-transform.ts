@@ -13,7 +13,6 @@ export type SlimMetadataTransform = {
     | SlimFieldMetadataTransform[];
 };
 
-// TODO: Para campos múltiplos de objeto permitir procurar dentro de um subcampo
 // TODO: Falta implementar agrupamento por regras criar um novo argumento opcional no transformMetada? sempre executar depois?
 
 export function toMetadataTransform(
