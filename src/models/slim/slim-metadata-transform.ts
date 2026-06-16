@@ -1,6 +1,6 @@
 import {
   FieldMetadataTransform,
-  MetadataTransform,
+  FieldsMetadataTransform,
 } from "../pure/metadata-transform";
 import { SlimApply, toApply } from "./slim-apply";
 import { toMatchCondition } from "./slim-match";
@@ -17,8 +17,8 @@ export type SlimMetadataTransform = {
 
 export function toMetadataTransform(
   transform: SlimMetadataTransform,
-): MetadataTransform {
-  const simpleTransform = {} as MetadataTransform;
+): FieldsMetadataTransform {
+  const simpleTransform = {} as FieldsMetadataTransform;
 
   for (const [fieldIdentifier, fieldTransform] of Object.entries(transform)) {
     const fieldTransformArray = Array.isArray(fieldTransform)
