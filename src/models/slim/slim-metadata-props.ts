@@ -25,6 +25,7 @@ type SlimMultiplicityProp = {
 
 // =============================================================================
 
+// TODO: Verificar se está aplicado
 type SlimMask = {
   mask?: string | MetadataProps["mask"];
 };
