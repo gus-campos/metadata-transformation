@@ -57,8 +57,8 @@ export type SlimMetadataProps = Omit<MetadataProps, "valueOptions"> &
   BehaviorProp &
   SlimMultiplicityProp &
   SlimValueOptionsProp &
-  SlimNamesProps &
-  SlimMask;
+  SlimNamesProps;
+//   & SlimMask;
 
 export function toMetadataProps({
   behavior,
@@ -74,10 +74,10 @@ export function toMetadataProps({
 
   const multiplicityProps = toMinMaxMultiplicityProps(multiplicity);
 
-  const maskProp =
-    mask !== undefined
-      ? { mask: typeof mask === "string" ? toIdSet(mask) : mask } // Verificar se funciona no sydle passar dó o id
-      : null;
+//   const maskProp =
+//     mask !== undefined
+//       ? { mask: typeof mask === "string" ? toIdSet(mask) : mask } // Verificar se funciona no sydle passar dó o id
+//       : null;
 
   const nameProp = name !== undefined ? { name: toNameProp(name) } : null;
   const editHelpProp =
@@ -94,7 +94,7 @@ export function toMetadataProps({
     ...rest,
     ...behaviorProps,
     ...multiplicityProps,
-    ...maskProp,
+    // ...maskProp,
     ...nameProp,
     ...editHelpProp,
     ...placeholderProp,
