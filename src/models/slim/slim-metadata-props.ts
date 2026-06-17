@@ -25,9 +25,9 @@ type SlimMultiplicityProp = {
 
 // =============================================================================
 
-type SlimMask = {
-  mask?: string | MetadataProps["mask"];
-};
+// type SlimMask = {
+//   mask?: string | MetadataProps["mask"];
+// };
 
 // =============================================================================
 
@@ -102,9 +102,9 @@ export function toMetadataProps({
   };
 }
 
-function toIdSet(id: string, classId?: string): InstanceIdSet {
-  return { _id: id, _classId: classId };
-}
+// function toIdSet(id: string, classId?: string): InstanceIdSet {
+//   return { _id: id, _classId: classId };
+// }
 
 function toNameProp(expandedNameProp: SlimNameProp): NameProp {
   if (isPlainObject(expandedNameProp)) return expandedNameProp;
