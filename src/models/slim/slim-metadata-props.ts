@@ -25,7 +25,6 @@ type SlimMultiplicityProp = {
 
 // =============================================================================
 
-// TODO: Verificar se está aplicado
 type SlimMask = {
   mask?: string | MetadataProps["mask"];
 };
@@ -77,7 +76,7 @@ export function toMetadataProps({
 
   const maskProp =
     mask !== undefined
-      ? { mask: typeof mask === "string" ? toIdSet(mask) : mask }
+      ? { mask: typeof mask === "string" ? toIdSet(mask) : mask } // Verificar se funciona no sydle passar dó o id
       : null;
 
   const nameProp = name !== undefined ? { name: toNameProp(name) } : null;
