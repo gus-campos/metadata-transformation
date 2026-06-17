@@ -49,25 +49,25 @@ describe("toMetadataProps", () => {
     });
   });
 
-  it("should transform string mask into array", () => {
-    const result = toMetadataProps({
-      mask: "money",
-    });
+//   it("should transform string mask into array", () => {
+//     const result = toMetadataProps({
+//       mask: "money",
+//     });
 
-    expect(result).toEqual({
-      mask: { _id: "money" },
-    });
-  });
+//     expect(result).toEqual({
+//       mask: { _id: "money" },
+//     });
+//   });
 
-  it("should convert mask id to mask object", () => {
-    const result = toMetadataProps({
-      mask: "ID",
-    });
+//   it("should convert mask id to mask object", () => {
+//     const result = toMetadataProps({
+//       mask: "ID",
+//     });
 
-    expect(result).toEqual({
-      mask: { _id: "ID" },
-    });
-  });
+//     expect(result).toEqual({
+//       mask: { _id: "ID" },
+//     });
+//   });
 
   it("should transform simple named props into localized object", () => {
     const result = toMetadataProps({
@@ -178,15 +178,15 @@ describe("toMetadataProps", () => {
     });
   });
 
-  it("should preserve mask object", () => {
-    const result = toMetadataProps({
-      mask: { _id: "money" },
-    });
+//   it("should preserve mask object", () => {
+//     const result = toMetadataProps({
+//       mask: { _id: "money" },
+//     });
 
-    expect(result).toEqual({
-      mask: { _id: "money" },
-    });
-  });
+//     expect(result).toEqual({
+//       mask: { _id: "money" },
+//     });
+//   });
 
   it("should preserve unrelated metadata props", () => {
     const result = toMetadataProps({

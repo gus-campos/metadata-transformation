@@ -133,6 +133,34 @@ describe("checkMatchCondition — _some", () => {
   });
 });
 
+describe("checkMatchCondition — _match", () => {
+  it("match funciona como agrupador - caso 1", () => {
+    expect(
+      checkMatchCondition(instance, {
+        _some: {
+          _match: {
+            nome: { _anyOf: ["Maria"] },
+            idade: { _anyOf: [99] },
+          },
+        },
+      }),
+    ).toBe(false);
+  });
+
+  it("match funciona como agrupador - caso 2", () => {
+    expect(
+      checkMatchCondition(instance, {
+        _some: {
+          nome: { _anyOf: ["Maria"] },
+          _match: {
+            idade: { _anyOf: [99] },
+          },
+        },
+      }),
+    ).toBe(false);
+  });
+});
+
 // ---- combinações ------------------------------------------------------------
 
 describe("checkMatchCondition — combinações", () => {
@@ -492,10 +520,7 @@ describe("checkMatchCondition — campo é objeto, _anyOf verifica subset profun
     expect(
       checkMatchCondition(instanceWithObject, {
         endereco: {
-          _allOf: [
-            { estado: "SP", cidade: "BH" },
-            { pais: "BR" },
-          ],
+          _allOf: [{ estado: "SP", cidade: "BH" }, { pais: "BR" }],
         },
       }),
     ).toBe(false);

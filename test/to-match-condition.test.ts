@@ -149,6 +149,27 @@ describe("toMatchCondition", () => {
     });
   });
 
+  it("assume que é referente ao próprio campos quando passado para match interno", () => {
+    expect(
+      toMatchCondition(
+        {
+          _match: {
+            _match: null,
+            campo1: null,
+          },
+        },
+        MOCK_FIELD_IDENTIFIER,
+      ),
+    ).toEqual({
+      _match: {
+        campo1: { _anyOf: [null] },
+        _match: {
+          [MOCK_FIELD_IDENTIFIER]: { _anyOf: [null] },
+        },
+      },
+    });
+  });
+
   it("assume que é referente ao próprio campos em vários níveis de profundidade", () => {
     expect(
       toMatchCondition(

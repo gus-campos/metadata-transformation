@@ -32,6 +32,8 @@ export const MATCH_EXPECT_KEYS = [
 export type MatchNode = {
   _not?: MatchNode;
   _some?: MatchNode;
+  // Incluído para permitir referência implícita internamente
+  _match?: MatchNode;
 
   [identifier: string]:
     | MultExpected
@@ -46,8 +48,10 @@ export type MatchCondition = {
 
 export const NOT_KEY = "_not";
 export const SOME_KEY = "_some";
+export const MATCH_KEY = "_match";
 
 export const MATCH_CONDITION_KEYS = [
   NOT_KEY,
   SOME_KEY,
+  MATCH_KEY
 ] as const satisfies KeysOfUnion<MatchNode>[];

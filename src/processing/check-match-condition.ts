@@ -9,6 +9,7 @@ import {
   NOT_KEY,
   SOME_KEY,
   MATCH_CONDITION_KEYS,
+  MATCH_KEY,
 } from "../models/pure/instance-condition";
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
@@ -20,7 +21,6 @@ export function checkMatchCondition(
   return checkMatchConditionHelper(instance, matchCondition, "every");
 }
 
-
 // TODO: Verificar se sabe diferenciar bem quando passar um objeto como valor para comparar com o objeto do campo
 // e quando passa um objeto com not dentro
 function checkMatchConditionHelper(
@@ -30,6 +30,11 @@ function checkMatchConditionHelper(
 ): boolean {
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
+      if (key === MATCH_KEY) {
+        const matchCondition = content as MatchNode;
+        return checkMatchConditionHelper(instance, matchCondition, "every");
+      }
+      
       if (key === NOT_KEY) {
         const notCondition = content as MatchNode;
         return !checkMatchConditionHelper(instance, notCondition, "every");
@@ -44,8 +49,10 @@ function checkMatchConditionHelper(
       const valueExpected = content as MultExpected;
 
       // TODO: Passar para o validador?
-      if (MATCH_CONDITION_KEYS.some(key => key in valueExpected))
-        throw new Error("Chaves not e some só podem ser usadas dentro de 'match', ou outros not's e some's");
+      if (MATCH_CONDITION_KEYS.some((key) => key in valueExpected))
+        throw new Error(
+          "Chaves not e some só podem ser usadas dentro de 'match', ou outros not's e some's",
+        );
 
       return checkFieldMatch(instance, path, valueExpected);
     },
@@ -63,7 +70,6 @@ function checkFieldMatch(
   pathToField: string,
   fieldMatchExpect: MultExpected,
 ): boolean {
-
   const valueGot = accessPathInObject(instance, pathToField);
   if (valueGot === undefined) return false;
 
