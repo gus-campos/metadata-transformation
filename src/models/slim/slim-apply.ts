@@ -5,7 +5,7 @@ import {
   toMetadataProps,
 } from "./slim-metadata-props";
 
-const KEY_VALUE_FROM_STRING = {
+const SLIM_KEY_VALUE_FROM_TERM_STRING = {
   omitted: { behavior: "omitted" },
   displayed: { behavior: "displayed" },
   mandatory: { behavior: "mandatory" },
@@ -16,7 +16,7 @@ const KEY_VALUE_FROM_STRING = {
   breakLine: { breakLine: true },
 } as const satisfies Record<string, MetadataProps & BehaviorProp>;
 
-type MetadataPropTerm = keyof typeof KEY_VALUE_FROM_STRING;
+type MetadataPropTerm = keyof typeof SLIM_KEY_VALUE_FROM_TERM_STRING;
 
 export type ApplyTermProps = {
   _apply?: MetadataPropTerm | MetadataPropTerm[];
@@ -50,7 +50,7 @@ function toShotcuttedApplyObject(
   const termsArray: MetadataPropTerm[] = Array.isArray(apply) ? apply : [apply];
 
   const propsTranslatedFromEntries = termsArray.reduce((acc, current) => {
-    const props = KEY_VALUE_FROM_STRING[current];
+    const props = SLIM_KEY_VALUE_FROM_TERM_STRING[current];
     return { ...acc, ...props };
   }, {} as MetadataProps);
 

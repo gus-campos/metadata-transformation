@@ -1,9 +1,9 @@
 import { InstanceObject, InstanceValue, Value } from "./common";
 import { KeysOfUnion } from "./util";
 
+// O valor pode ser encontrado ou não, para ser passado pro predicato
 export type ValueIfCondition = {
   _if?: (args: {
-    // O valor pode ser encontrado ou não, para ser passado pro predicato
     value: InstanceValue | undefined;
     obj: InstanceObject;
   }) => boolean;
@@ -21,13 +21,6 @@ export type AnyOf = { _anyOf: Expected[] };
 export type AllOf = { _allOf: Expected[] };
 export type MultExpected = AnyOf | AllOf;
 
-export const ANY_OF_KEY = "_anyOf";
-export const ALL_OF_KEY = "_allOf";
-
-export const MATCH_EXPECT_KEYS = [
-  ANY_OF_KEY,
-  ALL_OF_KEY,
-] as const satisfies KeysOfUnion<MultExpected>[];
 
 export type MatchNode = {
   _not?: MatchNode;
@@ -45,6 +38,15 @@ export type MatchNode = {
 export type MatchCondition = {
   _match?: MatchNode;
 };
+
+// AUXILIARES
+
+export const ANY_OF_KEY = "_anyOf";
+export const ALL_OF_KEY = "_allOf";
+export const MATCH_EXPECT_KEYS = [
+  ANY_OF_KEY,
+  ALL_OF_KEY,
+] as const satisfies KeysOfUnion<MultExpected>[];
 
 export const NOT_KEY = "_not";
 export const SOME_KEY = "_some";
