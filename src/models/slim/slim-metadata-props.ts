@@ -1,3 +1,4 @@
+import { DEFAULT_LANGUAGE } from "../../constants/name-prop-config";
 import { isPlainObject } from "../../utils/is-plain-object";
 import { MetadataProps, NameProp, Option } from "../pure/metadata-transform";
 
@@ -107,13 +108,10 @@ export function toMetadataProps({
 //   return { _id: id, _classId: classId };
 // }
 
-// TODO: Descobrir o que current faz
-// TODO: Deixar a lingua padrão configurável opcionalmente
 function toNameProp(expandedNameProp: SlimNameProp): NameProp {
     if (isPlainObject(expandedNameProp)) return expandedNameProp;
     return {
-        pt: expandedNameProp,
-        // _current: expandedNameProp,
+        [DEFAULT_LANGUAGE]: expandedNameProp,
     };
 }
 

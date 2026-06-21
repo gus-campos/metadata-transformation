@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import {
     transformMetadataField,
-    transformMetadata
+    transformMetadata,
 } from "../src/processing/transform-metadata";
 import {
     FieldMetadataTransform,
@@ -27,12 +27,9 @@ function makeMetadata(
                 query: {},
                 minMultiplicity: 0,
                 maxMultiplicity: 10,
-                editHelp: { pt: "editHelpPt", _current: "editHelpCurrent" },
-                name: { pt: "namePt", _current: "nameCurrent" },
-                placeholder: {
-                    pt: "placeholderPt",
-                    _current: "placeholderCurent",
-                },
+                editHelp: { pt: "editHelpPt" },
+                name: { pt: "namePt" },
+                placeholder: { pt: "placeholderPt" },
                 mask: { _id: "ID_MASK" },
                 ...overrides["campo1"],
             },
@@ -46,12 +43,9 @@ function makeMetadata(
                 query: {},
                 minMultiplicity: 0,
                 maxMultiplicity: 10,
-                editHelp: { pt: "editHelpPt", _current: "editHelpCurrent" },
-                name: { pt: "namePt", _current: "nameCurrent" },
-                placeholder: {
-                    pt: "placeholderPt",
-                    _current: "placeholderCurent",
-                },
+                editHelp: { pt: "editHelpPt" },
+                name: { pt: "namePt" },
+                placeholder: { pt: "placeholderPt" },
                 mask: { _id: "ID_MASK" },
                 ...overrides["campo1"],
             },

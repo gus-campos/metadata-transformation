@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { toApply } from "../src/models/slim/slim-apply";
+import { DEFAULT_LANGUAGE } from "../src/constants/name-prop-config";
 
 // ===========================================================================
 // 1. Entrada como string (MetadataPropTerm único)
@@ -175,30 +176,30 @@ describe("toApply — entrada como SlimApplyObject (objeto)", () => {
     it("objeto com name como string expande para NameProp", () => {
         const result = toApply({ name: "Meu Campo" });
         expect(result).toMatchObject({
-            name: { pt: "Meu Campo", _current: "Meu Campo" },
+            name: { [DEFAULT_LANGUAGE]: "Meu Campo" },
         });
     });
 
     it("objeto com name como NameProp é preservado", () => {
         const result = toApply({
-            name: { pt: "Campo PT", _current: "Campo Atual" },
+            name: { [DEFAULT_LANGUAGE]: "Campo PT" },
         });
         expect(result).toMatchObject({
-            name: { pt: "Campo PT", _current: "Campo Atual" },
+            name: { [DEFAULT_LANGUAGE]: "Campo PT" },
         });
     });
 
     it("objeto com placeholder como string expande para NameProp", () => {
         const result = toApply({ placeholder: "Digite aqui..." });
         expect(result).toMatchObject({
-            placeholder: { pt: "Digite aqui...", _current: "Digite aqui..." },
+            placeholder: { [DEFAULT_LANGUAGE]: "Digite aqui..." },
         });
     });
 
     it("objeto com editHelp como string expande para NameProp", () => {
         const result = toApply({ editHelp: "Informe o valor" });
         expect(result).toMatchObject({
-            editHelp: { pt: "Informe o valor", _current: "Informe o valor" },
+            editHelp: { [DEFAULT_LANGUAGE]: "Informe o valor" },
         });
     });
 
@@ -268,7 +269,7 @@ describe("toApply — entrada como SlimApplyObject (objeto)", () => {
             readOnly: false,
             minMultiplicity: 1,
             maxMultiplicity: 3,
-            name: { pt: "Campo Teste", _current: "Campo Teste" },
+            name: { [DEFAULT_LANGUAGE]: "Campo Teste" },
         });
     });
 });

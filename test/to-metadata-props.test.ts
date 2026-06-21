@@ -77,9 +77,9 @@ describe("toMetadataProps", () => {
         });
 
         expect(result).toEqual({
-            name: { pt: "Nome", _current: "Nome" },
-            editHelp: { pt: "Ajuda", _current: "Ajuda" },
-            placeholder: { pt: "Digite aqui", _current: "Digite aqui" },
+            name: { pt: "Nome" },
+            editHelp: { pt: "Ajuda" },
+            placeholder: { pt: "Digite aqui" },
         });
     });
 
@@ -87,14 +87,12 @@ describe("toMetadataProps", () => {
         const result = toMetadataProps({
             name: {
                 pt: "Nome",
-                _current: "Name",
             },
         });
 
         expect(result).toEqual({
             name: {
                 pt: "Nome",
-                _current: "Name",
             },
         });
     });
@@ -152,7 +150,6 @@ describe("toMetadataProps", () => {
             breakLine: true,
             name: {
                 pt: "CPF",
-                _current: "CPF",
             },
         });
     });
@@ -183,7 +180,7 @@ describe("toMetadataProps", () => {
     //   const result = toMetadataProps({
     //     mask: { _id: "money" },
     //   });
-    // 
+    //
     //  expect(result).toEqual({
     //     mask: { _id: "money" },
     //   });

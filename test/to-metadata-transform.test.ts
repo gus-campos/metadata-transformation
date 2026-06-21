@@ -2,6 +2,7 @@
 
 import { describe, expect, it } from "vitest";
 import { toFieldsMetadataTransform } from "../src/models/slim/slim-metadata-transform";
+import { DEFAULT_LANGUAGE } from "../src/constants/name-prop-config";
 
 describe("toFieldsMetadataTransform", () => {
     it("should normalize single transform into array", () => {
@@ -70,8 +71,7 @@ describe("toFieldsMetadataTransform", () => {
                         required: false,
                         readOnly: true,
                         placeholder: {
-                            pt: "CPF",
-                            _current: "CPF",
+                            [DEFAULT_LANGUAGE]: "CPF"
                         },
                     },
                 },
