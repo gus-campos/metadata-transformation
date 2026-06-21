@@ -1,5 +1,4 @@
 import { isPlainObject } from "../../utils/is-plain-object";
-import { InstanceIdSet } from "../pure/common";
 import { MetadataProps, NameProp, Option } from "../pure/metadata-transform";
 
 const BEHAVIOR_PROPS = {
@@ -108,9 +107,14 @@ export function toMetadataProps({
 //   return { _id: id, _classId: classId };
 // }
 
+// TODO: Descobrir o que current faz
+// TODO: Deixar a lingua padrão configurável opcionalmente
 function toNameProp(expandedNameProp: SlimNameProp): NameProp {
     if (isPlainObject(expandedNameProp)) return expandedNameProp;
-    return { pt: expandedNameProp, _current: expandedNameProp };
+    return {
+        pt: expandedNameProp,
+        // _current: expandedNameProp,
+    };
 }
 
 function toMinMaxMultiplicityProps(
