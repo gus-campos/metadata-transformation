@@ -1,8 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import {
     transformMetadataField,
-    transformMetadata,
-    transformMetadataByRule,
+    transformMetadata
 } from "../src/processing/transform-metadata";
 import {
     FieldMetadataTransform,

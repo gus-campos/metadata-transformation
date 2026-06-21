@@ -16,14 +16,6 @@ export type SlimMetadataTransform = {
         | SlimFieldMetadataTransform[];
 };
 
-// ======================== RulesMetadataTransform ========================
-
-export type SlimFieldsApply = {
-    _apply: {
-        [fieldIdentifier: string]: TermProps | SlimApplyObject;
-    };
-};
-
 // ======================== Converters ========================
 
 export function toFieldsMetadataTransform(
