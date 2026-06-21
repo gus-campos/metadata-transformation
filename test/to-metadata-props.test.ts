@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { toMetadataProps } from "../src/models/slim/slim-metadata-props";
+import { DEFAULT_LANGUAGE } from "../src/constants/name-prop-config";
 
 describe("toMetadataProps", () => {
     it("should expand behavior shortcut", () => {
@@ -77,22 +78,22 @@ describe("toMetadataProps", () => {
         });
 
         expect(result).toEqual({
-            name: { pt: "Nome" },
-            editHelp: { pt: "Ajuda" },
-            placeholder: { pt: "Digite aqui" },
+            name: { [DEFAULT_LANGUAGE]: "Nome" },
+            editHelp: { [DEFAULT_LANGUAGE]: "Ajuda" },
+            placeholder: { [DEFAULT_LANGUAGE]: "Digite aqui" },
         });
     });
 
     it("should preserve named props already normalized", () => {
         const result = toMetadataProps({
             name: {
-                pt: "Nome",
+                [DEFAULT_LANGUAGE]: "Nome",
             },
         });
 
         expect(result).toEqual({
             name: {
-                pt: "Nome",
+                [DEFAULT_LANGUAGE]: "Nome",
             },
         });
     });
@@ -149,7 +150,7 @@ describe("toMetadataProps", () => {
             readOnly: true,
             breakLine: true,
             name: {
-                pt: "CPF",
+                [DEFAULT_LANGUAGE]: "CPF",
             },
         });
     });
