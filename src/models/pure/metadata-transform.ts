@@ -6,35 +6,35 @@ export type Option = { value: string; identifier: string };
 export type NameProp = { pt?: string; _current?: string };
 
 export type MetadataProps = {
-  readOnly?: boolean;
-  required?: boolean;
-  hidden?: boolean;
+    readOnly?: boolean;
+    required?: boolean;
+    hidden?: boolean;
 
-  breakLine?: boolean;
-  size?: "sm" | "md" | "bg";
+    breakLine?: boolean;
+    size?: "sm" | "md" | "bg";
 
-  valueOptions?: Option[];
-  query?: PlainObject;
+    valueOptions?: Option[];
+    query?: PlainObject;
 
-  minMultiplicity?: number;
-  maxMultiplicity?: number;
+    minMultiplicity?: number;
+    maxMultiplicity?: number;
 
-  mask?: InstanceIdSet;
-  name?: NameProp;
-  editHelp?: NameProp;
-  placeholder?: NameProp;
+    mask?: InstanceIdSet;
+    name?: NameProp;
+    editHelp?: NameProp;
+    placeholder?: NameProp;
 };
 
 export type Apply = MetadataProps;
 
 export type FieldMetadataTransform = {
-  _if?: ValueIfCondition;
-  _match?: Match;
-  _apply?: Apply;
+    _if?: ValueIfCondition;
+    _match?: Match;
+    _apply?: Apply;
 };
 
 export type FieldsMetadataTransform = {
-  [fieldIdentifier: string]: FieldMetadataTransform[];
+    [fieldIdentifier: string]: FieldMetadataTransform[];
 };
 
 // ======================== RulesMetadataTransform ========================
@@ -42,11 +42,11 @@ export type FieldsMetadataTransform = {
 export type FieldsApply = {};
 
 export type RuleMetadataTransform = {
-  _if?: ValueIfCondition;
-  _match?: Match;
-  _apply?: {
-    [fieldIdentifier: string]: Apply;
-  };
+    _if?: ValueIfCondition;
+    _match?: Match;
+    _apply?: {
+        [fieldIdentifier: string]: Apply;
+    };
 };
 export type RulesMetadataTransform = RuleMetadataTransform[];
 

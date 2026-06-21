@@ -3,10 +3,10 @@ import { KeysOfUnion } from "./util";
 
 // O valor pode ser encontrado ou não, para ser passado pro predicato
 export type ValueIfCondition = {
-  _if?: (args: {
-    value: InstanceValue | undefined;
-    obj: InstanceObject;
-  }) => boolean;
+    _if?: (args: {
+        value: InstanceValue | undefined;
+        obj: InstanceObject;
+    }) => boolean;
 };
 
 /*
@@ -21,17 +21,16 @@ export type AnyOf = { _anyOf: ValueExpected[] };
 export type AllOf = { _allOf: ValueExpected[] };
 export type ValueCheck = AnyOf | AllOf;
 
-
 export type Match = {
-  _not?: Match;
-  _some?: Match;
-  _match?: Match;
+    _not?: Match;
+    _some?: Match;
+    _match?: Match;
 
-  [identifier: string]:
-    | ValueCheck
-    // Na prática não devem ser aceitos:
-    | undefined
-    | Match;
+    [identifier: string]:
+        | ValueCheck
+        // Na prática não devem ser aceitos:
+        | undefined
+        | Match;
 };
 
 // =================================================================================================
@@ -39,15 +38,15 @@ export type Match = {
 export const ANY_OF_KEY = "_anyOf";
 export const ALL_OF_KEY = "_allOf";
 export const MATCH_EXPECT_KEYS = [
-  ANY_OF_KEY,
-  ALL_OF_KEY,
+    ANY_OF_KEY,
+    ALL_OF_KEY,
 ] as const satisfies KeysOfUnion<ValueCheck>[];
 
 export const NOT_KEY = "_not";
 export const SOME_KEY = "_some";
 export const MATCH_KEY = "_match";
 export const MATCH_CONDITION_KEYS = [
-  NOT_KEY,
-  SOME_KEY,
-  MATCH_KEY
+    NOT_KEY,
+    SOME_KEY,
+    MATCH_KEY,
 ] as const satisfies KeysOfUnion<Match>[];

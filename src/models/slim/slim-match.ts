@@ -1,9 +1,9 @@
 import {
-  ValueCheck,
-  MATCH_CONDITION_KEYS,
-  MATCH_EXPECT_KEYS,
-  Match,
-  ValueExpected,
+    ValueCheck,
+    MATCH_CONDITION_KEYS,
+    MATCH_EXPECT_KEYS,
+    Match,
+    ValueExpected,
 } from "../pure/instance-condition";
 import { InstanceObject, Value } from "../pure/common";
 import { isPlainObject } from "../../utils/is-plain-object";
@@ -12,15 +12,15 @@ import { isPlainObject } from "../../utils/is-plain-object";
 export type SlimValueCheck = ValueCheck | ValueExpected | ValueExpected[];
 
 export type SlimMatch = {
-  _not?: SlimMatch;
-  _some?: SlimMatch;
-  _match?: SlimMatch;
+    _not?: SlimMatch;
+    _some?: SlimMatch;
+    _match?: SlimMatch;
 
-  [identifier: string]:
-    | SlimValueCheck
-    // Na prática não devem ser aceitos:
-    | undefined
-    | SlimMatch;
+    [identifier: string]:
+        | SlimValueCheck
+        // Na prática não devem ser aceitos:
+        | undefined
+        | SlimMatch;
 };
 
 // =================================================================================================
@@ -29,15 +29,15 @@ export type SlimMatch = {
 type ImplicitExpected = Value | Value[];
 
 type SlimImplicitMatchNode = {
-  _not?: SlimImplicitMatch | ImplicitExpected;
-  _some?: SlimImplicitMatch | ImplicitExpected;
-  _match?: SlimImplicitMatch | ImplicitExpected;
+    _not?: SlimImplicitMatch | ImplicitExpected;
+    _some?: SlimImplicitMatch | ImplicitExpected;
+    _match?: SlimImplicitMatch | ImplicitExpected;
 
-  [identifier: string]:
-    | SlimValueCheck
-    // Na prática não devem ser aceitos:
-    | undefined
-    | SlimImplicitMatch;
+    [identifier: string]:
+        | SlimValueCheck
+        // Na prática não devem ser aceitos:
+        | undefined
+        | SlimImplicitMatch;
 };
 
 export type SlimImplicitMatch = SlimImplicitMatchNode | ImplicitExpected;
@@ -45,98 +45,98 @@ export type SlimImplicitMatch = SlimImplicitMatchNode | ImplicitExpected;
 // =================================================================================================
 
 export function toMatch(
-  slimImplicitMatch: SlimImplicitMatch,
-  fieldIdentifier: string | null = null,
+    slimImplicitMatch: SlimImplicitMatch,
+    fieldIdentifier: string | null = null,
 ): Match {
-  // Se for valor esperado (campo implícito)
-  if (!isPlainObject(slimImplicitMatch)) {
-    if (!fieldIdentifier) {
-      throw new Error(
-        "Deve ser passado fieldIdentifier quando houver campo implícito",
-      );
+    // Se for valor esperado (campo implícito)
+    if (!isPlainObject(slimImplicitMatch)) {
+        if (!fieldIdentifier) {
+            throw new Error(
+                "Deve ser passado fieldIdentifier quando houver campo implícito",
+            );
+        }
+        return toMatchFromImplicitExpected(slimImplicitMatch, fieldIdentifier);
     }
-    return toMatchFromImplicitExpected(slimImplicitMatch, fieldIdentifier);
-  }
 
-  return toMatchFromImplicitMatchNode(slimImplicitMatch, fieldIdentifier);
+    return toMatchFromImplicitMatchNode(slimImplicitMatch, fieldIdentifier);
 }
 
 function toMatchFromImplicitMatchNode(
-  implicitMatchNode: SlimImplicitMatchNode,
-  currentFieldIdentifier: string | null = null,
+    implicitMatchNode: SlimImplicitMatchNode,
+    currentFieldIdentifier: string | null = null,
 ): Match {
-  /*
-   * Processa recursivamente os nós do objeto match, até chegar em um ponto
-   * onde invés de ter um objeto de comparação entre campos e valore, há na
-   * verdade apenas uma valor. Nesses casos assume que a comparação pretendida
-   * era implicitamente uma comparação entre o valor do campo atual, e o valor
-   * passado. E então torna explícita essa comparação.
-   */
+    /*
+     * Processa recursivamente os nós do objeto match, até chegar em um ponto
+     * onde invés de ter um objeto de comparação entre campos e valore, há na
+     * verdade apenas uma valor. Nesses casos assume que a comparação pretendida
+     * era implicitamente uma comparação entre o valor do campo atual, e o valor
+     * passado. E então torna explícita essa comparação.
+     */
 
-  const result: Record<string, unknown> = {};
+    const result: Record<string, unknown> = {};
 
-  for (const [key, value] of Object.entries(implicitMatchNode)) {
-    if ((MATCH_CONDITION_KEYS as string[]).includes(key)) {
-      // Encontrado um objeto de comparação atalhado, tratar recursivamente
-      if (isPlainObject(value)) {
-        result[key] = toMatchFromImplicitMatchNode(
-          value as SlimImplicitMatchNode,
-          currentFieldIdentifier,
-        );
-      }
+    for (const [key, value] of Object.entries(implicitMatchNode)) {
+        if ((MATCH_CONDITION_KEYS as string[]).includes(key)) {
+            // Encontrado um objeto de comparação atalhado, tratar recursivamente
+            if (isPlainObject(value)) {
+                result[key] = toMatchFromImplicitMatchNode(
+                    value as SlimImplicitMatchNode,
+                    currentFieldIdentifier,
+                );
+            }
 
-      // Encontrado um valor, invés de um objeto de comparação implícito,
-      // esse caso é tratado como uma comparação implícita com o campo atual
-      else if (currentFieldIdentifier) {
-        result[key] = toMatchFromImplicitExpected(
-          value as ImplicitExpected,
-          currentFieldIdentifier,
-        );
-      } else {
-        throw new Error(
-          "Deve ser passado fieldIdentifier quando houver campo implícito",
-        );
-      }
-    } else {
-      result[key] = toValueCheck(value as SlimValueCheck);
+            // Encontrado um valor, invés de um objeto de comparação implícito,
+            // esse caso é tratado como uma comparação implícita com o campo atual
+            else if (currentFieldIdentifier) {
+                result[key] = toMatchFromImplicitExpected(
+                    value as ImplicitExpected,
+                    currentFieldIdentifier,
+                );
+            } else {
+                throw new Error(
+                    "Deve ser passado fieldIdentifier quando houver campo implícito",
+                );
+            }
+        } else {
+            result[key] = toValueCheck(value as SlimValueCheck);
+        }
     }
-  }
 
-  return result as Match;
+    return result as Match;
 }
 
 function toValueCheck(slimValueCheck: SlimValueCheck): ValueCheck {
-  /*
-   * Converte um ValueCheck atalhado que trás apenas valores diretamente
-   * para a estrutura padrão que traz um objeto com anyOf
-   */
+    /*
+     * Converte um ValueCheck atalhado que trás apenas valores diretamente
+     * para a estrutura padrão que traz um objeto com anyOf
+     */
 
-  if (isPlainObject(slimValueCheck)) {
-    // Se já está na forma do ValueCheck, retornar assim
-    if (MATCH_EXPECT_KEYS.some((key) => key in slimValueCheck))
-      return { ...slimValueCheck } as ValueCheck;
+    if (isPlainObject(slimValueCheck)) {
+        // Se já está na forma do ValueCheck, retornar assim
+        if (MATCH_EXPECT_KEYS.some((key) => key in slimValueCheck))
+            return { ...slimValueCheck } as ValueCheck;
 
-    // Se não, considerar que é uma comparação com um objeto num array unitário
-    return { _anyOf: [{ ...slimValueCheck } as InstanceObject] };
-  }
+        // Se não, considerar que é uma comparação com um objeto num array unitário
+        return { _anyOf: [{ ...slimValueCheck } as InstanceObject] };
+    }
 
-  // Considerar que é uma comparação com um valor
-  const expectArray = Array.isArray(slimValueCheck)
-    ? slimValueCheck
-    : [slimValueCheck];
+    // Considerar que é uma comparação com um valor
+    const expectArray = Array.isArray(slimValueCheck)
+        ? slimValueCheck
+        : [slimValueCheck];
 
-  return { _anyOf: expectArray };
+    return { _anyOf: expectArray };
 }
 
 function toMatchFromImplicitExpected(
-  implicitExpected: ImplicitExpected,
-  fieldIdentifier: string,
+    implicitExpected: ImplicitExpected,
+    fieldIdentifier: string,
 ): Match {
-  const expectArray = Array.isArray(implicitExpected)
-    ? implicitExpected
-    : [implicitExpected];
+    const expectArray = Array.isArray(implicitExpected)
+        ? implicitExpected
+        : [implicitExpected];
 
-  return {
-    [fieldIdentifier]: { _anyOf: expectArray },
-  };
+    return {
+        [fieldIdentifier]: { _anyOf: expectArray },
+    };
 }

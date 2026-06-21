@@ -3,23 +3,23 @@ import { MetadataProps } from "./metadata-transform";
 export type Value = string | number | Date | boolean | null;
 
 export type PlainObject = {
-  [key: string]: any;
+    [key: string]: any;
 };
 
 export type InstanceIdSet = {
-  _id?: string;
-  _classId?: string;
-  _class?: { _id?: string; }
+    _id?: string;
+    _classId?: string;
+    _class?: { _id?: string };
 };
 
 export type InstanceValue = Value | Value[] | InstanceObject | InstanceObject[];
 
 export type InstanceObject = InstanceIdSet & {
-  [key: string]: InstanceValue;
+    [key: string]: InstanceValue;
 };
 
 export type Metadata = {
-  fields: Record<string, Required<MetadataProps>>;
+    fields: Record<string, Required<MetadataProps>>;
 };
 
 // // Implementar só no atualizar rascunho

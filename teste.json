@@ -1,1 +1,322 @@
-[{"limitDate":"1970-01-01T00:00Z","tags":[{"identifier":"slaOnTime","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"1","color":"#E6F5EE","_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a3035a9d0701054f896d245","name":"onTime.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":69694,"hash":"e0405691e44009dded00e8d2d207f8c1"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":3,"_creationDate":"2026-06-15T17:24:05.687Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:26:03.329Z","_protected":false,"name":{"pt":"No prazo","en":"Within","es":"A tiempo"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a30353548482717f88f220f","order":10},{"identifier":"slaPostponed","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"7","color":null,"_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30338b48482717f844010a","name":"postponed.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":86141,"hash":"2cf7fa2b0c50944fbf6225f337b1b9c2"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":10,"_creationDate":"2026-06-12T18:08:15.938Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:29:14.732Z","_protected":false,"name":{"pt":"Prazo estendido"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a2c4b0f4575ec15f62a2345","order":10}]},{"limitDate":"1970-01-01T00:00Z","tags":[{"identifier":"slaAttention","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"1","color":"#FFF3E0","_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30358e48482717f8a770f9","name":"attention.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":75526,"hash":"6826675e82254489d6b340d17aa60113"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":2,"_creationDate":"2026-06-15T17:24:48.056Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:25:37.464Z","_protected":false,"name":{"pt":"Atenção","en":"Attention","es":"Atención"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a30356048482717f89baead","order":10},{"identifier":"slaPostponed","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"7","color":null,"_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30338b48482717f844010a","name":"postponed.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":86141,"hash":"2cf7fa2b0c50944fbf6225f337b1b9c2"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":10,"_creationDate":"2026-06-12T18:08:15.938Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:29:14.732Z","_protected":false,"name":{"pt":"Prazo estendido"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a2c4b0f4575ec15f62a2345","order":10}]},{"limitDate":"1970-01-01T00:00Z","tags":[{"identifier":"slaCritical","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"1","color":"#FFEBF0","_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30359c29b578782544bca2","name":"critic.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":77309,"hash":"279f406acbd935b1f1a3e17df16bb81d"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":1,"_creationDate":"2026-06-15T17:24:29.610Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:25:50.629Z","_protected":false,"name":{"pt":"Crítico","en":"Critical","es":"Crítico"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a30354d48482717f89931ea","order":10},{"identifier":"slaPostponed","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"7","color":null,"_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30338b48482717f844010a","name":"postponed.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":86141,"hash":"2cf7fa2b0c50944fbf6225f337b1b9c2"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":10,"_creationDate":"2026-06-12T18:08:15.938Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:29:14.732Z","_protected":false,"name":{"pt":"Prazo estendido"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a2c4b0f4575ec15f62a2345","order":10}]},{"limitDate":"2026-06-26T00:00Z","tags":[{"identifier":"slaOverdue","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"4","color":null,"_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a303376d0701054f85d3425","name":"overdue.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":75547,"hash":"b91eef1c72c703750e71ed76b544ec2b"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":0,"_creationDate":"2026-06-15T16:38:57.602Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:29:35.301Z","_protected":false,"name":{"pt":"Fora do prazo"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a302aa10f175c19f8337662","order":10},{"identifier":"slaPostponed","_creationUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_revision":"7","color":null,"_classId":"5ce586e8150308416d0174d6","icon":{"_id":"6a30338b48482717f844010a","name":"postponed.png","contentText":null,"pendingContentExtraction":false,"contentType":"image/png","length":86141,"hash":"2cf7fa2b0c50944fbf6225f337b1b9c2"},"_lastUpdateUser":{"_id":"69c525d8913e95216f7bfd21","_classId":"000000000000000000000002"},"_classRevision":"0","priority":10,"_creationDate":"2026-06-12T18:08:15.938Z","_publishedObject":null,"_lastUpdateDate":"2026-06-15T17:29:14.732Z","_protected":false,"name":{"pt":"Prazo estendido"},"_unprotectedFields":[],"_class":{"_id":"5ce586e8150308416d0174d6","_classId":"000000000000000000000000"},"_id":"6a2c4b0f4575ec15f62a2345","order":10}]}]
+[
+    {
+        "limitDate": "1970-01-01T00:00Z",
+        "tags": [
+            {
+                "identifier": "slaOnTime",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "1",
+                "color": "#E6F5EE",
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a3035a9d0701054f896d245",
+                    "name": "onTime.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 69694,
+                    "hash": "e0405691e44009dded00e8d2d207f8c1"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 3,
+                "_creationDate": "2026-06-15T17:24:05.687Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:26:03.329Z",
+                "_protected": false,
+                "name": { "pt": "No prazo", "en": "Within", "es": "A tiempo" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a30353548482717f88f220f",
+                "order": 10
+            },
+            {
+                "identifier": "slaPostponed",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "7",
+                "color": null,
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30338b48482717f844010a",
+                    "name": "postponed.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 86141,
+                    "hash": "2cf7fa2b0c50944fbf6225f337b1b9c2"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 10,
+                "_creationDate": "2026-06-12T18:08:15.938Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:29:14.732Z",
+                "_protected": false,
+                "name": { "pt": "Prazo estendido" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a2c4b0f4575ec15f62a2345",
+                "order": 10
+            }
+        ]
+    },
+    {
+        "limitDate": "1970-01-01T00:00Z",
+        "tags": [
+            {
+                "identifier": "slaAttention",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "1",
+                "color": "#FFF3E0",
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30358e48482717f8a770f9",
+                    "name": "attention.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 75526,
+                    "hash": "6826675e82254489d6b340d17aa60113"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 2,
+                "_creationDate": "2026-06-15T17:24:48.056Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:25:37.464Z",
+                "_protected": false,
+                "name": {
+                    "pt": "Atenção",
+                    "en": "Attention",
+                    "es": "Atención"
+                },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a30356048482717f89baead",
+                "order": 10
+            },
+            {
+                "identifier": "slaPostponed",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "7",
+                "color": null,
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30338b48482717f844010a",
+                    "name": "postponed.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 86141,
+                    "hash": "2cf7fa2b0c50944fbf6225f337b1b9c2"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 10,
+                "_creationDate": "2026-06-12T18:08:15.938Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:29:14.732Z",
+                "_protected": false,
+                "name": { "pt": "Prazo estendido" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a2c4b0f4575ec15f62a2345",
+                "order": 10
+            }
+        ]
+    },
+    {
+        "limitDate": "1970-01-01T00:00Z",
+        "tags": [
+            {
+                "identifier": "slaCritical",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "1",
+                "color": "#FFEBF0",
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30359c29b578782544bca2",
+                    "name": "critic.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 77309,
+                    "hash": "279f406acbd935b1f1a3e17df16bb81d"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 1,
+                "_creationDate": "2026-06-15T17:24:29.610Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:25:50.629Z",
+                "_protected": false,
+                "name": { "pt": "Crítico", "en": "Critical", "es": "Crítico" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a30354d48482717f89931ea",
+                "order": 10
+            },
+            {
+                "identifier": "slaPostponed",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "7",
+                "color": null,
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30338b48482717f844010a",
+                    "name": "postponed.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 86141,
+                    "hash": "2cf7fa2b0c50944fbf6225f337b1b9c2"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 10,
+                "_creationDate": "2026-06-12T18:08:15.938Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:29:14.732Z",
+                "_protected": false,
+                "name": { "pt": "Prazo estendido" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a2c4b0f4575ec15f62a2345",
+                "order": 10
+            }
+        ]
+    },
+    {
+        "limitDate": "2026-06-26T00:00Z",
+        "tags": [
+            {
+                "identifier": "slaOverdue",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "4",
+                "color": null,
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a303376d0701054f85d3425",
+                    "name": "overdue.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 75547,
+                    "hash": "b91eef1c72c703750e71ed76b544ec2b"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 0,
+                "_creationDate": "2026-06-15T16:38:57.602Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:29:35.301Z",
+                "_protected": false,
+                "name": { "pt": "Fora do prazo" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a302aa10f175c19f8337662",
+                "order": 10
+            },
+            {
+                "identifier": "slaPostponed",
+                "_creationUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_revision": "7",
+                "color": null,
+                "_classId": "5ce586e8150308416d0174d6",
+                "icon": {
+                    "_id": "6a30338b48482717f844010a",
+                    "name": "postponed.png",
+                    "contentText": null,
+                    "pendingContentExtraction": false,
+                    "contentType": "image/png",
+                    "length": 86141,
+                    "hash": "2cf7fa2b0c50944fbf6225f337b1b9c2"
+                },
+                "_lastUpdateUser": {
+                    "_id": "69c525d8913e95216f7bfd21",
+                    "_classId": "000000000000000000000002"
+                },
+                "_classRevision": "0",
+                "priority": 10,
+                "_creationDate": "2026-06-12T18:08:15.938Z",
+                "_publishedObject": null,
+                "_lastUpdateDate": "2026-06-15T17:29:14.732Z",
+                "_protected": false,
+                "name": { "pt": "Prazo estendido" },
+                "_unprotectedFields": [],
+                "_class": {
+                    "_id": "5ce586e8150308416d0174d6",
+                    "_classId": "000000000000000000000000"
+                },
+                "_id": "6a2c4b0f4575ec15f62a2345",
+                "order": 10
+            }
+        ]
+    }
+]
