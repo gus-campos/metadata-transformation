@@ -1,6 +1,5 @@
-
 import { InstanceIdSet, PlainObject } from "./common";
-import { ValueIfCondition, MatchCondition } from "./instance-condition";
+import { ValueIfCondition, Match } from "./instance-condition";
 
 export type Option = { value: string; identifier: string };
 
@@ -26,14 +25,13 @@ export type MetadataProps = {
   placeholder?: NameProp;
 };
 
-export type Apply = {
-  _apply?: MetadataProps;
-};
+export type Apply = MetadataProps;
 
-export type FieldMetadataTransform = ValueIfCondition &
-  // ExceptionHandling &
-  MatchCondition &
-  Apply;
+export type FieldMetadataTransform = {
+  _if?: ValueIfCondition;
+  _match?: Match;
+  _apply?: Apply;
+};
 
 export type FieldsMetadataTransform = {
   [fieldIdentifier: string]: FieldMetadataTransform[];
@@ -41,16 +39,15 @@ export type FieldsMetadataTransform = {
 
 // ======================== RulesMetadataTransform ========================
 
-export type FieldsApply = {
-  _apply: {
-    [fieldIdentifier: string]: Apply["_apply"];
+export type FieldsApply = {};
+
+export type RuleMetadataTransform = {
+  _if?: ValueIfCondition;
+  _match?: Match;
+  _apply?: {
+    [fieldIdentifier: string]: Apply;
   };
 };
-
-export type RuleMetadataTransform = ValueIfCondition &
-  MatchCondition &
-  FieldsApply;
-
 export type RulesMetadataTransform = RuleMetadataTransform[];
 
 // const rulesMetadataTransformExample: RulesMetadataTransform = [

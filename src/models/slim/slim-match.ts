@@ -1,56 +1,53 @@
 import {
-  MultExpected,
+  ValueCheck,
   MATCH_CONDITION_KEYS,
   MATCH_EXPECT_KEYS,
-  MatchCondition,
-  MatchNode,
-  Expected,
+  Match,
+  ValueExpected,
 } from "../pure/instance-condition";
 import { InstanceObject, Value } from "../pure/common";
 import { isPlainObject } from "../../utils/is-plain-object";
 
-export type SlimMultExpected = Expected | Expected[] | MultExpected;
+// Pode receber uma checagem explícita ou resumida
+export type SlimValueCheck = ValueCheck | ValueExpected | ValueExpected[];
 
-export type SlimMatchNode = {
-  // Quando tiver expect direto, está se referindo ao próprio campo
-  _not?: SlimMatchNode;
-  _some?: SlimMatchNode;
+export type SlimMatch = {
+  _not?: SlimMatch;
+  _some?: SlimMatch;
+  _match?: SlimMatch;
 
   [identifier: string]:
-    | SlimMultExpected
+    | SlimValueCheck
     // Na prática não devem ser aceitos:
     | undefined
-    | SlimMatchNode;
+    | SlimMatch;
 };
 
-export type SlimMatchCondition = {
-  _match?: SlimMatchNode;
-};
+// =================================================================================================
 
-// WITH INFERENCE
-
+// Para comparações implícitas do próprio campo, não permite passagem de objeto
 type ImplicitExpected = Value | Value[];
 
-export type SlimImplicitMatchNode = {
-  // Quando tiver expect direto, está se referindo ao próprio campo
-  _not?: SlimImplicitMatchNode | ImplicitExpected;
-  _some?: SlimImplicitMatchNode | ImplicitExpected;
+export type SlimImplicitMatchNode =
+  | ImplicitExpected
+  | {
+      _not?: SlimImplicitMatchNode | ImplicitExpected;
+      _some?: SlimImplicitMatchNode | ImplicitExpected;
+      _match?: SlimImplicitMatchNode | ImplicitExpected;
 
-  [identifier: string]:
-    | SlimMultExpected
-    // Na prática não devem ser aceitos:
-    | undefined
-    | SlimImplicitMatchNode;
-};
+      [identifier: string]:
+        | SlimValueCheck
+        // Na prática não devem ser aceitos:
+        | undefined
+        | SlimImplicitMatchNode;
+    };
 
-export type SlimImplicitMatchCondition = {
-  _match?: SlimImplicitMatchNode | ImplicitExpected;
-};
+// =================================================================================================
 
 export function toMatchCondition(
   slimCondition: SlimImplicitMatchCondition,
   fieldIdentifier: string | null = null,
-): MatchCondition {
+): Match {
   const { _match } = slimCondition;
   if (_match === undefined) return {};
 
@@ -70,7 +67,7 @@ export function toMatchCondition(
 function toMatchConditionNode(
   slimNode: SlimImplicitMatchNode,
   fieldIdentifier: string | null = null,
-): MatchNode {
+): Match {
   const nodeCopy = { ...slimNode };
 
   // Chamar recursivamente até chegar no SlimFieldMatchExpect
@@ -98,20 +95,20 @@ function toMatchConditionNode(
         );
       }
     } else {
-      nodeCopy[key] = toFieldMatchExpect(value as SlimMultExpected);
+      nodeCopy[key] = toFieldMatchExpect(value as SlimValueCheck);
     }
   }
 
-  return nodeCopy as MatchNode;
+  return nodeCopy as Match;
 }
 
-function toFieldMatchExpect(slimExpect: SlimMultExpected): MultExpected {
+function toFieldMatchExpect(slimExpect: SlimValueCheck): ValueCheck {
   // Assume array unitário de _anyOf quando passado valor único
 
   if (isPlainObject(slimExpect)) {
     // Já está na forma padrão
     if (MATCH_EXPECT_KEYS.some((key) => key in slimExpect))
-      return { ...slimExpect } as MultExpected;
+      return { ...slimExpect } as ValueCheck;
 
     // Comparação com instância
     return { _anyOf: [{ ...slimExpect } as InstanceObject] };
@@ -126,7 +123,7 @@ function toFieldMatchExpect(slimExpect: SlimMultExpected): MultExpected {
 function getImplicitNode(
   implicitExpected: ImplicitExpected,
   fieldIdentifier: string,
-): MatchNode {
+): Match {
   const expectArray = Array.isArray(implicitExpected)
     ? implicitExpected
     : [implicitExpected];

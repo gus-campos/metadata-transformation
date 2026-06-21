@@ -16,43 +16,41 @@ const SLIM_KEY_VALUE_FROM_TERM_STRING = {
   breakLine: { breakLine: true },
 } as const satisfies Record<string, MetadataProps & BehaviorProp>;
 
+// =================================================================================================
+
 type MetadataPropTerm = keyof typeof SLIM_KEY_VALUE_FROM_TERM_STRING;
 
-export type ApplyTermProps = {
-  _apply?: MetadataPropTerm | MetadataPropTerm[];
-};
+// Termos (strings) que resumem props
+export type TermProps = MetadataPropTerm | MetadataPropTerm[];
 
-export type SlimApplyObject = Apply & {
-  _apply?: SlimMetadataProps;
-};
+// Objeto com props e props encurtadas
+export type SlimApplyObject = Omit<Apply, "valueOptions"> & SlimMetadataProps;
 
-// Apply que compreende as props encurtadas, e os termos de props
-export type SlimApply = ApplyTermProps | SlimApplyObject;
+// Tipo que compreende as props encurtadas, e os termos de props (strings)
+export type SlimApply = TermProps | SlimApplyObject;
+
+// =================================================================================================
 
 export function toApply(slimApply: SlimApply): Apply {
   // Apenas props nativas em formatos nativos
-
-  const applyObj = toShotcuttedApplyObject(slimApply);
-  if (!applyObj._apply) return {};
-  return { _apply: toMetadataProps(applyObj._apply) };
+  const applyObj = toSlimApplyObject(slimApply);
+  return toMetadataProps(applyObj);
 }
 
-function toShotcuttedApplyObject(
-  slimApply: SlimApply,
-): SlimApplyObject {
-  const apply = slimApply._apply;
+function toSlimApplyObject(slimApply: SlimApply): SlimApplyObject {
+  if (!slimApply) return {};
 
-  if (!apply) return {};
+  if (typeof slimApply !== "string" && !Array.isArray(slimApply))
+    return { ...slimApply };
 
-  if (typeof apply !== "string" && !Array.isArray(apply))
-    return { _apply: { ...apply } };
-
-  const termsArray: MetadataPropTerm[] = Array.isArray(apply) ? apply : [apply];
+  const termsArray: MetadataPropTerm[] = Array.isArray(slimApply)
+    ? slimApply
+    : [slimApply];
 
   const propsTranslatedFromEntries = termsArray.reduce((acc, current) => {
     const props = SLIM_KEY_VALUE_FROM_TERM_STRING[current];
     return { ...acc, ...props };
   }, {} as MetadataProps);
 
-  return { _apply: { ...propsTranslatedFromEntries } };
+  return { ...propsTranslatedFromEntries };
 }

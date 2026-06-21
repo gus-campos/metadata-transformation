@@ -39,11 +39,11 @@ type SlimNamesProps = {
   placeholder?: SlimNameProp;
 };
 
-const SIMPLY_NAMED_PROPS_KEYS = [
-  "name",
-  "editHelp",
-  "placeholder",
-] as const satisfies (keyof SlimNamesProps)[];
+// const SIMPLY_NAMED_PROPS_KEYS = [
+//   "name",
+//   "editHelp",
+//   "placeholder",
+// ] as const satisfies (keyof SlimNamesProps)[];
 
 // =============================================================================
 
@@ -58,7 +58,7 @@ export type SlimMetadataProps = Omit<MetadataProps, "valueOptions"> &
   SlimMultiplicityProp &
   SlimValueOptionsProp &
   SlimNamesProps;
-//   & SlimMask;
+  // & SlimMask;
 
 export function toMetadataProps({
   behavior,
@@ -74,10 +74,10 @@ export function toMetadataProps({
 
   const multiplicityProps = toMinMaxMultiplicityProps(multiplicity);
 
-//   const maskProp =
-//     mask !== undefined
-//       ? { mask: typeof mask === "string" ? toIdSet(mask) : mask } // Verificar se funciona no sydle passar dó o id
-//       : null;
+  // const maskProp =
+  //   mask !== undefined
+  //     ? { mask: typeof mask === "string" ? toIdSet(mask) : mask } // Verificar se funciona no sydle passar dó o id
+  //     : null;
 
   const nameProp = name !== undefined ? { name: toNameProp(name) } : null;
   const editHelpProp =

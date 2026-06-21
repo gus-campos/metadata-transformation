@@ -5,21 +5,16 @@ import {
   RuleMetadataTransform,
   RulesMetadataTransform,
 } from "../pure/metadata-transform";
-import {
-  ApplyTermProps,
-  SlimApply,
-  SlimApplyObject,
-  toApply,
-} from "./slim-apply";
+import { TermProps, SlimApplyObject, toApply } from "./slim-apply";
 import {
   SlimImplicitMatchCondition,
-  SlimMatchCondition,
+  SlimMatch,
   toMatchCondition,
 } from "./slim-match";
 
 type SlimFieldMetadataTransform = FieldMetadataTransform &
   SlimImplicitMatchCondition &
-  SlimApply;
+  SlimApplyObject;
 
 export type SlimMetadataTransform = {
   [fieldIdentifier: string]:
@@ -31,18 +26,9 @@ export type SlimMetadataTransform = {
 
 export type SlimFieldsApply = {
   _apply: {
-    [fieldIdentifier: string]:
-      | ApplyTermProps["_apply"]
-      | SlimApplyObject["_apply"];
+    [fieldIdentifier: string]: TermProps | SlimApplyObject;
   };
 };
-
-export type SlimRuleMetadataTransform = RuleMetadataTransform &
-  // Não pode ter campo implícito no match
-  SlimMatchCondition &
-  SlimFieldsApply;
-
-export type SlimRulesMetadataTransform = SlimRuleMetadataTransform[];
 
 // ======================== Converters ========================
 
@@ -68,35 +54,11 @@ function toFieldMetadataTransform(
   fieldTransform: SlimFieldMetadataTransform,
   fieldIdentifier: string,
 ): FieldMetadataTransform {
+  const apply = toApply(fieldTransform);
+  const match = toMatchCondition(fieldTransform, fieldIdentifier);
   return {
     ...fieldTransform,
-    ...toApply(fieldTransform),
-    ...toMatchCondition(fieldTransform, fieldIdentifier),
+    ...(apply && { _apply: apply }),
+    ...(match && { _match: match }),
   };
-}
-
-export function toRulesMetadataTransform(
-  rulesTransform: SlimRulesMetadataTransform,
-): RulesMetadataTransform {
-  return rulesTransform.map((ruleTransform) => {
-    return {
-      ...ruleTransform,
-      ...toFieldsApply(ruleTransform),
-      ...toMatchCondition(ruleTransform),
-    };
-  });
-}
-
-function toFieldsApply(slimFieldsApply: SlimFieldsApply): FieldsApply {
-  const fieldsApply = { _apply: {} } as FieldsApply;
-
-  for (const [fieldIdentifier, applyContent] of Object.entries(
-    slimFieldsApply._apply,
-  )) {
-    fieldsApply._apply[fieldIdentifier] = toApply({
-      _apply: applyContent,
-    } as SlimApply)._apply;
-  }
-
-  return fieldsApply;
 }

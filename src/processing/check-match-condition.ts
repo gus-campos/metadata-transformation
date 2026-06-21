@@ -1,7 +1,7 @@
 import { InstanceObject } from "../models/pure/common";
 import {
-  MatchNode,
-  MultExpected,
+  Match,
+  ValueCheck,
   AnyOf,
   AllOf,
   ALL_OF_KEY,
@@ -16,7 +16,7 @@ import { valuesAreEqual } from "../utils/values-are-equal";
 
 export function checkMatchCondition(
   instance: InstanceObject,
-  matchCondition: MatchNode,
+  matchCondition: Match,
 ): boolean {
   return checkMatchConditionHelper(instance, matchCondition, "every");
 }
@@ -25,28 +25,28 @@ export function checkMatchCondition(
 // e quando passa um objeto com not dentro
 function checkMatchConditionHelper(
   instance: InstanceObject,
-  matchCondition: MatchNode,
+  matchCondition: Match,
   mode: "every" | "some",
 ): boolean {
   const evaluationOfAllConditions = Object.entries(matchCondition).map(
     ([key, content]) => {
       if (key === MATCH_KEY) {
-        const matchCondition = content as MatchNode;
+        const matchCondition = content as Match;
         return checkMatchConditionHelper(instance, matchCondition, "every");
       }
       
       if (key === NOT_KEY) {
-        const notCondition = content as MatchNode;
+        const notCondition = content as Match;
         return !checkMatchConditionHelper(instance, notCondition, "every");
       }
 
       if (key === SOME_KEY) {
-        const someCondition = content as MatchNode;
+        const someCondition = content as Match;
         return checkMatchConditionHelper(instance, someCondition, "some");
       }
 
       const path = key as string;
-      const valueExpected = content as MultExpected;
+      const valueExpected = content as ValueCheck;
 
       // TODO: Passar para o validador?
       if (MATCH_CONDITION_KEYS.some((key) => key in valueExpected))
@@ -68,7 +68,7 @@ function checkMatchConditionHelper(
 function checkFieldMatch(
   instance: InstanceObject,
   pathToField: string,
-  fieldMatchExpect: MultExpected,
+  fieldMatchExpect: ValueCheck,
 ): boolean {
   const valueGot = accessPathInObject(instance, pathToField);
   if (valueGot === undefined) return false;
