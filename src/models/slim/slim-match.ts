@@ -28,99 +28,107 @@ export type SlimMatch = {
 // Para comparações implícitas do próprio campo, não permite passagem de objeto
 type ImplicitExpected = Value | Value[];
 
-export type SlimImplicitMatchNode =
-  | ImplicitExpected
-  | {
-      _not?: SlimImplicitMatchNode | ImplicitExpected;
-      _some?: SlimImplicitMatchNode | ImplicitExpected;
-      _match?: SlimImplicitMatchNode | ImplicitExpected;
+type SlimImplicitMatchNode = {
+  _not?: SlimImplicitMatch | ImplicitExpected;
+  _some?: SlimImplicitMatch | ImplicitExpected;
+  _match?: SlimImplicitMatch | ImplicitExpected;
 
-      [identifier: string]:
-        | SlimValueCheck
-        // Na prática não devem ser aceitos:
-        | undefined
-        | SlimImplicitMatchNode;
-    };
+  [identifier: string]:
+    | SlimValueCheck
+    // Na prática não devem ser aceitos:
+    | undefined
+    | SlimImplicitMatch;
+};
+
+export type SlimImplicitMatch = SlimImplicitMatchNode | ImplicitExpected;
 
 // =================================================================================================
 
-export function toMatchCondition(
-  slimCondition: SlimImplicitMatchCondition,
+export function toMatch(
+  slimImplicitMatch: SlimImplicitMatch,
   fieldIdentifier: string | null = null,
 ): Match {
-  const { _match } = slimCondition;
-  if (_match === undefined) return {};
-
   // Se for valor esperado (campo implícito)
-  if (!isPlainObject(_match)) {
+  if (!isPlainObject(slimImplicitMatch)) {
     if (!fieldIdentifier) {
       throw new Error(
         "Deve ser passado fieldIdentifier quando houver campo implícito",
       );
     }
-    return { _match: getImplicitNode(_match, fieldIdentifier) };
+    return toMatchFromImplicitExpected(slimImplicitMatch, fieldIdentifier);
   }
 
-  return { _match: toMatchConditionNode(_match, fieldIdentifier) };
+  return toMatchFromImplicitMatchNode(slimImplicitMatch, fieldIdentifier);
 }
 
-function toMatchConditionNode(
-  slimNode: SlimImplicitMatchNode,
-  fieldIdentifier: string | null = null,
+function toMatchFromImplicitMatchNode(
+  implicitMatchNode: SlimImplicitMatchNode,
+  currentFieldIdentifier: string | null = null,
 ): Match {
-  const nodeCopy = { ...slimNode };
+  /*
+   * Processa recursivamente os nós do objeto match, até chegar em um ponto
+   * onde invés de ter um objeto de comparação entre campos e valore, há na
+   * verdade apenas uma valor. Nesses casos assume que a comparação pretendida
+   * era implicitamente uma comparação entre o valor do campo atual, e o valor
+   * passado. E então torna explícita essa comparação.
+   */
 
-  // Chamar recursivamente até chegar no SlimFieldMatchExpect
-  // converter
+  const result: Record<string, unknown> = {};
 
-  for (const [key, value] of Object.entries(slimNode)) {
+  for (const [key, value] of Object.entries(implicitMatchNode)) {
     if ((MATCH_CONDITION_KEYS as string[]).includes(key)) {
-      // É valor direto (implicitamente o próprio campo)
-
+      // Encontrado um objeto de comparação atalhado, tratar recursivamente
       if (isPlainObject(value)) {
-        // É chave recursiva
-        nodeCopy[key] = toMatchConditionNode(
+        result[key] = toMatchFromImplicitMatchNode(
           value as SlimImplicitMatchNode,
-          fieldIdentifier,
+          currentFieldIdentifier,
+        );
+      }
+
+      // Encontrado um valor, invés de um objeto de comparação implícito,
+      // esse caso é tratado como uma comparação implícita com o campo atual
+      else if (currentFieldIdentifier) {
+        result[key] = toMatchFromImplicitExpected(
+          value as ImplicitExpected,
+          currentFieldIdentifier,
         );
       } else {
-        if (!fieldIdentifier) {
-          throw new Error(
-            "Deve ser passado fieldIdentifier quando houver campo implícito",
-          );
-        }
-        nodeCopy[key] = getImplicitNode(
-          value as ImplicitExpected,
-          fieldIdentifier,
+        throw new Error(
+          "Deve ser passado fieldIdentifier quando houver campo implícito",
         );
       }
     } else {
-      nodeCopy[key] = toFieldMatchExpect(value as SlimValueCheck);
+      result[key] = toValueCheck(value as SlimValueCheck);
     }
   }
 
-  return nodeCopy as Match;
+  return result as Match;
 }
 
-function toFieldMatchExpect(slimExpect: SlimValueCheck): ValueCheck {
-  // Assume array unitário de _anyOf quando passado valor único
+function toValueCheck(slimValueCheck: SlimValueCheck): ValueCheck {
+  /*
+   * Converte um ValueCheck atalhado que trás apenas valores diretamente
+   * para a estrutura padrão que traz um objeto com anyOf
+   */
 
-  if (isPlainObject(slimExpect)) {
-    // Já está na forma padrão
-    if (MATCH_EXPECT_KEYS.some((key) => key in slimExpect))
-      return { ...slimExpect } as ValueCheck;
+  if (isPlainObject(slimValueCheck)) {
+    // Se já está na forma do ValueCheck, retornar assim
+    if (MATCH_EXPECT_KEYS.some((key) => key in slimValueCheck))
+      return { ...slimValueCheck } as ValueCheck;
 
-    // Comparação com instância
-    return { _anyOf: [{ ...slimExpect } as InstanceObject] };
+    // Se não, considerar que é uma comparação com um objeto num array unitário
+    return { _anyOf: [{ ...slimValueCheck } as InstanceObject] };
   }
 
-  // Comparação com valor
-  const expectArray = Array.isArray(slimExpect) ? slimExpect : [slimExpect];
+  // Considerar que é uma comparação com um valor
+  const expectArray = Array.isArray(slimValueCheck)
+    ? slimValueCheck
+    : [slimValueCheck];
 
   return { _anyOf: expectArray };
 }
 
-function getImplicitNode(
+function toMatchFromImplicitExpected(
   implicitExpected: ImplicitExpected,
   fieldIdentifier: string,
 ): Match {

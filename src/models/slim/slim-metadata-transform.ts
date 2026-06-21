@@ -1,20 +1,14 @@
 import {
   FieldMetadataTransform,
-  FieldsApply,
   FieldsMetadataTransform,
-  RuleMetadataTransform,
-  RulesMetadataTransform,
 } from "../pure/metadata-transform";
-import { TermProps, SlimApplyObject, toApply } from "./slim-apply";
-import {
-  SlimImplicitMatchCondition,
-  SlimMatch,
-  toMatchCondition,
-} from "./slim-match";
+import { TermProps, SlimApplyObject, toApply, SlimApply } from "./slim-apply";
+import { SlimImplicitMatch, toMatch } from "./slim-match";
 
-type SlimFieldMetadataTransform = FieldMetadataTransform &
-  SlimImplicitMatchCondition &
-  SlimApplyObject;
+type SlimFieldMetadataTransform = FieldMetadataTransform & {
+  _match?: SlimImplicitMatch;
+  _apply?: SlimApply;
+};
 
 export type SlimMetadataTransform = {
   [fieldIdentifier: string]:
@@ -54,8 +48,12 @@ function toFieldMetadataTransform(
   fieldTransform: SlimFieldMetadataTransform,
   fieldIdentifier: string,
 ): FieldMetadataTransform {
-  const apply = toApply(fieldTransform);
-  const match = toMatchCondition(fieldTransform, fieldIdentifier);
+  const apply = fieldTransform._apply ? toApply(fieldTransform._apply) : null;
+
+  const match = fieldTransform._match
+    ? toMatch(fieldTransform._match, fieldIdentifier)
+    : null;
+
   return {
     ...fieldTransform,
     ...(apply && { _apply: apply }),

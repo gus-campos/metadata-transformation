@@ -1,16 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { toMatchCondition } from "../src/models/slim/slim-match"; // ajuste o caminho
+import { toMatch } from "../src/models/slim/slim-match";
 
 const MOCK_FIELD_IDENTIFIER = "CAMPO IMPLÍCITO";
 
-describe("toMatchCondition", () => {
+describe("toMatch", () => {
   // ---------------------------------------------------------------------------
   // Passthrough — sem atalho
   // ---------------------------------------------------------------------------
 
   it("passa _anyOf já expandido sem alterar", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         { _match: { campo: { _anyOf: ["a", "b"] } } },
         MOCK_FIELD_IDENTIFIER,
       ),
@@ -19,7 +19,7 @@ describe("toMatchCondition", () => {
 
   it("passa _allOf já expandido sem alterar", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         { _match: { campo: { _allOf: ["a", "b"] } } },
         MOCK_FIELD_IDENTIFIER,
       ),
@@ -32,7 +32,7 @@ describe("toMatchCondition", () => {
 
   it("converte string simples para _anyOf unitário", () => {
     expect(
-      toMatchCondition({ _match: { campo: "valor" } }, MOCK_FIELD_IDENTIFIER),
+      toMatch({ _match: { campo: "valor" } }, MOCK_FIELD_IDENTIFIER),
     ).toEqual({
       _match: { campo: { _anyOf: ["valor"] } },
     });
@@ -40,7 +40,7 @@ describe("toMatchCondition", () => {
 
   it("converte número simples para _anyOf unitário", () => {
     expect(
-      toMatchCondition({ _match: { campo: 42 } }, MOCK_FIELD_IDENTIFIER),
+      toMatch({ _match: { campo: 42 } }, MOCK_FIELD_IDENTIFIER),
     ).toEqual({
       _match: { campo: { _anyOf: [42] } },
     });
@@ -48,7 +48,7 @@ describe("toMatchCondition", () => {
 
   it("converte booleano simples para _anyOf unitário", () => {
     expect(
-      toMatchCondition({ _match: { campo: true } }, MOCK_FIELD_IDENTIFIER),
+      toMatch({ _match: { campo: true } }, MOCK_FIELD_IDENTIFIER),
     ).toEqual({
       _match: { campo: { _anyOf: [true] } },
     });
@@ -57,7 +57,7 @@ describe("toMatchCondition", () => {
   it("converte InstanceObject simples para _anyOf unitário", () => {
     const obj = { _classId: "Foo", name: "bar" };
     expect(
-      toMatchCondition({ _match: { campo: obj } }, MOCK_FIELD_IDENTIFIER),
+      toMatch({ _match: { campo: obj } }, MOCK_FIELD_IDENTIFIER),
     ).toEqual({
       _match: { campo: { _anyOf: [obj] } },
     });
@@ -69,7 +69,7 @@ describe("toMatchCondition", () => {
 
   it("converte array unitário para _anyOf com mesmo array", () => {
     expect(
-      toMatchCondition({ _match: { campo: [42] } }, MOCK_FIELD_IDENTIFIER),
+      toMatch({ _match: { campo: [42] } }, MOCK_FIELD_IDENTIFIER),
     ).toEqual({
       _match: { campo: { _anyOf: [42] } },
     });
@@ -77,7 +77,7 @@ describe("toMatchCondition", () => {
 
   it("converte array para _anyOf com mesmo array", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         { _match: { campo: ["valor1", "valor2"] } },
         MOCK_FIELD_IDENTIFIER,
       ),
@@ -92,7 +92,7 @@ describe("toMatchCondition", () => {
 
   it("converte valor atalho dentro de _not", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         { _match: { _not: { campo: "valor" } } },
         MOCK_FIELD_IDENTIFIER,
       ),
@@ -103,7 +103,7 @@ describe("toMatchCondition", () => {
 
   it("converte valor atalho dentro de _some", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         { _match: { _some: { campo: "valor" } } },
         MOCK_FIELD_IDENTIFIER,
       ),
@@ -112,7 +112,7 @@ describe("toMatchCondition", () => {
 
   it("preserva campos adicionais", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         {
           _match: {
             campo1: "valor",
@@ -144,14 +144,14 @@ describe("toMatchCondition", () => {
   // ---------------------------------------------------------------------------
 
   it("assume que é referente ao próprio campos quando passado sem objeto de match", () => {
-    expect(toMatchCondition({ _match: null }, MOCK_FIELD_IDENTIFIER)).toEqual({
+    expect(toMatch({ _match: null }, MOCK_FIELD_IDENTIFIER)).toEqual({
       _match: { [MOCK_FIELD_IDENTIFIER]: { _anyOf: [null] } },
     });
   });
 
   it("assume que é referente ao próprio campos quando passado para match interno", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         {
           _match: {
             _match: null,
@@ -172,7 +172,7 @@ describe("toMatchCondition", () => {
 
   it("assume que é referente ao próprio campos em vários níveis de profundidade", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         {
           _match: {
             _not: {
@@ -195,7 +195,7 @@ describe("toMatchCondition", () => {
 
   it("assume que é referente ao próprio campos em vários níveis de profundidade", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         {
           _match: {
             _not: {
@@ -218,7 +218,7 @@ describe("toMatchCondition", () => {
 
   it("assume que é referente ao próprio campos sem perder outros campos", () => {
     expect(
-      toMatchCondition(
+      toMatch(
         {
           _match: {
             campo1: "valor",
@@ -244,6 +244,6 @@ describe("toMatchCondition", () => {
   // ---------------------------------------------------------------------------
 
   it("retorna condição vazia quando _match não é passado", () => {
-    expect(toMatchCondition({}, MOCK_FIELD_IDENTIFIER)).toEqual({});
+    expect(toMatch({}, MOCK_FIELD_IDENTIFIER)).toEqual({});
   });
 });
