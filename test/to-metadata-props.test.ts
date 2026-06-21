@@ -178,15 +178,16 @@ describe("toMetadataProps", () => {
         });
     });
 
-    //   it("should preserve mask object", () => {
-    //     const result = toMetadataProps({
-    //       mask: { _id: "money" },
-    //     });
-
-    //     expect(result).toEqual({
-    //       mask: { _id: "money" },
-    //     });
+    // [Deprecado]
+    // it("should preserve mask object", () => {
+    //   const result = toMetadataProps({
+    //     mask: { _id: "money" },
     //   });
+    // 
+    //  expect(result).toEqual({
+    //     mask: { _id: "money" },
+    //   });
+    // });
 
     it("should preserve unrelated metadata props", () => {
         const result = toMetadataProps({

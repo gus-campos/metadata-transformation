@@ -36,37 +36,3 @@ export type FieldMetadataTransform = {
 export type FieldsMetadataTransform = {
     [fieldIdentifier: string]: FieldMetadataTransform[];
 };
-
-// ======================== RulesMetadataTransform ========================
-
-export type FieldsApply = {};
-
-export type RuleMetadataTransform = {
-    _if?: ValueIfCondition;
-    _match?: Match;
-    _apply?: {
-        [fieldIdentifier: string]: Apply;
-    };
-};
-export type RulesMetadataTransform = RuleMetadataTransform[];
-
-// const rulesMetadataTransformExample: RulesMetadataTransform = [
-//   {
-//     _if: () => true,
-
-//     _match: {
-//       _not: {
-//         campo: { _anyOf: ["valor"] },
-//       },
-//     },
-
-//     _apply: {
-//       campo1: {
-//         hidden: true,
-//       },
-//       campo2: {
-//         valueOptions: [],
-//       },
-//     },
-//   },
-// ];

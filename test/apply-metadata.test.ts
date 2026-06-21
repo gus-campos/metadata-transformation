@@ -52,54 +52,6 @@ function makeMetadata(
     };
 }
 
-// ---- behavior ---------------------------------------------------------------
-
-// describe("ApplyMetadata — behavior", () => {
-//   it("omitted: oculta, não obrigatório, não readOnly", () => {
-//     const metadata = makeMetadata();
-//     applyMetadata(metadata, "campo1", { behavior: "omitted" });
-
-//     expect(metadata.fields.campo1!).toMatchObject({
-//       hidden: true,
-//       required: false,
-//       readOnly: false,
-//     });
-//   });
-
-//   it("mandatory: visível, obrigatório, não readOnly", () => {
-//     const metadata = makeMetadata();
-//     applyMetadata(metadata, "campo1", { behavior: "mandatory" });
-
-//     expect(metadata.fields.campo1!).toMatchObject({
-//       hidden: false,
-//       required: true,
-//       readOnly: false,
-//     });
-//   });
-
-//   it("editable: visível, não obrigatório, não readOnly", () => {
-//     const metadata = makeMetadata();
-//     applyMetadata(metadata, "campo1", { behavior: "editable" });
-
-//     expect(metadata.fields.campo1!).toMatchObject({
-//       hidden: false,
-//       required: false,
-//       readOnly: false,
-//     });
-//   });
-
-//   it("displayed: visível, não obrigatório, readOnly", () => {
-//     const metadata = makeMetadata();
-//     applyMetadata(metadata, "campo1", { behavior: "displayed" });
-
-//     expect(metadata.fields.campo1!).toMatchObject({
-//       hidden: false,
-//       required: false,
-//       readOnly: true,
-//     });
-//   });
-// });
-
 // ---- behaviorProps ----------------------------------------------------------
 
 describe("ApplyMetadata — BehaviorProps", () => {
@@ -159,22 +111,6 @@ describe("ApplyMetadata — ExtraMetadataProps", () => {
         expect(metadata.fields.campo1!.valueOptions).toEqual(valueOptions);
         expect(metadata.fields.campo1!.query).toEqual(query);
     });
-
-    //   it("aplica ExtraMetadataProps junto com behavior", () => {
-    //     const metadata = makeMetadata();
-
-    //     applyMetadata(metadata, "campo1", {
-    //       behavior: "displayed",
-    //       breakLine: true,
-    //       size: "bg",
-    //     });
-
-    //     expect(metadata.fields.campo1!).toMatchObject({
-    //       readOnly: true,
-    //       breakLine: true,
-    //       size: "bg",
-    //     });
-    //   });
 });
 
 // ---- mutação ----------------------------------------------------------------
@@ -227,16 +163,6 @@ describe("ApplyMetadata — fieldIdentifier inexistente", () => {
         expect(metadata.fields.campo2).toMatchObject({ hidden: false });
     });
 });
-
-// describe("ApplyMetadata — behavior indefinido", () => {
-//   it("lança ou ignora ao receber behavior undefined", () => {
-//     const metadata = makeMetadata();
-
-//     expect(() =>
-//       applyMetadata(metadata, "campo1", { behavior: undefined }),
-//     ).not.toThrow();
-//   });
-// });
 
 describe("ApplyMetadata — _apply vazio", () => {
     it("não altera o campo ao receber objeto vazio", () => {

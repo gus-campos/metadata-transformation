@@ -2,12 +2,10 @@ import { InstanceObject, InstanceValue, Value } from "./common";
 import { KeysOfUnion } from "./util";
 
 // O valor pode ser encontrado ou não, para ser passado pro predicato
-export type ValueIfCondition = {
-    _if?: (args: {
-        value: InstanceValue | undefined;
-        obj: InstanceObject;
-    }) => boolean;
-};
+export type ValueIfCondition = (args: {
+    value: InstanceValue | undefined;
+    obj: InstanceObject;
+}) => boolean;
 
 /*
  * Any of: Se for único ou múltiplo um deve estar incluso
