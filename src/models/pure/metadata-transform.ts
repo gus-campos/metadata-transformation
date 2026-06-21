@@ -31,8 +31,6 @@ export type FieldMetadataTransform = {
     _if?: ValueIfCondition;
     _match?: Match;
     _apply?: Apply;
-    // Usado apenas internamente
-    __conditionsMatches?: Match[];
 };
 
 export type FieldsMetadataTransform = {

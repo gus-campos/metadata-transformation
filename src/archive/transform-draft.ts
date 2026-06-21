@@ -6,7 +6,7 @@
 //   checkChangedCondition,
 //   checkSwapCondition,
 // } from "./check-change-condition";
-// import { checkMatchCondition } from "./check-match-condition";
+// import { checkMatch } from "./check-match-condition";
 
 // type FieldDraftContext = {
 //   instance: InstanceObject;
@@ -58,7 +58,7 @@
 
 //   const isMatchTruthy = !_match
 //     ? true
-//     : checkMatchCondition(context.lookupInstance, _match);
+//     : checkMatch(context.lookupInstance, _match);
 
 //   const fieldValue = accessPathInObject(
 //     context.lookupInstance,

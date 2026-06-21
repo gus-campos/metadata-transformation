@@ -5,7 +5,7 @@ import {
 } from "../models/pure/metadata-transform";
 import { accessPathInObject } from "../utils/path-access";
 import { applyMetadata } from "./apply-metadata";
-import { checkMatchCondition } from "./check-match-condition";
+import { checkMatch } from "./check-match-condition";
 
 type MetadataContext = {
     metadata: Metadata;
@@ -41,21 +41,15 @@ export function transformMetadataField(
     context: FieldMetadataContext,
     fieldTransform: FieldMetadataTransform,
 ) {
-    const { _if, _match, _apply, __conditionsMatches } = fieldTransform;
+    const { _if, _match, _apply } = fieldTransform;
 
     // Verificar as condições, mesmo que não tenha nenhuma mudança para aplicar.
     // Assim erros são lançados todas as vezes, melhorando a experiência do
     // desenvolvedor
 
-    const isConditionsTruthy = !__conditionsMatches
-        ? true
-        : __conditionsMatches.every((match) =>
-              checkMatchCondition(context.instance, match),
-          );
-
     const isMatchTruthy = !_match
         ? true
-        : checkMatchCondition(context.instance, _match);
+        : checkMatch(context.instance, _match);
 
     const fieldValue = accessPathInObject(
         context.instance,
@@ -66,7 +60,7 @@ export function transformMetadataField(
         ? true
         : _if({ value: fieldValue, obj: context.instance });
 
-    if (!isConditionsTruthy || !_apply || !isMatchTruthy || !isIfTruthy) return;
+    if (!_apply || !isMatchTruthy || !isIfTruthy) return;
 
     applyMetadata(context.metadata, context.fieldIdentifier, _apply);
 }

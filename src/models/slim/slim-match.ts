@@ -127,3 +127,31 @@ function toMatchFromImplicitExpected(
         [fieldIdentifier]: { _anyOf: expectArray },
     };
 }
+
+// TODO: Implementar condition dentro do match
+
+// function getFieldConditionsMatches(
+//     fieldTransform: SlimFieldMetadataTransform,
+//     conditions: Conditions | null,
+// ): Match[] | null {
+//     const conditionsNames = toArray(fieldTransform._condition ?? []);
+//     if (conditionsNames.length === 0) return null;
+
+//     if (!conditions)
+//         throw new Error("Não foi definida nenhuma condição");
+
+//     const namesNotDefined = !conditions
+//         ? conditionsNames
+//         : conditionsNames.filter((name) => !(name in conditions));
+
+//     if (namesNotDefined.length > 0) {
+//         throw new Error(
+//             `As seguintes condições não foram definidas: ${namesNotDefined.join(", ")}`,
+//         );
+//     }
+
+//     return conditionsNames.map((conditionName) => {
+//         const slimMatch = conditions![conditionName]!;
+//         return toMatch(slimMatch);
+//     });
+// }

@@ -71,7 +71,7 @@ describe("toFieldsMetadataTransform", () => {
                         required: false,
                         readOnly: true,
                         placeholder: {
-                            [DEFAULT_LANGUAGE]: "CPF"
+                            [DEFAULT_LANGUAGE]: "CPF",
                         },
                     },
                 },
@@ -105,108 +105,6 @@ describe("toFieldsMetadataTransform", () => {
         });
     });
 
-    it("should resolve named condition into __conditionsMatches", () => {
-        const result = toFieldsMetadataTransform({
-            _conditions: {
-                isActive: { status: { _anyOf: ["ACTIVE"] } },
-            },
-            fieldName: {
-                _condition: "isActive",
-                _apply: "mandatory",
-            },
-        });
-
-        expect(result).toEqual({
-            fieldName: [
-                {
-                    _apply: {
-                        hidden: false,
-                        required: true,
-                        readOnly: false,
-                    },
-                    __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
-                },
-            ],
-        });
-    });
-
-    it("should resolve multiple named conditions into __conditionsMatches", () => {
-        const result = toFieldsMetadataTransform({
-            _conditions: {
-                isActive: { status: { _anyOf: ["ACTIVE"] } },
-                isAdmin: { role: { _anyOf: ["ADMIN"] } },
-            },
-            fieldName: {
-                _condition: ["isActive", "isAdmin"],
-                _apply: "mandatory",
-            },
-        });
-
-        expect(result).toEqual({
-            fieldName: [
-                {
-                    _apply: {
-                        hidden: false,
-                        required: true,
-                        readOnly: false,
-                    },
-                    __conditionsMatches: [
-                        { status: { _anyOf: ["ACTIVE"] } },
-                        { role: { _anyOf: ["ADMIN"] } },
-                    ],
-                },
-            ],
-        });
-    });
-
-    it("should throw if condition fieldName is referenced but _conditions is not defined", () => {
-        expect(() =>
-            toFieldsMetadataTransform({
-                fieldName: {
-                    _condition: "isActive",
-                    _apply: "mandatory",
-                },
-            }),
-        ).toThrow("Não foi definida nenhuma condição");
-    });
-
-    it("should throw if condition fieldName is not defined in _conditions", () => {
-        expect(() =>
-            toFieldsMetadataTransform({
-                _conditions: {
-                    isActive: { status: { _anyOf: ["ACTIVE"] } },
-                },
-                fieldName: {
-                    _condition: "isAdmin",
-                    _apply: "mandatory",
-                },
-            }),
-        ).toThrow("As seguintes condições não foram definidas: isAdmin");
-    });
-
-    it("should not include __conditionsMatches if no _condition specified", () => {
-        const result = toFieldsMetadataTransform({
-            _conditions: {
-                isActive: { status: { _anyOf: ["ACTIVE"] } },
-            },
-            fieldName: {
-                _apply: "mandatory",
-            },
-        });
-
-        expect(result).toEqual({
-            fieldName: [
-                {
-                    _apply: {
-                        hidden: false,
-                        required: true,
-                        readOnly: false,
-                    },
-                },
-            ],
-        });
-    });
-
     it("should preserve _if in transform", () => {
         const ifFn = () => true;
 
@@ -231,40 +129,142 @@ describe("toFieldsMetadataTransform", () => {
         });
     });
 
-    it("should resolve condition in array of transforms", () => {
-        const result = toFieldsMetadataTransform({
-            _conditions: {
-                isActive: { status: { _anyOf: ["ACTIVE"] } },
-            },
-            fieldName: [
-                {
-                    _condition: "isActive",
-                    _apply: "mandatory",
-                },
-                {
-                    _apply: "readOnly",
-                },
-            ],
-        });
+    // it("should resolve named condition into __conditionsMatches", () => {
+    //     const result = toFieldsMetadataTransform({
+    //         _conditions: {
+    //             isActive: { status: { _anyOf: ["ACTIVE"] } },
+    //         },
+    //         fieldName: {
+    //             _condition: "isActive",
+    //             _apply: "mandatory",
+    //         },
+    //     });
 
-        expect(result).toEqual({
-            fieldName: [
-                {
-                    _apply: {
-                        hidden: false,
-                        required: true,
-                        readOnly: false,
-                    },
-                    __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
-                },
-                {
-                    _apply: {
-                        readOnly: true,
-                    },
-                },
-            ],
-        });
-    });
+    //     expect(result).toEqual({
+    //         fieldName: [
+    //             {
+    //                 _apply: {
+    //                     hidden: false,
+    //                     required: true,
+    //                     readOnly: false,
+    //                 },
+    //                 __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
+    //             },
+    //         ],
+    //     });
+    // });
+
+    // it("should resolve multiple named conditions into __conditionsMatches", () => {
+    //     const result = toFieldsMetadataTransform({
+    //         _conditions: {
+    //             isActive: { status: { _anyOf: ["ACTIVE"] } },
+    //             isAdmin: { role: { _anyOf: ["ADMIN"] } },
+    //         },
+    //         fieldName: {
+    //             _condition: ["isActive", "isAdmin"],
+    //             _apply: "mandatory",
+    //         },
+    //     });
+
+    //     expect(result).toEqual({
+    //         fieldName: [
+    //             {
+    //                 _apply: {
+    //                     hidden: false,
+    //                     required: true,
+    //                     readOnly: false,
+    //                 },
+    //                 __conditionsMatches: [
+    //                     { status: { _anyOf: ["ACTIVE"] } },
+    //                     { role: { _anyOf: ["ADMIN"] } },
+    //                 ],
+    //             },
+    //         ],
+    //     });
+    // });
+
+    // it("should throw if condition fieldName is referenced but _conditions is not defined", () => {
+    //     expect(() =>
+    //         toFieldsMetadataTransform({
+    //             fieldName: {
+    //                 _condition: "isActive",
+    //                 _apply: "mandatory",
+    //             },
+    //         }),
+    //     ).toThrow("Não foi definida nenhuma condição");
+    // });
+
+    // it("should throw if condition fieldName is not defined in _conditions", () => {
+    //     expect(() =>
+    //         toFieldsMetadataTransform({
+    //             _conditions: {
+    //                 isActive: { status: { _anyOf: ["ACTIVE"] } },
+    //             },
+    //             fieldName: {
+    //                 _condition: "isAdmin",
+    //                 _apply: "mandatory",
+    //             },
+    //         }),
+    //     ).toThrow("As seguintes condições não foram definidas: isAdmin");
+    // });
+
+    // it("should not include __conditionsMatches if no _condition specified", () => {
+    //     const result = toFieldsMetadataTransform({
+    //         _conditions: {
+    //             isActive: { status: { _anyOf: ["ACTIVE"] } },
+    //         },
+    //         fieldName: {
+    //             _apply: "mandatory",
+    //         },
+    //     });
+
+    //     expect(result).toEqual({
+    //         fieldName: [
+    //             {
+    //                 _apply: {
+    //                     hidden: false,
+    //                     required: true,
+    //                     readOnly: false,
+    //                 },
+    //             },
+    //         ],
+    //     });
+    // });
+
+    // it("should resolve condition in array of transforms", () => {
+    //     const result = toFieldsMetadataTransform({
+    //         _conditions: {
+    //             isActive: { status: { _anyOf: ["ACTIVE"] } },
+    //         },
+    //         fieldName: [
+    //             {
+    //                 _condition: "isActive",
+    //                 _apply: "mandatory",
+    //             },
+    //             {
+    //                 _apply: "readOnly",
+    //             },
+    //         ],
+    //     });
+
+    //     expect(result).toEqual({
+    //         fieldName: [
+    //             {
+    //                 _apply: {
+    //                     hidden: false,
+    //                     required: true,
+    //                     readOnly: false,
+    //                 },
+    //                 __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
+    //             },
+    //             {
+    //                 _apply: {
+    //                     readOnly: true,
+    //                 },
+    //             },
+    //         ],
+    //     });
+    // });
 
     it("should transform multiple fields independently", () => {
         const result = toFieldsMetadataTransform({

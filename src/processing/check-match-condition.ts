@@ -14,16 +14,16 @@ import {
 import { accessPathInObject } from "../utils/path-access";
 import { valuesAreEqual } from "../utils/values-are-equal";
 
-export function checkMatchCondition(
+export function checkMatch(
     instance: InstanceObject,
     matchCondition: Match,
 ): boolean {
-    return checkMatchConditionHelper(instance, matchCondition, "every");
+    return checkMatchHelper(instance, matchCondition, "every");
 }
 
 // TODO: Verificar se diferencia bem quando passar um objeto como valor para comparar com o 
 // objeto do campo e quando passa um objeto com not dentro
-function checkMatchConditionHelper(
+function checkMatchHelper(
     instance: InstanceObject,
     matchCondition: Match,
     mode: "every" | "some",
@@ -32,7 +32,7 @@ function checkMatchConditionHelper(
         ([key, content]) => {
             if (key === MATCH_KEY) {
                 const matchCondition = content as Match;
-                return checkMatchConditionHelper(
+                return checkMatchHelper(
                     instance,
                     matchCondition,
                     "every",
@@ -41,7 +41,7 @@ function checkMatchConditionHelper(
 
             if (key === NOT_KEY) {
                 const notCondition = content as Match;
-                return !checkMatchConditionHelper(
+                return !checkMatchHelper(
                     instance,
                     notCondition,
                     "every",
@@ -50,7 +50,7 @@ function checkMatchConditionHelper(
 
             if (key === SOME_KEY) {
                 const someCondition = content as Match;
-                return checkMatchConditionHelper(
+                return checkMatchHelper(
                     instance,
                     someCondition,
                     "some",
@@ -66,7 +66,7 @@ function checkMatchConditionHelper(
                     "Chaves not e some só podem ser usadas dentro de 'match', ou outros not's e some's",
                 );
 
-            return checkFieldMatch(instance, path, valueExpected);
+            return checkFieldValue(instance, path, valueExpected);
         },
     );
 
@@ -77,7 +77,7 @@ function checkMatchConditionHelper(
     return evaluationOfAllConditions.some(Boolean);
 }
 
-function checkFieldMatch(
+function checkFieldValue(
     instance: InstanceObject,
     pathToField: string,
     fieldMatchExpect: ValueCheck,
