@@ -28,6 +28,9 @@ export type SlimFieldsMetadataTransform = {
         | undefined;
 };
 
+// TODO: Permitir conditions dentro de conditions
+// Mudar conditions pra dentro de match
+
 // ======================== Converters ========================
 
 export function toFieldsMetadataTransform(
