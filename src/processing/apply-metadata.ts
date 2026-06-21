@@ -1,5 +1,10 @@
 import { Metadata } from "../models/pure/common";
-import { MetadataProps, Option } from "../models/pure/metadata-transform";
+import {
+    MetadataProps,
+    NAME_PROP_KEYS,
+    NameProp,
+    Option,
+} from "../models/pure/metadata-transform";
 import { getTypedEntries } from "../utils/get-typed-entries";
 
 export function applyMetadata(
@@ -25,6 +30,11 @@ export function applyMetadata(
             const current = fieldMetadata.valueOptions;
             const incoming = value as Option[];
             current.splice(0, current.length, ...incoming);
+        } else if ((NAME_PROP_KEYS as string[]).includes(propKey)) {
+            // Setar somente as subpropriedades, sem apagar as outras
+            const nameProp = value as NameProp;
+            for (const [namePropKey, nameGiven] of Object.entries(nameProp))
+                field[propKey][namePropKey] = nameGiven;
         } else {
             field[propKey] = value;
         }

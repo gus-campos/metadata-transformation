@@ -38,3 +38,11 @@ export type FieldMetadataTransform = {
 export type FieldsMetadataTransform = {
     [fieldIdentifier: string]: FieldMetadataTransform[];
 };
+
+// =================================================================================================
+
+export const NAME_PROP_KEYS = [
+    "name",
+    "editHelp",
+    "placeholder",
+] as const satisfies (keyof MetadataProps)[];
