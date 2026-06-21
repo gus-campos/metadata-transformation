@@ -1,7 +1,7 @@
 import { InstanceObject, Metadata } from "../models/pure/common";
 import {
     FieldMetadataTransform,
-    FieldsMetadataTransform
+    FieldsMetadataTransform,
 } from "../models/pure/metadata-transform";
 import { accessPathInObject } from "../utils/path-access";
 import { applyMetadata } from "./apply-metadata";
@@ -19,20 +19,20 @@ type FieldMetadataContext = MetadataContext & {
 export function transformMetadata(
     metadata: Metadata,
     instance: InstanceObject,
-    fieldsMetadataTransform: FieldsMetadataTransform | null = null
+    fieldsMetadataTransform: FieldsMetadataTransform | null = null,
 ) {
     // Para campo e sua transformação
 
-    if (fieldsMetadataTransform) {
-        for (const [fieldIdentifier, fieldTransforms] of Object.entries(
-            fieldsMetadataTransform,
-        )) {
-            for (const fieldTransform of fieldTransforms)
-                transformMetadataField(
-                    { metadata, instance, fieldIdentifier },
-                    fieldTransform,
-                );
-        }
+    if (!fieldsMetadataTransform) return;
+
+    for (const [fieldIdentifier, fieldTransforms] of Object.entries(
+        fieldsMetadataTransform,
+    )) {
+        for (const fieldTransform of fieldTransforms)
+            transformMetadataField(
+                { metadata, instance, fieldIdentifier },
+                fieldTransform,
+            );
     }
 }
 
@@ -40,10 +40,17 @@ export function transformMetadataField(
     context: FieldMetadataContext,
     fieldTransform: FieldMetadataTransform,
 ) {
-    const { _if, _match, _apply } = fieldTransform;
+    const { _if, _match, _apply, __conditionsMatches } = fieldTransform;
 
-    // Verificar mesmo que não tenha condição para aplicar
-    // pra manter consistência no fluxo de erros e execuções
+    // Verificar as condições, mesmo que não tenha nenhuma mudança para aplicar.
+    // Assim erros são lançados todas as vezes, melhorando a experiência do
+    // desenvolvedor
+
+    const isConditionsTruthy = !__conditionsMatches
+        ? true
+        : __conditionsMatches.every((match) =>
+              checkMatchCondition(context.instance, match),
+          );
 
     const isMatchTruthy = !_match
         ? true
@@ -58,7 +65,7 @@ export function transformMetadataField(
         ? true
         : _if({ value: fieldValue, obj: context.instance });
 
-    if (!_apply || !isMatchTruthy || !isIfTruthy) return;
+    if (!isConditionsTruthy || !_apply || !isMatchTruthy || !isIfTruthy) return;
 
     applyMetadata(context.metadata, context.fieldIdentifier, _apply);
 }

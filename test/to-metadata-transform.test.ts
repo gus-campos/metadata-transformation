@@ -104,4 +104,106 @@ describe("toFieldsMetadataTransform", () => {
             ],
         });
     });
+
+    it("should resolve named condition into __conditionsMatches", () => {
+        const result = toFieldsMetadataTransform({
+            _conditions: {
+                isActive: { status: { _anyOf: ["ACTIVE"] } },
+            },
+            name: {
+                _condition: "isActive",
+                _apply: "mandatory",
+            },
+        });
+
+        expect(result).toEqual({
+            name: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                    __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
+                },
+            ],
+        });
+    });
+
+    it("should resolve multiple named conditions into __conditionsMatches", () => {
+        const result = toFieldsMetadataTransform({
+            _conditions: {
+                isActive: { status: { _anyOf: ["ACTIVE"] } },
+                isAdmin: { role: { _anyOf: ["ADMIN"] } },
+            },
+            name: {
+                _condition: ["isActive", "isAdmin"],
+                _apply: "mandatory",
+            },
+        });
+
+        expect(result).toEqual({
+            name: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                    __conditionsMatches: [
+                        { status: { _anyOf: ["ACTIVE"] } },
+                        { role: { _anyOf: ["ADMIN"] } },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it("should throw if condition name is referenced but _conditions is not defined", () => {
+        expect(() =>
+            toFieldsMetadataTransform({
+                name: {
+                    _condition: "isActive",
+                    _apply: "mandatory",
+                },
+            }),
+        ).toThrow("Não foi definida nenhuma condição");
+    });
+
+    it("should throw if condition name is not defined in _conditions", () => {
+        expect(() =>
+            toFieldsMetadataTransform({
+                _conditions: {
+                    isActive: { status: { _anyOf: ["ACTIVE"] } },
+                },
+                name: {
+                    _condition: "isAdmin",
+                    _apply: "mandatory",
+                },
+            }),
+        ).toThrow("As seguintes condições não foram definidas: isAdmin");
+    });
+
+    it("should not include __conditionsMatches if no _condition specified", () => {
+        const result = toFieldsMetadataTransform({
+            _conditions: {
+                isActive: { status: { _anyOf: ["ACTIVE"] } },
+            },
+            name: {
+                _apply: "mandatory",
+            },
+        });
+
+        expect(result).toEqual({
+            name: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                },
+            ],
+        });
+    });
 });

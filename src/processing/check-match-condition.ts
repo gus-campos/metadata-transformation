@@ -21,8 +21,8 @@ export function checkMatchCondition(
     return checkMatchConditionHelper(instance, matchCondition, "every");
 }
 
-// TODO: Verificar se sabe diferenciar bem quando passar um objeto como valor para comparar com o objeto do campo
-// e quando passa um objeto com not dentro
+// TODO: Verificar se diferencia bem quando passar um objeto como valor para comparar com o 
+// objeto do campo e quando passa um objeto com not dentro
 function checkMatchConditionHelper(
     instance: InstanceObject,
     matchCondition: Match,

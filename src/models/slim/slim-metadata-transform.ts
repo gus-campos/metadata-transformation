@@ -1,45 +1,88 @@
+import { toArray } from "../../utils/toArray";
 import {
     FieldMetadataTransform,
     FieldsMetadataTransform,
 } from "../pure/metadata-transform";
-import { TermProps, SlimApplyObject, toApply, SlimApply } from "./slim-apply";
-import { SlimImplicitMatch, toMatch } from "./slim-match";
+import { toApply, SlimApply } from "./slim-apply";
+import { SlimMatch, toMatch } from "./slim-match";
+
+type Conditions = {
+    [conditionName: string]: SlimMatch;
+};
 
 type SlimFieldMetadataTransform = FieldMetadataTransform & {
-    _match?: SlimImplicitMatch;
+    _condition?: string | string[];
+    _match?: SlimMatch;
     _apply?: SlimApply;
 };
 
-export type SlimMetadataTransform = {
+export type SlimFieldsMetadataTransform = {
+    _conditions?: Conditions;
+
     [fieldIdentifier: string]:
         | SlimFieldMetadataTransform
-        | SlimFieldMetadataTransform[];
+        | SlimFieldMetadataTransform[]
+        // Na prática, não deve ser aceito
+        | Conditions
+        | undefined;
 };
 
 // ======================== Converters ========================
 
 export function toFieldsMetadataTransform(
-    transform: SlimMetadataTransform,
+    transform: SlimFieldsMetadataTransform,
 ): FieldsMetadataTransform {
-    const simpleTransform = {} as FieldsMetadataTransform;
+    const { _conditions: conditions, ...rest } = transform;
 
-    for (const [fieldIdentifier, fieldTransform] of Object.entries(transform)) {
-        const fieldTransformArray = Array.isArray(fieldTransform)
-            ? fieldTransform
-            : [fieldTransform];
+    const pureFieldsTransform = rest as
+        | SlimFieldMetadataTransform
+        | SlimFieldMetadataTransform[];
 
-        simpleTransform[fieldIdentifier] = fieldTransformArray.map(
-            (transform) => toFieldMetadataTransform(transform, fieldIdentifier),
+    const simpleTransform = {} as Record<string, unknown>;
+
+    for (const [fieldIdentifier, fieldTransform] of Object.entries(
+        pureFieldsTransform,
+    )) {
+        simpleTransform[fieldIdentifier] = toArray(fieldTransform).map(
+            (transform) =>
+                toFieldMetadataTransform(
+                    transform,
+                    fieldIdentifier,
+                    conditions ?? null,
+                ),
         );
     }
 
-    return simpleTransform;
+    return simpleTransform as FieldsMetadataTransform;
 }
 
 function toFieldMetadataTransform(
     fieldTransform: SlimFieldMetadataTransform,
     fieldIdentifier: string,
+    conditions: Conditions | null,
 ): FieldMetadataTransform {
+    const conditionsNames = toArray(fieldTransform._condition ?? []);
+    if (conditionsNames.length > 0 && !conditions)
+        throw new Error("Não foi definida nenhuma condição");
+
+    const namesNotDefined = !conditions
+        ? conditionsNames
+        : conditionsNames.filter((name) => !(name in conditions));
+
+    if (namesNotDefined.length > 0) {
+        throw new Error(
+            `As seguintes condições não foram definidas: ${namesNotDefined.join(", ")}`,
+        );
+    }
+
+    const fieldConditionsMatches =
+        conditionsNames.length > 0
+            ? conditionsNames.map((conditionName) => {
+                  const slimMatch = conditions![conditionName]!;
+                  return toMatch(slimMatch);
+              })
+            : null;
+
     const apply = fieldTransform._apply ? toApply(fieldTransform._apply) : null;
 
     const match = fieldTransform._match
@@ -47,8 +90,10 @@ function toFieldMetadataTransform(
         : null;
 
     return {
-        ...fieldTransform,
         ...(apply && { _apply: apply }),
         ...(match && { _match: match }),
+        ...(fieldConditionsMatches && {
+            __conditionsMatches: fieldConditionsMatches,
+        }),
     };
 }

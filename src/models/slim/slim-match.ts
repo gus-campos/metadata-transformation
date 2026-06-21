@@ -11,10 +11,13 @@ import { isPlainObject } from "../../utils/is-plain-object";
 // Pode receber uma checagem explícita ou resumida
 export type SlimValueCheck = ValueCheck | ValueExpected | ValueExpected[];
 
-export type SlimMatch = {
-    _not?: SlimMatch;
-    _some?: SlimMatch;
-    _match?: SlimMatch;
+// Para comparações implícitas do próprio campo, não permite passagem de objeto
+type ImplicitExpected = Value | Value[];
+
+type SlimMatchNode = {
+    _not?: SlimMatch | ImplicitExpected;
+    _some?: SlimMatch | ImplicitExpected;
+    _match?: SlimMatch | ImplicitExpected;
 
     [identifier: string]:
         | SlimValueCheck
@@ -23,29 +26,13 @@ export type SlimMatch = {
         | SlimMatch;
 };
 
-// =================================================================================================
-
-// Para comparações implícitas do próprio campo, não permite passagem de objeto
-type ImplicitExpected = Value | Value[];
-
-type SlimImplicitMatchNode = {
-    _not?: SlimImplicitMatch | ImplicitExpected;
-    _some?: SlimImplicitMatch | ImplicitExpected;
-    _match?: SlimImplicitMatch | ImplicitExpected;
-
-    [identifier: string]:
-        | SlimValueCheck
-        // Na prática não devem ser aceitos:
-        | undefined
-        | SlimImplicitMatch;
-};
-
-export type SlimImplicitMatch = SlimImplicitMatchNode | ImplicitExpected;
+export type SlimMatch = SlimMatchNode | ImplicitExpected;
 
 // =================================================================================================
 
+// Também aceita SlimMatch (pois é um superset)
 export function toMatch(
-    slimImplicitMatch: SlimImplicitMatch,
+    slimImplicitMatch: SlimMatch,
     fieldIdentifier: string | null = null,
 ): Match {
     // Se for valor esperado (campo implícito)
@@ -62,7 +49,7 @@ export function toMatch(
 }
 
 function toMatchFromImplicitMatchNode(
-    implicitMatchNode: SlimImplicitMatchNode,
+    implicitMatchNode: SlimMatchNode,
     currentFieldIdentifier: string | null = null,
 ): Match {
     /*
@@ -80,7 +67,7 @@ function toMatchFromImplicitMatchNode(
             // Encontrado um objeto de comparação atalhado, tratar recursivamente
             if (isPlainObject(value)) {
                 result[key] = toMatchFromImplicitMatchNode(
-                    value as SlimImplicitMatchNode,
+                    value as SlimMatchNode,
                     currentFieldIdentifier,
                 );
             }
