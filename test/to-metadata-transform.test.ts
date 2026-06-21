@@ -6,13 +6,13 @@ import { toFieldsMetadataTransform } from "../src/models/slim/slim-metadata-tran
 describe("toFieldsMetadataTransform", () => {
     it("should normalize single transform into array", () => {
         const result = toFieldsMetadataTransform({
-            name: {
+            fieldName: {
                 _apply: "mandatory",
             },
         });
 
         expect(result).toEqual({
-            name: [
+            fieldName: [
                 {
                     _apply: {
                         hidden: false,
@@ -110,14 +110,14 @@ describe("toFieldsMetadataTransform", () => {
             _conditions: {
                 isActive: { status: { _anyOf: ["ACTIVE"] } },
             },
-            name: {
+            fieldName: {
                 _condition: "isActive",
                 _apply: "mandatory",
             },
         });
 
         expect(result).toEqual({
-            name: [
+            fieldName: [
                 {
                     _apply: {
                         hidden: false,
@@ -136,14 +136,14 @@ describe("toFieldsMetadataTransform", () => {
                 isActive: { status: { _anyOf: ["ACTIVE"] } },
                 isAdmin: { role: { _anyOf: ["ADMIN"] } },
             },
-            name: {
+            fieldName: {
                 _condition: ["isActive", "isAdmin"],
                 _apply: "mandatory",
             },
         });
 
         expect(result).toEqual({
-            name: [
+            fieldName: [
                 {
                     _apply: {
                         hidden: false,
@@ -159,10 +159,10 @@ describe("toFieldsMetadataTransform", () => {
         });
     });
 
-    it("should throw if condition name is referenced but _conditions is not defined", () => {
+    it("should throw if condition fieldName is referenced but _conditions is not defined", () => {
         expect(() =>
             toFieldsMetadataTransform({
-                name: {
+                fieldName: {
                     _condition: "isActive",
                     _apply: "mandatory",
                 },
@@ -170,13 +170,13 @@ describe("toFieldsMetadataTransform", () => {
         ).toThrow("Não foi definida nenhuma condição");
     });
 
-    it("should throw if condition name is not defined in _conditions", () => {
+    it("should throw if condition fieldName is not defined in _conditions", () => {
         expect(() =>
             toFieldsMetadataTransform({
                 _conditions: {
                     isActive: { status: { _anyOf: ["ACTIVE"] } },
                 },
-                name: {
+                fieldName: {
                     _condition: "isAdmin",
                     _apply: "mandatory",
                 },
@@ -189,18 +189,166 @@ describe("toFieldsMetadataTransform", () => {
             _conditions: {
                 isActive: { status: { _anyOf: ["ACTIVE"] } },
             },
-            name: {
+            fieldName: {
                 _apply: "mandatory",
             },
         });
 
         expect(result).toEqual({
-            name: [
+            fieldName: [
                 {
                     _apply: {
                         hidden: false,
                         required: true,
                         readOnly: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should preserve _if in transform", () => {
+        const ifFn = () => true;
+
+        const result = toFieldsMetadataTransform({
+            fieldName: {
+                _if: ifFn,
+                _apply: "mandatory",
+            },
+        });
+
+        expect(result).toEqual({
+            fieldName: [
+                {
+                    _if: ifFn,
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should resolve condition in array of transforms", () => {
+        const result = toFieldsMetadataTransform({
+            _conditions: {
+                isActive: { status: { _anyOf: ["ACTIVE"] } },
+            },
+            fieldName: [
+                {
+                    _condition: "isActive",
+                    _apply: "mandatory",
+                },
+                {
+                    _apply: "readOnly",
+                },
+            ],
+        });
+
+        expect(result).toEqual({
+            fieldName: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                    __conditionsMatches: [{ status: { _anyOf: ["ACTIVE"] } }],
+                },
+                {
+                    _apply: {
+                        readOnly: true,
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should transform multiple fields independently", () => {
+        const result = toFieldsMetadataTransform({
+            fieldName: {
+                _apply: "mandatory",
+            },
+            age: {
+                _apply: "readOnly",
+            },
+        });
+
+        expect(result).toEqual({
+            fieldName: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                },
+            ],
+            age: [
+                {
+                    _apply: {
+                        readOnly: true,
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should ignore _conditions if no field references it", () => {
+        const result = toFieldsMetadataTransform({
+            _conditions: {
+                isActive: { status: { _anyOf: ["ACTIVE"] } },
+            },
+            fieldName: {
+                _apply: "mandatory",
+            },
+        });
+
+        expect(result).toEqual({
+            fieldName: [
+                {
+                    _apply: {
+                        hidden: false,
+                        required: true,
+                        readOnly: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should use fieldIdentifier for implicit match conversion", () => {
+        const result = toFieldsMetadataTransform({
+            status: {
+                _match: "ACTIVE",
+            },
+        });
+
+        expect(result).toEqual({
+            status: [
+                {
+                    _match: {
+                        status: { _anyOf: ["ACTIVE"] },
+                    },
+                },
+            ],
+        });
+    });
+
+    it("should use fieldIdentifier for implicit match array conversion", () => {
+        const result = toFieldsMetadataTransform({
+            status: {
+                _match: ["ACTIVE", "PENDING"],
+            },
+        });
+
+        expect(result).toEqual({
+            status: [
+                {
+                    _match: {
+                        status: { _anyOf: ["ACTIVE", "PENDING"] },
                     },
                 },
             ],

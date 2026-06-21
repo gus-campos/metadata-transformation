@@ -1,4 +1,5 @@
 import { toArray } from "../../utils/toArray";
+import { Match } from "../pure/instance-condition";
 import {
     FieldMetadataTransform,
     FieldsMetadataTransform,
@@ -61,8 +62,37 @@ function toFieldMetadataTransform(
     fieldIdentifier: string,
     conditions: Conditions | null,
 ): FieldMetadataTransform {
+    const fieldConditionsMatches = getFieldConditionsMatches(
+        fieldTransform,
+        conditions,
+    );
+
+    const apply = fieldTransform._apply ? toApply(fieldTransform._apply) : null;
+
+    const match = fieldTransform._match
+        ? toMatch(fieldTransform._match, fieldIdentifier)
+        : null;
+
+    const { _condition, ...cleanTransform } = fieldTransform;
+
+    return {
+        ...cleanTransform,
+        ...(apply && { _apply: apply }),
+        ...(match && { _match: match }),
+        ...(fieldConditionsMatches && {
+            __conditionsMatches: fieldConditionsMatches,
+        }),
+    };
+}
+
+function getFieldConditionsMatches(
+    fieldTransform: SlimFieldMetadataTransform,
+    conditions: Conditions | null,
+): Match[] | null {
     const conditionsNames = toArray(fieldTransform._condition ?? []);
-    if (conditionsNames.length > 0 && !conditions)
+    if (conditionsNames.length === 0) return null;
+
+    if (!conditions)
         throw new Error("Não foi definida nenhuma condição");
 
     const namesNotDefined = !conditions
@@ -75,25 +105,8 @@ function toFieldMetadataTransform(
         );
     }
 
-    const fieldConditionsMatches =
-        conditionsNames.length > 0
-            ? conditionsNames.map((conditionName) => {
-                  const slimMatch = conditions![conditionName]!;
-                  return toMatch(slimMatch);
-              })
-            : null;
-
-    const apply = fieldTransform._apply ? toApply(fieldTransform._apply) : null;
-
-    const match = fieldTransform._match
-        ? toMatch(fieldTransform._match, fieldIdentifier)
-        : null;
-
-    return {
-        ...(apply && { _apply: apply }),
-        ...(match && { _match: match }),
-        ...(fieldConditionsMatches && {
-            __conditionsMatches: fieldConditionsMatches,
-        }),
-    };
+    return conditionsNames.map((conditionName) => {
+        const slimMatch = conditions![conditionName]!;
+        return toMatch(slimMatch);
+    });
 }
