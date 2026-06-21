@@ -28,11 +28,12 @@ export function transformMetadata(
     for (const [fieldIdentifier, fieldTransforms] of Object.entries(
         fieldsMetadataTransform,
     )) {
-        for (const fieldTransform of fieldTransforms)
+        for (const fieldTransform of fieldTransforms) {
             transformMetadataField(
                 { metadata, instance, fieldIdentifier },
                 fieldTransform,
             );
+        }
     }
 }
 
