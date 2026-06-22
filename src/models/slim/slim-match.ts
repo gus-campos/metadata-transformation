@@ -19,11 +19,16 @@ type SlimMatchNode = {
     _some?: SlimMatch | ImplicitExpected;
     _match?: SlimMatch | ImplicitExpected;
 
+    // Usado internamente para conditions
+    // TODO: Implementar lógica
+    __conditionsMatches: SlimMatch[];
+
     [identifier: string]:
         | SlimValueCheck
         // Na prática não devem ser aceitos:
         | undefined
-        | SlimMatch;
+        | SlimMatch
+        | SlimMatch[];
 };
 
 export type SlimMatch = SlimMatchNode | ImplicitExpected;

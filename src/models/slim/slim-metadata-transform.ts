@@ -1,5 +1,4 @@
 import { toArray } from "../../utils/toArray";
-import { Match } from "../pure/instance-condition";
 import {
     FieldMetadataTransform,
     FieldsMetadataTransform,
@@ -7,17 +6,19 @@ import {
 import { toApply, SlimApply } from "./slim-apply";
 import { SlimMatch, toMatch } from "./slim-match";
 
-type Conditions = {
-    [conditionName: string]: SlimMatch;
-};
-
 type SlimFieldMetadataTransform = FieldMetadataTransform & {
+    // TODO: Implementar lógica
     _condition?: string | string[];
     _match?: SlimMatch;
     _apply?: SlimApply;
 };
 
+type Conditions = {
+    [conditionName: string]: SlimMatch;
+};
+
 export type SlimFieldsMetadataTransform = {
+    // TODO: Implementar lógica
     _conditions?: Conditions;
 
     [fieldIdentifier: string]:
